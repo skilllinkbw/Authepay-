@@ -1,0 +1,24 @@
+{
+  "name": "authepay-bw",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AuthePay - Secure Tap-to-Pay and Payment Gateway Platform for Botswana and Africa",
+  "author": "Braincade Holdings (Pty) Ltd",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.6",
+    "next": "^15.3.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
