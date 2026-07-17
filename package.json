@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "latest" ,
+    "@opennextjs/cloudflare": "latest",
     "clsx": "^2.1.1",
     "lucide-react": "^0.344.0",
     "next": "^16.2.10",
@@ -18,7 +18,6 @@
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "latest",
     "@types/node": "^20.8.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
