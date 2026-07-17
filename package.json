@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "opennextjs-cloudflare build",
+    "build": "npx opennextjs-cloudflare build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.0.0" ,
+    "@opennextjs/cloudflare": "latest" ,
     "clsx": "^2.1.1",
     "lucide-react": "^0.344.0",
     "next": "^16.2.10",
