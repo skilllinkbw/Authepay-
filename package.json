@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@opennextjs/cloudflare": "latest",
+    "@radix-ui/react-slot": "^2.0.2",
     "@supabase/supabase-js": "^2.38.0",
     "@supabase/ssr": "^0.0.10",
     "clsx": "^2.1.1",
