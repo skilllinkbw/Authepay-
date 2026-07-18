@@ -7,11 +7,15 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
+    "test": "echo 'tests not yet configured'",
     "opennext": "opennextjs-cloudflare build"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "latest",
+    "@supabase/supabase-js": "^2.38.0",
+    "@supabase/ssr": "^0.0.10",
     "clsx": "^2.1.1",
+    "date-fns": "^2.30.0",
     "lucide-react": "^0.344.0",
     "next": "^16.2.10",
     "react": "^18",
