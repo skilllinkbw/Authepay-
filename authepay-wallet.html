@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Wallet Core – Digital Wallet</title>
+    <meta name="description" content="AuthePay Wallet – Secure digital wallet for payments, receipts, and financial services." />
+    <style>
+        /* ============================================================
+           AUTHEPAY WALLET CORE – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           Modern fintech wallet design – mobile-first
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --brand-glow-strong: rgba(255, 107, 0, 0.4);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --shadow-glow: 0 0 40px rgba(255, 107, 0, 0.12);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 270px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── WALLET BALANCE DISPLAY ── */
+        .wallet-balance-display {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 2rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .wallet-balance-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 0, 0.05), transparent 70%);
+            pointer-events: none;
+        }
+        .wallet-balance-display .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        .wallet-balance-display .amount {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+        }
+        .wallet-balance-display .amount .currency {
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+        .wallet-balance-display .sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            position: relative;
+            z-index: 1;
+        }
+        .wallet-balance-display .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 1.2rem;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+
+        /* ── TRANSACTION ITEM ── */
+        .tx-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+        .tx-item:hover {
+            background: var(--bg-card-hover);
+            margin: 0 -0.5rem;
+            padding: 10px 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+        .tx-item .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .tx-item .icon.incoming {
+            background: rgba(34, 197, 94, 0.15);
+        }
+        .tx-item .icon.outgoing {
+            background: rgba(255, 107, 0, 0.15);
+        }
+        .tx-item .icon.pending {
+            background: rgba(245, 158, 11, 0.15);
+        }
+        .tx-item .details {
+            flex: 1;
+        }
+        .tx-item .details .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .tx-item .details .meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .tx-item .amount {
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: right;
+        }
+        .tx-item .amount.positive {
+            color: var(--success);
+        }
+        .tx-item .amount.negative {
+            color: var(--brand);
+        }
+
+        /* ── RECEIPT CARD ── */
+        .receipt-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+        }
+        .receipt-card:hover {
+            border-color: var(--brand);
+        }
+        .receipt-card .ref {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .receipt-card .amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .receipt-card .meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ── SECURITY SECTION ── */
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .security-item:last-child {
+            border-bottom: none;
+        }
+        .security-item .left .label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .security-item .left .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .wallet-balance-display {
+                padding: 1.5rem 1rem;
+            }
+            .wallet-balance-display .amount {
+                font-size: 2.5rem;
+            }
+            .wallet-balance-display .amount .currency {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">👛</span>
+                <div>
+                    <span>Wallet</span>
+                    <span class="sub">Digital Wallet</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Wallet</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="payments">💳 Payments</a>
+                <a href="#" data-page="transactions">📋 Transactions</a>
+                <a href="#" data-page="receipts">🧾 Receipts</a>
+
+                <div class="sidebar-section-label">Business</div>
+                <a href="#" data-page="merchant">🏪 Merchant Wallet</a>
+
+                <div class="sidebar-section-label">Security</div>
+                <a href="#" data-page="security">🔐 Security</a>
+                <a href="#" data-page="ai-security">🤖 KaTSo AI</a>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Secure</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · AML Ready</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Wallet Dashboard <small>Digital Wallet</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('payModal')">💳 Pay Now</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+
+                <!-- Wallet Balance Display -->
+                <div class="wallet-balance-display">
+                    <div class="label">Available Balance</div>
+                    <div class="amount">
+                        <span class="currency">P</span>
+                        <span id="walletBalance">—</span>
+                    </div>
+                    <div class="sub" id="walletStatus">🟢 Wallet active · Last transaction: —</div>
+                    <div class="actions">
+                        <button class="btn btn-brand" onclick="navigateTo('payments')">💳 Pay</button>
+                        <button class="btn btn-outline" onclick="openModal('receiveModal')">📥 Receive</button>
+                        <button class="btn btn-outline" onclick="openModal('requestModal')">📤 Request</button>
+                    </div>
+                    <!-- CONNECTION POINT: Wallet balance from Supabase wallets table -->
+                    <!-- CONNECTION POINT: Ledger system for balance calculation -->
+                </div>
+
+                <div class="stat-grid" style="margin-top:1.5rem;">
+                    <div class="stat-card">
+                        <div class="value blue" id="statTxCount">—</div>
+                        <div class="label">Transactions</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statReceived">—</div>
+                        <div class="label">Received (MTD)</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value brand" id="statSent">—</div>
+                        <div class="label">Sent (MTD)</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="statPending">—</div>
+                        <div class="label">Pending</div>
+                        <div class="trend">—</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Activity (7 Days)</span>
+                        </div>
+                        <div style="height:100px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:12px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:12px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:12px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:12px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:12px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:12px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:12px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: wallet_activity from Supabase analytics -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">🕐 Recent Activity</span>
+                            <a href="#" onclick="navigateTo('transactions');return false;" style="font-size:0.8rem;color:var(--brand);">View all</a>
+                        </div>
+                        <div id="recentTxList">
+                            <div class="tx-item">
+                                <div class="icon incoming">📥</div>
+                                <div class="details"><div class="name">Payment from ABC Shop</div><div class="meta">14:23 · Ref: #TX-8921</div></div>
+                                <div class="amount positive">+P 150.00</div>
+                            </div>
+                            <div class="tx-item">
+                                <div class="icon outgoing">📤</div>
+                                <div class="details"><div class="name">Sent to QuickBet</div><div class="meta">13:45 · Ref: #TX-8920</div></div>
+                                <div class="amount negative">-P 85.00</div>
+                            </div>
+                            <div class="tx-item">
+                                <div class="icon pending">⏳</div>
+                                <div class="details"><div class="name">Pending to TechHub</div><div class="meta">12:18 · Ref: #TX-8919</div></div>
+                                <div class="amount negative">-P 220.00</div>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: wallet_transactions from Supabase -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: wallet_dashboard API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: PAYMENTS
+            ============================================================ -->
+            <div class="page" id="page-payments">
+                <div class="section-header">
+                    <h2>💳 Payments</h2>
+                    <p>Send, receive, and manage payment requests securely.</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📤 Send Payment</span>
+                            <span class="badge badge-neutral">Secure</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Recipient (Merchant, Email, Phone)</label>
+                            <input type="text" class="form-input" id="sendRecipient" placeholder="ABC Shop or +267 71 234 567" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount (BWP)</label>
+                            <input type="number" class="form-input" id="sendAmount" placeholder="0.00" step="0.01" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reference</label>
+                            <input type="text" class="form-input" id="sendRef" placeholder="Invoice #123" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select" id="sendMethod">
+                                <option value="wallet">Wallet Balance</option>
+                                <option value="mobile">Mobile Money</option>
+                                <option value="bank">Bank Transfer</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-brand" style="width:100%;padding:0.85rem;" onclick="sendPayment()">
+                            📤 Send Payment
+                        </button>
+                        <!-- CONNECTION POINT: AuthePay Gateway – payment initiation -->
+                        <!-- CONNECTION POINT: KaTSo AI – risk scoring before send -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📥 Request Payment</span>
+                            <span class="badge badge-info">Request</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Request From</label>
+                            <input type="text" class="form-input" id="requestFrom" placeholder="Customer or business name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount (BWP)</label>
+                            <input type="number" class="form-input" id="requestAmount" placeholder="0.00" step="0.01" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-input" id="requestDesc" placeholder="Payment for services" />
+                        </div>
+                        <button class="btn btn-outline" style="width:100%;padding:0.85rem;" onclick="requestPayment()">
+                            📤 Send Request
+                        </button>
+                        <!-- CONNECTION POINT: Payment request via AuthePay Gateway -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Quick Actions</span>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-outline btn-sm" onclick="showToast('💳 QR code generated','success')">📱 QR Pay</button>
+                        <button class="btn btn-outline btn-sm" onclick="openModal('receiveModal')">📥 Receive</button>
+                        <button class="btn btn-outline btn-sm" onclick="openModal('requestModal')">📤 Request</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📋 Favourite merchants loaded','info')">⭐ Favourites</button>
+                    </div>
+                    <!-- CONNECTION POINT: Favourite merchants from Supabase -->
+                </div>
+
+                <!-- CONNECTION POINT: payments API endpoint -->
+                <!-- CONNECTION POINT: Mobile money integration -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: TRANSACTIONS
+            ============================================================ -->
+            <div class="page" id="page-transactions">
+                <div class="section-header">
+                    <h2>📋 Transaction History</h2>
+                    <p>Complete record of all wallet transactions with search and filters.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">All Transactions</span>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting transactions...','info')">📥 Export</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('🔍 Search opened','info')">🔍 Search</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>ID</th><th>Date</th><th>Merchant/Counterparty</th><th>Amount</th><th>Type</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr class="tr-clickable" onclick="showToast('📋 TX-8921 details','info')">
+                                    <td>#TX-8921</td><td>2026-07-21 14:23</td><td>ABC Shop</td><td><span class="positive">+P 150.00</span></td>
+                                    <td><span class="badge badge-success">Received</span></td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 TX-8920 details','info')">
+                                    <td>#TX-8920</td><td>2026-07-21 13:45</td><td>QuickBet</td><td><span class="negative">-P 85.00</span></td>
+                                    <td><span class="badge badge-brand">Sent</span></td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 TX-8919 details','info')">
+                                    <td>#TX-8919</td><td>2026-07-21 12:18</td><td>TechHub</td><td><span class="negative">-P 220.00</span></td>
+                                    <td><span class="badge badge-brand">Sent</span></td>
+                                    <td><span class="badge badge-warning">Processing</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 TX-8918 details','info')">
+                                    <td>#TX-8918</td><td>2026-07-21 11:02</td><td>PayrollCo</td><td><span class="positive">+P 45.00</span></td>
+                                    <td><span class="badge badge-success">Received</span></td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: transactions table from Supabase -->
+                    <!-- CONNECTION POINT: Wallet ledger system -->
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: RECEIPTS
+            ============================================================ -->
+            <div class="page" id="page-receipts">
+                <div class="section-header">
+                    <h2>🧾 Digital Receipts</h2>
+                    <p>View, download, and share payment receipts.</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 Recent Receipts</span>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting receipts...','info')">📥 Export</button>
+                        </div>
+                        <div class="receipt-card" style="margin-bottom:8px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div><strong>ABC Shop</strong></div>
+                                <div class="amount positive">+P 150.00</div>
+                            </div>
+                            <div class="ref">Ref: #TX-8921</div>
+                            <div class="meta"><span>2026-07-21 14:23</span><span>Payment received</span></div>
+                            <div style="margin-top:6px;display:flex;gap:6px;">
+                                <button class="btn btn-outline btn-xs" onclick="showToast('📄 Receipt downloaded','success')">⬇ Download</button>
+                                <button class="btn btn-outline btn-xs" onclick="showToast('📤 Receipt shared','success')">📤 Share</button>
+                            </div>
+                        </div>
+                        <div class="receipt-card" style="margin-bottom:8px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div><strong>QuickBet</strong></div>
+                                <div class="amount negative">-P 85.00</div>
+                            </div>
+                            <div class="ref">Ref: #TX-8920</div>
+                            <div class="meta"><span>2026-07-21 13:45</span><span>Payment sent</span></div>
+                            <div style="margin-top:6px;display:flex;gap:6px;">
+                                <button class="btn btn-outline btn-xs" onclick="showToast('📄 Receipt downloaded','success')">⬇ Download</button>
+                                <button class="btn btn-outline btn-xs" onclick="showToast('📤 Receipt shared','success')">📤 Share</button>
+                            </div>
+                        </div>
+                        <div class="receipt-card">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div><strong>PayrollCo</strong></div>
+                                <div class="amount positive">+P 45.00</div>
+                            </div>
+                            <div class="ref">Ref: #TX-8918</div>
+                            <div class="meta"><span>2026-07-21 11:02</span><span>Payment received</span></div>
+                            <div style="margin-top:6px;display:flex;gap:6px;">
+                                <button class="btn btn-outline btn-xs" onclick="showToast('📄 Receipt downloaded','success')">⬇ Download</button>
+                                <button class="btn btn-outline btn-xs" onclick="showToast('📤 Receipt shared','success')">📤 Share</button>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: receipts table from Supabase -->
+                        <!-- CONNECTION POINT: Receipt generation engine -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Receipt Summary</span></div>
+                        <div><span style="color:var(--text-muted);">Total Receipts</span> <span style="float:right;color:var(--text-primary);" id="receiptCount">—</span></div>
+                        <div><span style="color:var(--text-muted);">Total Amount</span> <span style="float:right;color:var(--text-primary);" id="receiptTotal">—</span></div>
+                        <div><span style="color:var(--text-muted);">Last Receipt</span> <span style="float:right;color:var(--text-secondary);" id="receiptLast">—</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="showToast('📊 Full receipt report loaded','info')">📊 View Full Report</button>
+                        <!-- CONNECTION POINT: receipt_summary from Supabase -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: receipts API endpoint -->
+                <!-- CONNECTION POINT: PDF generation service -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: MERCHANT WALLET
+            ============================================================ -->
+            <div class="page" id="page-merchant">
+                <div class="section-header">
+                    <h2>🏪 Merchant Wallet</h2>
+                    <p>Business balance, settlement tracking, and transaction management.</p>
+                </div>
+
+                <div class="wallet-balance-display" style="border-color:var(--brand);">
+                    <div class="label">Merchant Balance</div>
+                    <div class="amount">
+                        <span class="currency">P</span>
+                        <span id="merchantBalance">—</span>
+                    </div>
+                    <div class="sub" id="merchantStatus">🟢 Active · Settlements: T+1</div>
+                    <div class="actions">
+                        <button class="btn btn-brand" onclick="showToast('💰 Withdrawal requested','success')">💰 Withdraw</button>
+                        <button class="btn btn-outline" onclick="showToast('📊 Settlement report loaded','info')">📊 Settlements</button>
+                    </div>
+                    <!-- CONNECTION POINT: merchant_wallet from Supabase -->
+                    <!-- CONNECTION POINT: Settlement engine from AuthePay Gateway -->
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="merchantReceived">—</div><div class="label">Received (MTD)</div></div>
+                    <div class="stat-card"><div class="value brand" id="merchantSent">—</div><div class="label">Payouts (MTD)</div></div>
+                    <div class="stat-card"><div class="value blue" id="merchantPending">—</div><div class="label">Pending Settlements</div></div>
+                    <div class="stat-card"><div class="value purple" id="merchantVolume">—</div><div class="label">Total Volume</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Merchant Transactions</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Type</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>#TX-8921</td><td>Customer #1234</td><td>P 150.00</td><td><span class="badge badge-success">Sale</span></td><td><span class="badge badge-success">Completed</span></td></tr>
+                                <tr><td>#TX-8920</td><td>Customer #5678</td><td>P 85.00</td><td><span class="badge badge-success">Sale</span></td><td><span class="badge badge-success">Completed</span></td></tr>
+                                <tr><td>#TX-8919</td><td>Customer #9012</td><td>P 220.00</td><td><span class="badge badge-warning">Refund</span></td><td><span class="badge badge-warning">Processing</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: merchant_transactions from Supabase -->
+                </div>
+
+                <!-- CONNECTION POINT: merchant_wallet API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: SECURITY
+            ============================================================ -->
+            <div class="page" id="page-security">
+                <div class="section-header">
+                    <h2>🔐 Wallet Security</h2>
+                    <p>Manage PIN, device verification, sessions, and security settings.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="securityStatus">✅</div><div class="label">Security Status</div></div>
+                    <div class="stat-card"><div class="value blue" id="devicesCount">—</div><div class="label">Verified Devices</div></div>
+                    <div class="stat-card"><div class="value green" id="sessionsActive">—</div><div class="label">Active Sessions</div></div>
+                    <div class="stat-card"><div class="value yellow" id="securityAlerts">—</div><div class="label">Security Alerts</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔑 Security Settings</span></div>
+                    <div class="security-item">
+                        <div class="left"><div class="label">PIN / Password</div><div class="desc">Change your wallet PIN</div></div>
+                        <button class="btn btn-outline btn-sm" onclick="openModal('pinModal')">Change</button>
+                    </div>
+                    <div class="security-item">
+                        <div class="left"><div class="label">Device Verification</div><div class="desc">Manage trusted devices</div></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📱 Device verification opened','info')">Manage</button>
+                    </div>
+                    <div class="security-item">
+                        <div class="left"><div class="label">Sessions</div><div class="desc">Active and recent sessions</div></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📋 Sessions loaded','info')">View</button>
+                    </div>
+                    <div class="security-item">
+                        <div class="left"><div class="label">Two-Factor Authentication</div><div class="desc">Add extra security layer</div></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('🔐 2FA setup opened','info')">Setup</button>
+                    </div>
+                    <div class="security-item">
+                        <div class="left"><div class="label">Suspicious Activity Alerts</div><div class="desc">Real-time fraud notifications</div></div>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                    <!-- CONNECTION POINT: security_settings from Supabase -->
+                    <!-- CONNECTION POINT: Authentication service from KaTSo System Core -->
+                </div>
+
+                <!-- CONNECTION POINT: security API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: KaTSo AI SECURITY
+            ============================================================ -->
+            <div class="page" id="page-ai-security">
+                <div class="section-header">
+                    <h2>🤖 KaTSo AI Security</h2>
+                    <p>AI-powered fraud monitoring, wallet risk scoring, and account protection.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="aiRiskScore2">12</div><div class="label">Wallet Risk Score</div></div>
+                    <div class="stat-card"><div class="value green" id="aiFraudAlerts">0</div><div class="label">Fraud Alerts</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiAccountProtection">🛡️</div><div class="label">Account Protection</div></div>
+                    <div class="stat-card"><div class="value purple" id="aiAnomalies">0</div><div class="label">Unusual Transactions</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛡️ Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Fraud Monitoring</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Wallet Risk Scoring</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Unusual Transaction Detection</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Identity Verification</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: KaTSo AI Core – security module -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔔 Security Alerts</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> Wallet secure</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">Now</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-info">ℹ️</span> New login from trusted device</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">2h ago</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span><span class="badge badge-success">✅</span> Risk score low (12/100)</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">4h ago</span>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: security_alerts from KaTSo AI Core -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: KaTSo AI Security Engine integration -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance &amp; Safety</h2>
+                    <p>Botswana Data Protection Act, AML/CFT readiness, and audit controls.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compScore">98%</div><div class="label">Compliance Score</div></div>
+                    <div class="stat-card"><div class="value green" id="compAML">✅</div><div class="label">AML/CFT Ready</div></div>
+                    <div class="stat-card"><div class="value blue" id="compAudit">1.2K</div><div class="label">Audit Events</div></div>
+                    <div class="stat-card"><div class="value green" id="compBreaches">0</div><div class="label">Data Breaches</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Botswana Data Protection Act</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>AML/CFT Architecture</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>User Consent Management</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Transaction Audit Logs</span><span class="badge badge-success">✅</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: compliance_framework from KaTSo System Core -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔐 Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Encryption</span><span class="badge badge-success">AES-256</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Access Control</span><span class="badge badge-success">RBAC</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Data Minimisation</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Secure Storage</span><span class="badge badge-success">✅</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: security_controls from KaTSo System Core -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all wallet events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('payment')">Payment</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('wallet')">Wallet</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>user@authecorp</td><td>Payment Sent</td>
+                                    <td><span class="badge badge-brand">Payment</span></td>
+                                    <td>#TX-8921 to ABC Shop</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>user@authecorp</td><td>Login</td>
+                                    <td><span class="badge badge-info">Security</span></td>
+                                    <td>Device verified</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>system</td><td>Wallet Updated</td>
+                                    <td><span class="badge badge-neutral">Wallet</span></td>
+                                    <td>Balance changed</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>admin@authecorp</td><td>Consent Updated</td>
+                                    <td><span class="badge badge-success">Compliance</span></td>
+                                    <td>User consent refresh</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Pay Modal -->
+    <div class="modal-overlay" id="payModal">
+        <div class="modal">
+            <div class="modal-header"><h2>💳 Send Payment</h2><button class="modal-close" onclick="closeModal('payModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Recipient</label><input type="text" class="form-input" placeholder="Email, phone, or merchant" id="modalRecipient" /></div>
+                <div class="form-group"><label class="form-label">Amount (BWP)</label><input type="number" class="form-input" placeholder="0.00" id="modalAmount" step="0.01" /></div>
+                <div class="form-group"><label class="form-label">Reference</label><input type="text" class="form-input" placeholder="Invoice #" id="modalRef" /></div>
+                <div class="form-group"><label class="form-label">Payment Method</label><select class="form-select"><option>Wallet Balance</option><option>Mobile Money</option><option>Bank Transfer</option></select></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('payModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('payModal');showToast('💳 Payment sent successfully!','success')">Send Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receive Modal -->
+    <div class="modal-overlay" id="receiveModal">
+        <div class="modal">
+            <div class="modal-header"><h2>📥 Receive Payment</h2><button class="modal-close" onclick="closeModal('receiveModal')">✕</button></div>
+            <div class="modal-body">
+                <div style="text-align:center;padding:1rem 0;">
+                    <div style="font-size:4rem;">📱</div>
+                    <h3 style="margin:0.5rem 0;">Your Wallet Address</h3>
+                    <div style="background:var(--bg-input);padding:0.8rem;border-radius:var(--radius);font-family:monospace;font-size:0.9rem;color:var(--text-secondary);word-break:break-all;">
+                        wallet:0x7F3E••••••••••••••••
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📋 Address copied!','success')">📋 Copy</button>
+                    <div style="margin-top:1rem;color:var(--text-muted);font-size:0.85rem;">Share this address to receive payments</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('receiveModal')">Close</button>
+                <button class="btn btn-brand" onclick="showToast('📱 QR code generated','success')">📱 Show QR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Modal -->
+    <div class="modal-overlay" id="requestModal">
+        <div class="modal">
+            <div class="modal-header"><h2>📤 Request Payment</h2><button class="modal-close" onclick="closeModal('requestModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Request From</label><input type="text" class="form-input" placeholder="Customer name or email" /></div>
+                <div class="form-group"><label class="form-label">Amount (BWP)</label><input type="number" class="form-input" placeholder="0.00" step="0.01" /></div>
+                <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" placeholder="Payment for services" /></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('requestModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('requestModal');showToast('📤 Payment request sent!','success')">Send Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Change Modal -->
+    <div class="modal-overlay" id="pinModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🔐 Change PIN</h2><button class="modal-close" onclick="closeModal('pinModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Current PIN</label><input type="password" class="form-input" placeholder="••••" maxlength="4" inputmode="numeric" /></div>
+                <div class="form-group"><label class="form-label">New PIN</label><input type="password" class="form-input" placeholder="••••" maxlength="4" inputmode="numeric" /></div>
+                <div class="form-group"><label class="form-label">Confirm New PIN</label><input type="password" class="form-input" placeholder="••••" maxlength="4" inputmode="numeric" /></div>
+                <div class="security-warning"><span class="icon">🔐</span><span>Your PIN is encrypted and never stored in plain text.</span></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('pinModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('pinModal');showToast('🔐 PIN changed successfully!','success')">Change PIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Wallet Core Engine
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY WALLET CORE – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard',
+            balance: null,
+            merchantBalance: null
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Wallet Dashboard',
+                payments: 'Payments',
+                transactions: 'Transaction History',
+                receipts: 'Digital Receipts',
+                merchant: 'Merchant Wallet',
+                security: 'Security',
+                'ai-security': 'KaTSo AI Security',
+                compliance: 'Compliance & Safety',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Wallet';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── SEND PAYMENT ──
+        function sendPayment() {
+            const recipient = document.getElementById('sendRecipient').value || 'Unknown';
+            const amount = document.getElementById('sendAmount').value || '0.00';
+            const ref = document.getElementById('sendRef').value || 'REF-' + Date.now();
+
+            if (parseFloat(amount) <= 0) {
+                showToast('Please enter a valid amount', 'warning');
+                return;
+            }
+
+            // CONNECTION POINT: AuthePay Gateway – payment initiation
+            // CONNECTION POINT: KaTSo AI – risk scoring
+            // CONNECTION POINT: Wallet ledger – debit balance
+
+            showToast(`📤 Payment of P${parseFloat(amount).toFixed(2)} sent to ${recipient}`, 'success');
+
+            // Reset fields
+            document.getElementById('sendRecipient').value = '';
+            document.getElementById('sendAmount').value = '';
+            document.getElementById('sendRef').value = '';
+        }
+
+        // ── REQUEST PAYMENT ──
+        function requestPayment() {
+            const from = document.getElementById('requestFrom').value || 'Unknown';
+            const amount = document.getElementById('requestAmount').value || '0.00';
+            const desc = document.getElementById('requestDesc').value || 'Payment request';
+
+            if (parseFloat(amount) <= 0) {
+                showToast('Please enter a valid amount', 'warning');
+                return;
+            }
+
+            // CONNECTION POINT: Payment request via AuthePay Gateway
+            // CONNECTION POINT: Notification service
+
+            showToast(`📤 Payment request of P${parseFloat(amount).toFixed(2)} sent to ${from}`, 'success');
+
+            document.getElementById('requestFrom').value = '';
+            document.getElementById('requestAmount').value = '';
+            document.getElementById('requestDesc').value = '';
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing wallet data...', 'info');
+
+            // CONNECTION POINT: API call to fetch wallet balance
+            // CONNECTION POINT: Supabase query for transactions
+
+            // Simulate loading
+            const balanceEl = document.getElementById('walletBalance');
+            const merchantEl = document.getElementById('merchantBalance');
+
+            balanceEl.textContent = 'Loading...';
+            if (merchantEl) merchantEl.textContent = 'Loading...';
+
+            setTimeout(() => {
+                // CONNECTION POINT: Replace with actual API response
+                balanceEl.textContent = '—';
+                if (merchantEl) merchantEl.textContent = '—';
+
+                // Update stat cards with placeholder values
+                const statIds = [
+                    'statTxCount', 'statReceived', 'statSent', 'statPending',
+                    'merchantReceived', 'merchantSent', 'merchantPending', 'merchantVolume',
+                    'receiptCount', 'receiptTotal', 'receiptLast',
+                    'devicesCount', 'sessionsActive', 'securityAlerts'
+                ];
+                statIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update merchant stats
+                const merchantStats = ['merchantBalance'];
+                merchantStats.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update wallet status
+                document.getElementById('walletStatus').textContent = '🟢 Wallet active · Last transaction: —';
+
+                showToast('✅ Data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial data load
+            refreshData();
+
+            console.log('👛 AuthePay Wallet Core loaded');
+            console.log('📦 Modules: Dashboard, Payments, Transactions, Receipts, Merchant Wallet, Security, KaTSo AI, Compliance, Audit');
+            console.log('🔗 Integrations: AuthePay Gateway, KaTSo AI Core, Supabase ready');
+            console.log('🛡️ Security: PIN, 2FA, Device Verification, Session Management');
+            console.log('📋 Compliance: Botswana DPA, AML/CFT Ready, Audit Logging');
+            console.log('🔌 Future: Mobile money, Bank accounts, P2P, SADC payments, Loyalty, KaTSo AI Financial Assistant');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.sendPayment = sendPayment;
+        window.requestPayment = requestPayment;
+        window.refreshData = refreshData;
+        window.filterAudit = filterAudit;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,2146 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Production Readiness Platform</title>
+    <meta name="description" content="AuthePay Production Readiness – Testing, Security, Compliance, AI Validation, Disaster Recovery, and Go-Live Command Center." />
+    <style>
+        /* ============================================================
+           AUTHEPAY PRODUCTION READINESS PLATFORM – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           Professional production readiness dashboard
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .topbar-actions .status-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+        .progress-fill.red {
+            background: var(--danger);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── TEST/STATUS CARD ── */
+        .status-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .status-card:hover {
+            border-color: var(--brand);
+        }
+        .status-card .left .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .status-card .left .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .status-card .right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* ── AI CARD ── */
+        .ai-card {
+            padding: 0.8rem 1rem;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            margin-bottom: 6px;
+            border-left: 3px solid var(--brand);
+            transition: var(--transition);
+        }
+        .ai-card:hover {
+            border-color: var(--brand);
+        }
+        .ai-card .title {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .ai-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .ai-card .confidence {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-5 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .status-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .status-card .right {
+                justify-content: center;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── AI BANNER ── */
+        .ai-banner {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-banner .icon {
+            font-size: 1.5rem;
+        }
+        .ai-banner .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-banner .text strong {
+            color: var(--text-primary);
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+
+        /* ── READINESS GAUGE ── */
+        .readiness-gauge {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .readiness-gauge .meter {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+        .readiness-gauge .meter svg {
+            transform: rotate(-90deg);
+        }
+        .readiness-gauge .meter .bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 10;
+        }
+        .readiness-gauge .meter .progress {
+            fill: none;
+            stroke: var(--brand);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        .readiness-gauge .meter .label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+        .readiness-gauge .details {
+            flex: 1;
+        }
+        .readiness-gauge .details .value {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+        .readiness-gauge .details .sub {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ── RELEASE CHECKLIST ── */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+        .checklist-item .check {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .checklist-item .check.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: #fff;
+        }
+        .checklist-item .check:hover {
+            border-color: var(--brand);
+        }
+        .checklist-item .text {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+        .checklist-item .text .sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .checklist-item .status-badge {
+            font-size: 0.65rem;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">🚀</span>
+                <div>
+                    <span>Prod Readiness</span>
+                    <span class="sub">Command Center</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Core</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="testing">🧪 Testing Center</a>
+                <a href="#" data-page="performance">⚡ Performance Testing</a>
+
+                <div class="sidebar-section-label">Validation</div>
+                <a href="#" data-page="security">🛡️ Security Validation</a>
+                <a href="#" data-page="compliance">📋 Compliance Validation</a>
+                <a href="#" data-page="infrastructure">🏗️ Infrastructure Readiness</a>
+                <a href="#" data-page="ai-validation">🧠 AI Validation</a>
+
+                <div class="sidebar-section-label">Recovery &amp; Release</div>
+                <a href="#" data-page="disaster-recovery">💾 Disaster Recovery</a>
+                <a href="#" data-page="release">📦 Release Management</a>
+
+                <div class="sidebar-section-label">Monitoring</div>
+                <a href="#" data-page="monitoring">📡 Monitoring</a>
+                <a href="#" data-page="golive">🚀 Go-Live Command Center</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Ready</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · Production</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Production Readiness Dashboard <small>Command Center</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI</span>
+                    <span class="status-badge">🟢 All systems ready</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('deployModal')">🚀 Deploy</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="dashReadiness">—</div>
+                        <div class="label">Readiness Score</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="dashTests">—</div>
+                        <div class="label">Tests Passed</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="dashIssues">—</div>
+                        <div class="label">Open Issues</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="dashChecks">—</div>
+                        <div class="label">Checks Passed</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="dashDeployments">—</div>
+                        <div class="label">Deployments</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="dashUptime">—</div>
+                        <div class="label">System Uptime</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="readiness-gauge" style="margin-bottom:1.5rem;">
+                    <div class="meter">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <circle class="bg" cx="60" cy="60" r="52" />
+                            <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="32.7" />
+                        </svg>
+                        <div class="label">94%</div>
+                    </div>
+                    <div class="details">
+                        <div class="value">94% Production Ready</div>
+                        <div class="sub">All critical checks passed · 2 minor issues</div>
+                        <div style="display:flex;gap:1rem;margin-top:0.5rem;flex-wrap:wrap;">
+                            <span class="badge badge-success">✅ 12/12 Tests</span>
+                            <span class="badge badge-success">✅ 8/8 Security</span>
+                            <span class="badge badge-warning">⚠️ 2/4 Compliance</span>
+                            <span class="badge badge-success">✅ Infrastructure</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Readiness Progress (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: readiness_progress from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 Recent Activity</span>
+                            <a href="#" onclick="navigateTo('audit');return false;" style="font-size:0.8rem;color:var(--brand);">View all</a>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> Security audit passed</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-warning">⚠️</span> 2 compliance items pending</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> AI validation passed</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span><span class="badge badge-success">✅</span> DR drill completed</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🧪 Testing</span></div>
+                        <div><span style="color:var(--text-muted);">Unit Tests</span> <span style="float:right;color:var(--success);" id="testUnit">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Integration</span> <span style="float:right;color:var(--success);" id="testIntegration">✅</span></div>
+                        <div><span style="color:var(--text-muted);">E2E</span> <span style="float:right;color:var(--success);" id="testE2E">✅</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛡️ Security</span></div>
+                        <div><span style="color:var(--text-muted);">Vulnerabilities</span> <span style="float:right;color:var(--success);" id="secVuln">0</span></div>
+                        <div><span style="color:var(--text-muted);">Pen Tests</span> <span style="float:right;color:var(--success);" id="secPen">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Encryption</span> <span style="float:right;color:var(--success);" id="secEnc">✅</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🧠 AI Health</span></div>
+                        <div><span style="color:var(--text-muted);">KaTSo AI</span> <span style="float:right;color:var(--success);" id="aiHealth">✅</span></div>
+                        <div><span style="color:var(--text-muted);">DeepSeek</span> <span style="float:right;color:var(--success);" id="aiDeepSeek">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Qwen</span> <span style="float:right;color:var(--success);" id="aiQwen">✅</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: TESTING CENTER
+            ============================================================ -->
+            <div class="page" id="page-testing">
+                <div class="section-header">
+                    <h2>🧪 Testing Center</h2>
+                    <p>Unit Testing, Integration Testing, API Testing, UI Testing, Regression Testing, Smoke Testing, End-to-End Testing, and User Acceptance Testing.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="testTotal">—</div><div class="label">Total Tests</div></div>
+                    <div class="stat-card"><div class="value green" id="testPassed">—</div><div class="label">Passed</div></div>
+                    <div class="stat-card"><div class="value red" id="testFailed">—</div><div class="label">Failed</div></div>
+                    <div class="stat-card"><div class="value purple" id="testCoverage">—</div><div class="label">Coverage</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Test Suites</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">🧪 Unit Testing</div><div class="meta">1,234 tests · 1,234 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔗 Integration Testing</div><div class="meta">342 tests · 342 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔌 API Testing</div><div class="meta">89 tests · 89 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🖥️ UI Testing</div><div class="meta">456 tests · 456 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔄 Regression Testing</div><div class="meta">234 tests · 234 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">💨 Smoke Testing</div><div class="meta">12 tests · 12 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔁 End-to-End Testing</div><div class="meta">45 tests · 45 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">👥 User Acceptance Testing</div><div class="meta">12 tests · 12 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: test_results from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Test Coverage</span></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Unit Tests</span><span>98%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:98%;"></div></div></div></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Integration</span><span>95%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill brand" style="width:95%;"></div></div></div></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>E2E</span><span>92%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill purple" style="width:92%;"></div></div></div></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🧪 Run Tests</span></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-brand btn-sm" onclick="showToast('🧪 Running all tests...','info')">▶ Run All Tests</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('🧪 Running unit tests...','info')">🧪 Unit</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('🧪 Running integration tests...','info')">🔗 Integration</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('🧪 Running E2E tests...','info')">🔁 E2E</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: PERFORMANCE TESTING
+            ============================================================ -->
+            <div class="page" id="page-performance">
+                <div class="section-header">
+                    <h2>⚡ Performance Testing</h2>
+                    <p>Load Testing, Stress Testing, Spike Testing, Endurance Testing, Scalability Testing, Database Performance, and API Benchmarking.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="perfRequests">—</div><div class="label">Requests/sec</div></div>
+                    <div class="stat-card"><div class="value green" id="perfLatency">—</div><div class="label">Avg Latency</div></div>
+                    <div class="stat-card"><div class="value purple" id="perfError">—</div><div class="label">Error Rate</div></div>
+                    <div class="stat-card"><div class="value yellow" id="perfThroughput">—</div><div class="label">Throughput</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Performance Tests</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Load Testing</div><div class="meta">1,000 req/s · 142ms latency</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">💥 Stress Testing</div><div class="meta">5,000 req/s · 12% error</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📈 Spike Testing</div><div class="meta">10x spike · 98% success</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">⏳ Endurance Testing</div><div class="meta">12 hours · 99.9% uptime</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📐 Scalability Testing</div><div class="meta">3x scale · linear growth</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🗄️ Database Performance</div><div class="meta">12ms avg · 98% cache</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📡 API Benchmarking</div><div class="meta">2,000 req/s · 99.7% success</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: performance_results from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Performance Metrics</span></div>
+                    <div class="grid-3">
+                        <div><span style="color:var(--text-muted);">Avg Response</span><br><span style="font-size:1.2rem;font-weight:900;">142ms</span></div>
+                        <div><span style="color:var(--text-muted);">Peak Throughput</span><br><span style="font-size:1.2rem;font-weight:900;">2,300 req/s</span></div>
+                        <div><span style="color:var(--text-muted);">Error Rate</span><br><span style="font-size:1.2rem;font-weight:900;color:var(--success);">0.3%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SECURITY VALIDATION
+            ============================================================ -->
+            <div class="page" id="page-security">
+                <div class="section-header">
+                    <h2>🛡️ Security Validation</h2>
+                    <p>Vulnerability Scanning, Penetration Testing, API Security Tests, Authentication Testing, Encryption Validation, Secret Management, and Security Audit.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="secVulns">—</div><div class="label">Vulnerabilities</div></div>
+                    <div class="stat-card"><div class="value green" id="secPenTest">—</div><div class="label">Pen Tests</div></div>
+                    <div class="stat-card"><div class="value green" id="secAuth">—</div><div class="label">Auth Tests</div></div>
+                    <div class="stat-card"><div class="value green" id="secEncrypt">—</div><div class="label">Encryption</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Security Validation Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔍 Vulnerability Scanning</div><div class="meta">0 critical · 0 high</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Clean</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔐 Penetration Testing</div><div class="meta">12 tests · 12 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔌 API Security Tests</div><div class="meta">24 tests · 24 passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">👤 Authentication Testing</div><div class="meta">MFA · JWT · OAuth 2.0</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔒 Encryption Validation</div><div class="meta">AES-256 · TLS 1.3</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Valid</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔑 Secret Management</div><div class="meta">All secrets rotated</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Valid</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Security Audit</div><div class="meta">Audit passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: security_validation from Supabase -->
+                </div>
+
+                <div class="security-warning">
+                    <span class="icon">✅</span>
+                    <span>All security validations passed. No critical vulnerabilities found.</span>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE VALIDATION
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance Validation</h2>
+                    <p>AML Validation, KYC Validation, PCI DSS Validation, Data Protection Review, Audit Verification, Risk Assessment, and Compliance Reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compAML">—</div><div class="label">AML</div></div>
+                    <div class="stat-card"><div class="value green" id="compKYC">—</div><div class="label">KYC</div></div>
+                    <div class="stat-card"><div class="value green" id="compPCI">—</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value green" id="compDP">—</div><div class="label">Data Protection</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Compliance Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">💰 AML Validation</div><div class="meta">AML checks passed</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🆔 KYC Validation</div><div class="meta">KYC process verified</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">💳 PCI DSS Validation</div><div class="meta">PCI DSS compliant</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔐 Data Protection Review</div><div class="meta">DPA compliant</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Audit Verification</div><div class="meta">Audit trail verified</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Risk Assessment</div><div class="meta">Risk score: 12/100</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Low Risk</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: compliance_validation from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Compliance Reports</span></div>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Compliance report generated','success')">📊 Generate</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Audit report generated','success')">📊 Audit</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Risk report generated','success')">📊 Risk</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: INFRASTRUCTURE READINESS
+            ============================================================ -->
+            <div class="page" id="page-infrastructure">
+                <div class="section-header">
+                    <h2>🏗️ Infrastructure Readiness</h2>
+                    <p>Cloudflare Validation, Supabase Health, PostgreSQL Health, Redis Health, Queue Monitoring, Storage Validation, and Backup Verification.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="infCloudflare">—</div><div class="label">Cloudflare</div></div>
+                    <div class="stat-card"><div class="value green" id="infSupabase">—</div><div class="label">Supabase</div></div>
+                    <div class="stat-card"><div class="value green" id="infRedis">—</div><div class="label">Redis</div></div>
+                    <div class="stat-card"><div class="value green" id="infBackup">—</div><div class="label">Backup</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Infrastructure Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">☁️ Cloudflare Validation</div><div class="meta">CDN, Workers, Pages</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Valid</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🗄️ Supabase Health</div><div class="meta">Database operational · 98% performance</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🐘 PostgreSQL Health</div><div class="meta">12ms avg · 98% cache</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔄 Redis Health</div><div class="meta">12ms latency · 95% hit</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">⚙️ Queue Monitoring</div><div class="meta">8 workers · 0 backlog</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📦 Storage Validation</div><div class="meta">1.2GB used · 0 errors</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Valid</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">💾 Backup Verification</div><div class="meta">Last backup: 14:23</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Valid</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: infrastructure_status from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 System Metrics</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">CPU</span><br><strong>42%</strong><div class="progress-bar"><div class="progress-fill brand" style="width:42%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Memory</span><br><strong>67%</strong><div class="progress-bar"><div class="progress-fill yellow" style="width:67%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Disk</span><br><strong>34%</strong><div class="progress-bar"><div class="progress-fill green" style="width:34%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Network</span><br><strong>12%</strong><div class="progress-bar"><div class="progress-fill green" style="width:12%;"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI VALIDATION
+            ============================================================ -->
+            <div class="page" id="page-ai-validation">
+                <div class="section-header">
+                    <h2>🧠 AI Validation</h2>
+                    <p>KaTSo AI Health, Kimi Availability, DeepSeek Availability, Qwen Availability, AI Accuracy Testing, AI Response Validation, and AI Performance Reports.</p>
+                </div>
+
+                <div class="ai-banner" style="margin-bottom:1.5rem;">
+                    <span class="icon">🧠</span>
+                    <div class="text">
+                        <strong>AI Validation</strong> – All AI models are healthy and performing within acceptable parameters.
+                        <span style="display:block;font-size:0.75rem;color:var(--text-muted);">KaTSo AI · Kimi · DeepSeek · Qwen · All models validated</span>
+                    </div>
+                    <button class="btn btn-accent btn-sm" onclick="showToast('🧠 AI validation report generated','success')">📊 Generate Report</button>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="aiKaTSo">—</div><div class="label">KaTSo AI</div></div>
+                    <div class="stat-card"><div class="value green" id="aiKimi">—</div><div class="label">Kimi</div></div>
+                    <div class="stat-card"><div class="value green" id="aiDeepSeek2">—</div><div class="label">DeepSeek</div></div>
+                    <div class="stat-card"><div class="value green" id="aiQwen2">—</div><div class="label">Qwen</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 AI Model Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">🧠 KaTSo AI Health</div><div class="meta">Router active · 142ms latency</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">⚙️ Kimi Availability</div><div class="meta">Engineering agent active</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Available</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🛡️ DeepSeek Availability</div><div class="meta">Fraud detection engine active</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Available</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">👁️ Qwen Availability</div><div class="meta">Vision agent active</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Available</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 AI Accuracy Testing</div><div class="meta">Accuracy: 98.7%</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">✅ AI Response Validation</div><div class="meta">All responses validated</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: ai_validation from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 AI Performance</span></div>
+                    <div class="grid-3">
+                        <div><span style="color:var(--text-muted);">Accuracy</span><br><span style="font-size:1.2rem;font-weight:900;">98.7%</span></div>
+                        <div><span style="color:var(--text-muted);">Latency</span><br><span style="font-size:1.2rem;font-weight:900;">142ms</span></div>
+                        <div><span style="color:var(--text-muted);">Availability</span><br><span style="font-size:1.2rem;font-weight:900;color:var(--success);">99.98%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DISASTER RECOVERY
+            ============================================================ -->
+            <div class="page" id="page-disaster-recovery">
+                <div class="section-header">
+                    <h2>💾 Disaster Recovery</h2>
+                    <p>Backup Testing, Restore Testing, Failover Testing, High Availability, Recovery Validation, Business Continuity, and Recovery Reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="drBackup">—</div><div class="label">Backup</div></div>
+                    <div class="stat-card"><div class="value green" id="drFailover">—</div><div class="label">Failover</div></div>
+                    <div class="stat-card"><div class="value green" id="drRTO">—</div><div class="label">RTO</div></div>
+                    <div class="stat-card"><div class="value green" id="drRPO">—</div><div class="label">RPO</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Disaster Recovery Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">💾 Backup Testing</div><div class="meta">Daily backups · 100% success</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔄 Restore Testing</div><div class="meta">Restore time: 12 min</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">⚡ Failover Testing</div><div class="meta">Failover time: 45 sec</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔄 High Availability</div><div class="meta">99.98% uptime</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">✅ Recovery Validation</div><div class="meta">All systems recoverable</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Valid</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Business Continuity</div><div class="meta">BCP approved</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Valid</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: dr_status from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Recovery Metrics</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">RTO</span><br><span style="font-size:1.2rem;font-weight:900;">12 min</span></div>
+                        <div><span style="color:var(--text-muted);">RPO</span><br><span style="font-size:1.2rem;font-weight:900;">5 min</span></div>
+                        <div><span style="color:var(--text-muted);">Failover</span><br><span style="font-size:1.2rem;font-weight:900;">45 sec</span></div>
+                        <div><span style="color:var(--text-muted);">Recovery</span><br><span class="badge badge-success">Verified</span></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Recovery Reports</span></div>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 DR report generated','success')">📊 Generate</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 BCP report generated','success')">📊 BCP</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Recovery report generated','success')">📊 Recovery</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: RELEASE MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-release">
+                <div class="section-header">
+                    <h2>📦 Release Management</h2>
+                    <p>Version Control, Release Checklist, Deployment Approval, Change Management, Rollback Plan, Release Notes, and Production Approval.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="relVersion">—</div><div class="label">Version</div></div>
+                    <div class="stat-card"><div class="value green" id="relStatus">—</div><div class="label">Release Status</div></div>
+                    <div class="stat-card"><div class="value purple" id="relChanges">—</div><div class="label">Changes</div></div>
+                    <div class="stat-card"><div class="value yellow" id="relApprovals">—</div><div class="label">Approvals</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Release Checklist</span></div>
+                    <div id="checklist">
+                        <div class="checklist-item">
+                            <div class="check done" onclick="toggleCheck(this)">✓</div>
+                            <div class="text">Version Control <span class="sub">v2.1.0 tagged</span></div>
+                            <span class="status-badge badge-success">Done</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check done" onclick="toggleCheck(this)">✓</div>
+                            <div class="text">Release Checklist <span class="sub">All items reviewed</span></div>
+                            <span class="status-badge badge-success">Done</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check" onclick="toggleCheck(this)"> </div>
+                            <div class="text">Deployment Approval <span class="sub">Pending review</span></div>
+                            <span class="status-badge badge-warning">Pending</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check done" onclick="toggleCheck(this)">✓</div>
+                            <div class="text">Change Management <span class="sub">All changes documented</span></div>
+                            <span class="status-badge badge-success">Done</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check done" onclick="toggleCheck(this)">✓</div>
+                            <div class="text">Rollback Plan <span class="sub">Tested and verified</span></div>
+                            <span class="status-badge badge-success">Done</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check" onclick="toggleCheck(this)"> </div>
+                            <div class="text">Release Notes <span class="sub">Draft ready</span></div>
+                            <span class="status-badge badge-warning">Draft</span>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check" onclick="toggleCheck(this)"> </div>
+                            <div class="text">Production Approval <span class="sub">Waiting for sign-off</span></div>
+                            <span class="status-badge badge-warning">Pending</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-brand btn-sm" onclick="showToast('📦 Release package ready','success')">📦 Prepare Release</button>
+                        <button class="btn btn-success btn-sm" onclick="showToast('✅ Release approved!','success')">✅ Approve</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📝 Release notes generated','success')">📝 Notes</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Release Timeline</span></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>v2.1.0</span><span>July 2026</span><span class="badge badge-success">Planned</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>v2.0.0</span><span>June 2026</span><span class="badge badge-success">Deployed</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>v1.9.0</span><span>May 2026</span><span class="badge badge-neutral">Archived</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: MONITORING
+            ============================================================ -->
+            <div class="page" id="page-monitoring">
+                <div class="section-header">
+                    <h2>📡 Monitoring</h2>
+                    <p>Application Health, API Health, Database Health, AI Health, Infrastructure Health, Performance Metrics, and Executive Dashboard.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="monApp">—</div><div class="label">Application</div></div>
+                    <div class="stat-card"><div class="value green" id="monAPI">—</div><div class="label">API</div></div>
+                    <div class="stat-card"><div class="value green" id="monDB">—</div><div class="label">Database</div></div>
+                    <div class="stat-card"><div class="value green" id="monAI">—</div><div class="label">AI</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Health Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">🟢 Application Health</div><div class="meta">All services operational</div></div>
+                            <div class="right"><span class="badge badge-success">Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🟢 API Health</div><div class="meta">99.98% uptime · 142ms</div></div>
+                            <div class="right"><span class="badge badge-success">Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🟢 Database Health</div><div class="meta">98% performance</div></div>
+                            <div class="right"><span class="badge badge-success">Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🟢 AI Health</div><div class="meta">All models operational</div></div>
+                            <div class="right"><span class="badge badge-success">Healthy</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🟢 Infrastructure Health</div><div class="meta">All systems operational</div></div>
+                            <div class="right"><span class="badge badge-success">Healthy</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: monitoring_status from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Performance Metrics</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">Uptime</span><br><span style="font-size:1.2rem;font-weight:900;">99.98%</span></div>
+                        <div><span style="color:var(--text-muted);">Latency</span><br><span style="font-size:1.2rem;font-weight:900;">142ms</span></div>
+                        <div><span style="color:var(--text-muted);">Error Rate</span><br><span style="font-size:1.2rem;font-weight:900;color:var(--success);">0.3%</span></div>
+                        <div><span style="color:var(--text-muted);">Throughput</span><br><span style="font-size:1.2rem;font-weight:900;">2,300 req/s</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: GO-LIVE COMMAND CENTER
+            ============================================================ -->
+            <div class="page" id="page-golive">
+                <div class="section-header">
+                    <h2>🚀 Go-Live Command Center</h2>
+                    <p>Final Verification, Executive Approval, Production Deployment, Live Monitoring, Incident Response, Post-Launch Validation, and Success Metrics.</p>
+                </div>
+
+                <div class="ai-banner" style="margin-bottom:1.5rem;border-color:var(--success);">
+                    <span class="icon">🚀</span>
+                    <div class="text">
+                        <strong>Go-Live Status: Ready</strong> – All systems are validated and production-ready.
+                        <span style="display:block;font-size:0.75rem;color:var(--text-muted);">Final checks: 12/12 complete · Executive approval pending</span>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="showToast('🚀 Go-Live initiated!','success')">🚀 Launch Now</button>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="glChecks">—</div><div class="label">Checks Passed</div></div>
+                    <div class="stat-card"><div class="value yellow" id="glApprovals">—</div><div class="label">Approvals</div></div>
+                    <div class="stat-card"><div class="value blue" id="glIncidents">—</div><div class="label">Incidents</div></div>
+                    <div class="stat-card"><div class="value purple" id="glSuccess">—</div><div class="label">Success Rate</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Go-Live Checklist</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">✅ Final Verification</div><div class="meta">All checks passed</div></div>
+                            <div class="right"><span class="badge badge-success">Complete</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Executive Approval</div><div class="meta">Pending sign-off</div></div>
+                            <div class="right"><span class="badge badge-warning">Pending</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🚀 Production Deployment</div><div class="meta">Ready to deploy</div></div>
+                            <div class="right"><span class="badge badge-success">Ready</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📡 Live Monitoring</div><div class="meta">Monitoring active</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🚨 Incident Response</div><div class="meta">Team on standby</div></div>
+                            <div class="right"><span class="badge badge-success">Ready</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">✅ Post-Launch Validation</div><div class="meta">Pending</div></div>
+                            <div class="right"><span class="badge badge-warning">Pending</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Success Metrics</div><div class="meta">Ready to track</div></div>
+                            <div class="right"><span class="badge badge-success">Ready</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Go-Live Metrics</span></div>
+                        <div class="grid-3">
+                            <div><span style="color:var(--text-muted);">Readiness</span><br><span style="font-size:1.2rem;font-weight:900;">94%</span></div>
+                            <div><span style="color:var(--text-muted);">Confidence</span><br><span style="font-size:1.2rem;font-weight:900;color:var(--success);">High</span></div>
+                            <div><span style="color:var(--text-muted);">Risk</span><br><span style="font-size:1.2rem;font-weight:900;color:var(--success);">Low</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ Quick Actions</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <button class="btn btn-success btn-sm" onclick="showToast('🚀 Go-Live initiated!','success')">🚀 Deploy to Production</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📊 Launch report generated','success')">📊 Generate Launch Report</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📋 Incident response plan loaded','info')">📋 Incident Response</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all readiness, validation, and deployment events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('testing')">Testing</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('deployment')">Deployment</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>system</td><td>Tests Passed</td>
+                                    <td><span class="badge badge-brand">Testing</span></td>
+                                    <td>All unit tests passed</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>system</td><td>Security Audit</td>
+                                    <td><span class="badge badge-danger">Security</span></td>
+                                    <td>Vulnerability scan clean</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>admin@authecorp</td><td>Deployment Approved</td>
+                                    <td><span class="badge badge-success">Deployment</span></td>
+                                    <td>v2.1.0 approved</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>system</td><td>DR Drill</td>
+                                    <td><span class="badge badge-info">Recovery</span></td>
+                                    <td>Failover test passed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Deploy Modal -->
+    <div class="modal-overlay" id="deployModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🚀 Deploy to Production</h2><button class="modal-close" onclick="closeModal('deployModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Version</label><input type="text" class="form-input" value="v2.1.0" /></div>
+                <div class="form-group"><label class="form-label">Environment</label><select class="form-select"><option>Production</option><option>Staging</option><option>Sandbox</option></select></div>
+                <div class="form-group"><label class="form-label">Release Notes</label><textarea class="form-textarea" rows="3">Bug fixes and performance improvements.</textarea></div>
+                <div class="form-check"><input type="checkbox" checked /> Run pre-deployment checks</div>
+                <div class="form-check"><input type="checkbox" checked /> Enable rollback plan</div>
+                <div class="security-warning" style="margin-top:12px;">
+                    <span class="icon">⚠️</span>
+                    <span>This action will deploy to production. Ensure all checks are passed.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('deployModal')">Cancel</button>
+                <button class="btn btn-success" onclick="closeModal('deployModal');showToast('🚀 Deployment initiated!','success')">🚀 Deploy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Production Readiness Platform
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY PRODUCTION READINESS PLATFORM – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Production Readiness Dashboard',
+                testing: 'Testing Center',
+                performance: 'Performance Testing',
+                security: 'Security Validation',
+                compliance: 'Compliance Validation',
+                infrastructure: 'Infrastructure Readiness',
+                'ai-validation': 'AI Validation',
+                'disaster-recovery': 'Disaster Recovery',
+                release: 'Release Management',
+                monitoring: 'Monitoring',
+                golive: 'Go-Live Command Center',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Production Readiness';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── CHECKLIST TOGGLE ──
+        function toggleCheck(el) {
+            const isDone = el.classList.contains('done');
+            if (isDone) {
+                el.classList.remove('done');
+                el.textContent = ' ';
+                const badge = el.closest('.checklist-item').querySelector('.status-badge');
+                if (badge) {
+                    badge.className = 'status-badge badge-warning';
+                    badge.textContent = 'Pending';
+                }
+            } else {
+                el.classList.add('done');
+                el.textContent = '✓';
+                const badge = el.closest('.checklist-item').querySelector('.status-badge');
+                if (badge) {
+                    badge.className = 'status-badge badge-success';
+                    badge.textContent = 'Done';
+                }
+                showToast('✅ Checklist item completed!', 'success');
+            }
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing readiness data...', 'info');
+            // CONNECTION POINT: API call to fetch readiness metrics
+            setTimeout(() => {
+                const statIds = [
+                    'dashReadiness', 'dashTests', 'dashIssues', 'dashChecks', 'dashDeployments', 'dashUptime',
+                    'testUnit', 'testIntegration', 'testE2E',
+                    'secVuln', 'secPen', 'secEnc',
+                    'aiHealth', 'aiDeepSeek', 'aiQwen',
+                    'testTotal', 'testPassed', 'testFailed', 'testCoverage',
+                    'perfRequests', 'perfLatency', 'perfError', 'perfThroughput',
+                    'secVulns', 'secPenTest', 'secAuth', 'secEncrypt',
+                    'compAML', 'compKYC', 'compPCI', 'compDP',
+                    'infCloudflare', 'infSupabase', 'infRedis', 'infBackup',
+                    'aiKaTSo', 'aiKimi', 'aiDeepSeek2', 'aiQwen2',
+                    'drBackup', 'drFailover', 'drRTO', 'drRPO',
+                    'relVersion', 'relStatus', 'relChanges', 'relApprovals',
+                    'monApp', 'monAPI', 'monDB', 'monAI',
+                    'glChecks', 'glApprovals', 'glIncidents', 'glSuccess'
+                ];
+                statIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update progress bars to 0%
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+
+                showToast('✅ Readiness data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+
+            // Animate readiness gauge
+            const gauge = document.querySelector('.readiness-gauge .meter .progress');
+            if (gauge) {
+                const circ = 2 * Math.PI * 52;
+                gauge.style.strokeDasharray = circ;
+                gauge.style.strokeDashoffset = circ;
+                setTimeout(() => {
+                    gauge.style.transition = 'stroke-dashoffset 1.5s ease';
+                    gauge.style.strokeDashoffset = circ * 0.06; // 94% score
+                }, 300);
+            }
+
+            console.log('🚀 AuthePay Production Readiness Platform loaded');
+            console.log('📦 Modules: Testing, Performance, Security, Compliance, Infrastructure, AI, DR, Release, Monitoring, Go-Live');
+            console.log('🧠 AI: KaTSo AI, Kimi, DeepSeek, Qwen validation');
+            console.log('🔗 Integrations: AuthePay Gateway, KaTSo AI Core, Supabase, Cloudflare');
+            console.log('📋 Compliance: AML, KYC, PCI DSS, Data Protection, Audit');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.filterAudit = filterAudit;
+        window.refreshData = refreshData;
+        window.toggleCheck = toggleCheck;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Open Banking &amp; Financial Network</title>
+    <meta name="description" content="AuthePay Open Banking – Open Banking Gateway, Banking Integrations, Mobile Money, Payment Networks, Treasury, AI Intelligence, Security & Compliance." />
+    <style>
+        /* ============================================================
+           AUTHEPAY OPEN BANKING & FINANCIAL NETWORK – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .topbar-actions .env-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── INTEGRATION CARD ── */
+        .integration-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .integration-card:hover {
+            border-color: var(--brand);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .integration-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .integration-card .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .integration-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .integration-card .status {
+            margin-top: 6px;
+        }
+
+        /* ── PROVIDER CARD ── */
+        .provider-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .provider-card:hover {
+            border-color: var(--brand);
+        }
+        .provider-card .left .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .provider-card .left .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .provider-card .right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── TREASURY GAUGE ── */
+        .treasury-gauge {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .treasury-gauge .meter {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+        .treasury-gauge .meter svg {
+            transform: rotate(-90deg);
+        }
+        .treasury-gauge .meter .bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 10;
+        }
+        .treasury-gauge .meter .progress {
+            fill: none;
+            stroke: var(--brand);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        .treasury-gauge .meter .label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+        .treasury-gauge .details {
+            flex: 1;
+        }
+        .treasury-gauge .details .value {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+        .treasury-gauge .details .sub {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ── AI CARD ── */
+        .ai-card {
+            padding: 0.8rem 1rem;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            margin-bottom: 6px;
+            border-left: 3px solid var(--brand);
+            transition: var(--transition);
+        }
+        .ai-card:hover {
+            border-color: var(--brand);
+        }
+        .ai-card .title {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .ai-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .treasury-gauge {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-5 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .provider-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .provider-card .right {
+                justify-content: center;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── PCI DSS BADGE ── */
+        .pci-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        .pci-badge .check {
+            font-size: 0.8rem;
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+
+        /* ── AI BANNER ── */
+        .ai-banner {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-banner .icon {
+            font-size: 1.5rem;
+        }
+        .ai-banner .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-banner .text strong {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">🌐</span>
+                <div>
+                    <span>Open Banking</span>
+                    <span class="sub">Financial Network</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Core</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="gateway">🚪 Open Banking Gateway</a>
+                <a href="#" data-page="integrations">🏦 Banking Integrations</a>
+
+                <div class="sidebar-section-label">Networks</div>
+                <a href="#" data-page="mobile-money">📱 Mobile Money Network</a>
+                <a href="#" data-page="payment-networks">💳 Payment Networks</a>
+                <a href="#" data-page="data-exchange">📊 Financial Data Exchange</a>
+
+                <div class="sidebar-section-label">Ecosystem</div>
+                <a href="#" data-page="third-party">🔌 Third-Party Providers</a>
+                <a href="#" data-page="treasury">🏦 Treasury &amp; Liquidity</a>
+
+                <div class="sidebar-section-label">Intelligence</div>
+                <a href="#" data-page="ai-intelligence">🧠 AI Financial Intelligence</a>
+
+                <div class="sidebar-section-label">Security</div>
+                <a href="#" data-page="security">🛡️ Security</a>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Live</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · PSD2 Ready</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Open Banking Dashboard <small>Financial Network</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> AI Intelligence</span>
+                    <span class="pci-badge"><span class="check">✅</span> PSD2 Ready</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('connectModal')">🔌 Connect Bank</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="statVolume">—</div>
+                        <div class="label">Total Volume (MTD)</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="statBanks">—</div>
+                        <div class="label">Connected Banks</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statMobile">—</div>
+                        <div class="label">Mobile Money Tx</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="statProviders">—</div>
+                        <div class="label">Third-Party Providers</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="statLiquidity">—</div>
+                        <div class="label">Liquidity Position</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statUptime">—</div>
+                        <div class="label">Network Uptime</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Financial Network Activity (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: network_activity from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 Recent Activity</span>
+                            <a href="#" onclick="navigateTo('audit');return false;" style="font-size:0.8rem;color:var(--brand);">View all</a>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">🏦</span> Bank connected</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-info">📱</span> Orange Money sync</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-brand">💳</span> Card network event</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span><span class="badge badge-accent">🧠</span> AI liquidity forecast</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🚪 Open Banking Gateway</span></div>
+                        <div><span style="color:var(--text-muted);">API Calls (24h)</span> <span style="float:right;color:var(--text-primary);" id="gwCalls">—</span></div>
+                        <div><span style="color:var(--text-muted);">Consents Active</span> <span style="float:right;color:var(--text-primary);" id="gwConsents">—</span></div>
+                        <div><span style="color:var(--text-muted);">Success Rate</span> <span style="float:right;color:var(--success);" id="gwSuccess">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🏦 Banking Integrations</span></div>
+                        <div><span style="color:var(--text-muted);">Commercial Banks</span> <span style="float:right;color:var(--text-primary);" id="bankCommercial">—</span></div>
+                        <div><span style="color:var(--text-muted);">Settlement Banks</span> <span style="float:right;color:var(--text-primary);" id="bankSettlement">—</span></div>
+                        <div><span style="color:var(--text-muted);">Central Bank</span> <span style="float:right;color:var(--success);" id="bankCentral">✅</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📱 Mobile Money</span></div>
+                        <div><span style="color:var(--text-muted);">Orange Money</span> <span style="float:right;color:var(--success);" id="mmOrange">✅</span></div>
+                        <div><span style="color:var(--text-muted);">MyZaka</span> <span style="float:right;color:var(--success);" id="mmMyZaka">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Smega</span> <span style="float:right;color:var(--success);" id="mmSmega">✅</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: OPEN BANKING GATEWAY
+            ============================================================ -->
+            <div class="page" id="page-gateway">
+                <div class="section-header">
+                    <h2>🚪 Open Banking Gateway</h2>
+                    <p>Open Banking APIs, PSD2/Open Finance Ready, Secure API Gateway, OAuth 2.0, OpenID Connect, API Discovery, and Consent Management.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="gwTotal">—</div><div class="label">Total API Calls</div></div>
+                    <div class="stat-card"><div class="value green" id="gwSuccess2">—</div><div class="label">Success Rate</div></div>
+                    <div class="stat-card"><div class="value purple" id="gwConsents2">—</div><div class="label">Active Consents</div></div>
+                    <div class="stat-card"><div class="value yellow" id="gwLatency">—</div><div class="label">Avg Latency</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Gateway Status</span></div>
+                    <div class="grid-3">
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>🔐 OAuth 2.0</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>🔑 OpenID Connect</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>📡 API Discovery</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;grid-column:span 2;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>📋 Consent Management</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                            <div style="font-size:0.8rem;color:var(--text-muted);">342 active consents</div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>🏦 PSD2 Ready</span>
+                                <span class="badge badge-success">✅</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: gateway_status from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 API Discovery</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>API</th><th>Version</th><th>Status</th><th>Consent Required</th></tr></thead>
+                            <tbody>
+                                <tr><td>Accounts API</td><td>v3.1</td><td><span class="badge badge-success">Active</span></td><td>✅</td></tr>
+                                <tr><td>Transactions API</td><td>v3.1</td><td><span class="badge badge-success">Active</span></td><td>✅</td></tr>
+                                <tr><td>Payments API</td><td>v3.1</td><td><span class="badge badge-success">Active</span></td><td>✅</td></tr>
+                                <tr><td>Confirmation of Funds</td><td>v3.0</td><td><span class="badge badge-success">Active</span></td><td>✅</td></tr>
+                                <tr><td>Customer Data API</td><td>v2.0</td><td><span class="badge badge-warning">Beta</span></td><td>✅</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: api_discovery from Supabase -->
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: BANKING INTEGRATIONS
+            ============================================================ -->
+            <div class="page" id="page-integrations">
+                <div class="section-header">
+                    <h2>🏦 Banking Integrations</h2>
+                    <p>Commercial banks, central bank interfaces, settlement banks, treasury accounts, bank statements, account verification, and balance enquiries.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="biTotal">—</div><div class="label">Total Banks</div></div>
+                    <div class="stat-card"><div class="value green" id="biActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value purple" id="biAccounts">—</div><div class="label">Accounts Linked</div></div>
+                    <div class="stat-card"><div class="value yellow" id="biBalances">—</div><div class="label">Balances (MTD)</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Bank Connections</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🏦 FNB Botswana</div><div class="meta">Commercial · Settlement · Treasury</div></div>
+                            <div class="right"><span class="badge badge-success">Connected</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🏦 Stanbic Bank</div><div class="meta">Commercial · Settlement</div></div>
+                            <div class="right"><span class="badge badge-success">Connected</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🏦 ABSA Botswana</div><div class="meta">Commercial · Treasury</div></div>
+                            <div class="right"><span class="badge badge-success">Connected</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🏛️ Bank of Botswana</div><div class="meta">Central Bank Interface</div></div>
+                            <div class="right"><span class="badge badge-success">Connected</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🏦 Barclays Botswana</div><div class="meta">Commercial · Settlement</div></div>
+                            <div class="right"><span class="badge badge-warning">Pending</span><button class="btn btn-brand btn-xs">Connect</button></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: bank_connections from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🏦 Account Verification</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Accounts Verified</span><span>342</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Pending Verification</span><span>12</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Success Rate</span><span>98.7%</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('🏦 Account verification started','info')">🔍 Verify</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Balance Enquiries</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>FNB Botswana</span><span>P 234,000</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Stanbic Bank</span><span>P 89,000</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>ABSA Botswana</span><span>P 45,000</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 Balance enquiry updated','success')">🔄 Update</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: MOBILE MONEY NETWORK
+            ============================================================ -->
+            <div class="page" id="page-mobile-money">
+                <div class="section-header">
+                    <h2>📱 Mobile Money Network</h2>
+                    <p>Orange Money, MyZaka, Smega, wallet transfers, cash in, cash out, and wallet reconciliation.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="mmTotal">—</div><div class="label">Total Transactions</div></div>
+                    <div class="stat-card"><div class="value green" id="mmVolume">—</div><div class="label">Volume (MTD)</div></div>
+                    <div class="stat-card"><div class="value purple" id="mmWallets">—</div><div class="label">Active Wallets</div></div>
+                    <div class="stat-card"><div class="value yellow" id="mmRecon">—</div><div class="label">Reconciliation Rate</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Mobile Money Providers</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="provider-card">
+                            <div class="left"><div class="name">📱 Orange Money</div><div class="meta">Cash In · Cash Out · Transfers</div></div>
+                            <div class="right"><span class="badge badge-success">Connected</span><span style="color:var(--text-muted);font-size:0.75rem;">P 234K volume</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">📱 MyZaka</div><div class="meta">Cash In · Cash Out · Transfers</div></div>
+                            <div class="right"><span class="badge badge-success">Connected</span><span style="color:var(--text-muted);font-size:0.75rem;">P 89K volume</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">📱 Smega</div><div class="meta">Cash In · Cash Out · Transfers</div></div>
+                            <div class="right"><span class="badge badge-success">Connected</span><span style="color:var(--text-muted);font-size:0.75rem;">P 45K volume</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: mobile_money_providers from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Cash In / Cash Out</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Cash In (MTD)</span><span>P 567,000</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Cash Out (MTD)</span><span>P 234,000</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Net Position</span><span class="trend up">▲ P 333,000</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔄 Wallet Reconciliation</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Orange Money</span><span><span class="badge badge-success">✅</span> 99.8%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>MyZaka</span><span><span class="badge badge-success">✅</span> 99.5%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Smega</span><span><span class="badge badge-success">✅</span> 99.2%</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('🔄 Reconciliation complete','success')">🔄 Reconcile</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: PAYMENT NETWORKS
+            ============================================================ -->
+            <div class="page" id="page-payment-networks">
+                <div class="section-header">
+                    <h2>💳 Payment Networks</h2>
+                    <p>Visa, Mastercard, SWIFT, cross-border transfers, card processing, foreign exchange, and network monitoring.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="pnTotal">—</div><div class="label">Total Transactions</div></div>
+                    <div class="stat-card"><div class="value green" id="pnVolume">—</div><div class="label">Volume (MTD)</div></div>
+                    <div class="stat-card"><div class="value purple" id="pnCross">—</div><div class="label">Cross-Border Tx</div></div>
+                    <div class="stat-card"><div class="value yellow" id="pnFX">—</div><div class="label">FX Volume</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Network Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="provider-card">
+                            <div class="left"><div class="name">💳 Visa</div><div class="meta">Card Processing · Cross-Border</div></div>
+                            <div class="right"><span class="badge badge-success">Operational</span><span style="color:var(--text-muted);font-size:0.75rem;">12.4K tx</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">💳 Mastercard</div><div class="meta">Card Processing · Cross-Border</div></div>
+                            <div class="right"><span class="badge badge-success">Operational</span><span style="color:var(--text-muted);font-size:0.75rem;">8.9K tx</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🌐 SWIFT</div><div class="meta">Cross-Border Transfers</div></div>
+                            <div class="right"><span class="badge badge-success">Operational</span><span style="color:var(--text-muted);font-size:0.75rem;">342 tx</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">💱 Foreign Exchange</div><div class="meta">Currency Conversion</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span><span style="color:var(--text-muted);font-size:0.75rem;">P 234K</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: payment_networks from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Card Processing</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Visa</span><span>12,400 tx</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Mastercard</span><span>8,900 tx</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Success Rate</span><span>99.7%</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Network Monitoring</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Uptime</span><span>99.98%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Avg Latency</span><span>142ms</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Errors (24h)</span><span>12</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: FINANCIAL DATA EXCHANGE
+            ============================================================ -->
+            <div class="page" id="page-data-exchange">
+                <div class="section-header">
+                    <h2>📊 Financial Data Exchange</h2>
+                    <p>Transaction data, account data, merchant data, customer consent, financial insights, and secure data sharing.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="deTotal">—</div><div class="label">Data Records</div></div>
+                    <div class="stat-card"><div class="value green" id="deConsents">—</div><div class="label">Active Consents</div></div>
+                    <div class="stat-card"><div class="value purple" id="deMerchants">—</div><div class="label">Merchant Data</div></div>
+                    <div class="stat-card"><div class="value yellow" id="deInsights">—</div><div class="label">Financial Insights</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Data Exchange Status</span></div>
+                    <div class="grid-3">
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>🔄 Transaction Data</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>📊 Account Data</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>🏪 Merchant Data</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;grid-column:span 2;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>📋 Customer Consent</span>
+                                <span class="badge badge-success">98%</span>
+                            </div>
+                            <div style="font-size:0.8rem;color:var(--text-muted);">342 active consents</div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>🔒 Secure Data Sharing</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: data_exchange from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Data Insights</span></div>
+                    <div class="ai-card" style="border-left-color:var(--brand);">
+                        <div class="title">📈 Transaction volume up 22% this month</div>
+                        <div class="desc">Cross-border and mobile money driving growth.</div>
+                    </div>
+                    <div class="ai-card" style="border-left-color:var(--success);">
+                        <div class="title">👥 Merchant data quality: 98% verified</div>
+                        <div class="desc">All merchant records validated and enriched.</div>
+                    </div>
+                    <div class="ai-card" style="border-left-color:var(--warning);">
+                        <div class="title">⚠️ Consent refresh required for 12 customers</div>
+                        <div class="desc">Consents expiring in 7 days. Automated renewal scheduled.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: THIRD-PARTY PROVIDERS
+            ============================================================ -->
+            <div class="page" id="page-third-party">
+                <div class="section-header">
+                    <h2>🔌 Third-Party Providers</h2>
+                    <p>Fintech APIs, insurance APIs, government APIs, ERP systems, accounting platforms, payroll systems, and business platforms.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="tpTotal">—</div><div class="label">Total Providers</div></div>
+                    <div class="stat-card"><div class="value green" id="tpActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value purple" id="tpAPIs">—</div><div class="label">APIs Connected</div></div>
+                    <div class="stat-card"><div class="value yellow" id="tpRequests">—</div><div class="label">API Calls</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Provider Connections</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🔌 Fintech APIs</div><div class="meta">Payment, verification, analytics</div></div>
+                            <div class="right"><span class="badge badge-success">12 connected</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🛡️ Insurance APIs</div><div class="meta">Claims, policies, verification</div></div>
+                            <div class="right"><span class="badge badge-success">4 connected</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">🏛️ Government APIs</div><div class="meta">Tax, licence, permits</div></div>
+                            <div class="right"><span class="badge badge-success">3 connected</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">📊 ERP Systems</div><div class="meta">SAP, Oracle, custom</div></div>
+                            <div class="right"><span class="badge badge-success">2 connected</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">📚 Accounting Platforms</div><div class="meta">QuickBooks, Xero, custom</div></div>
+                            <div class="right"><span class="badge badge-success">3 connected</span></div>
+                        </div>
+                        <div class="provider-card">
+                            <div class="left"><div class="name">💰 Payroll Systems</div><div class="meta">Payroll, employee data</div></div>
+                            <div class="right"><span class="badge badge-warning">1 pending</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: third_party_providers from Supabase -->
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: TREASURY & LIQUIDITY
+            ============================================================ -->
+            <div class="page" id="page-treasury">
+                <div class="section-header">
+                    <h2>🏦 Treasury &amp; Liquidity</h2>
+                    <p>Cash management, liquidity monitoring, settlement position, reserve management, FX management, and treasury dashboard.</p>
+                </div>
+
+                <div class="treasury-gauge">
+                    <div class="meter">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <circle class="bg" cx="60" cy="60" r="52" />
+                            <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="65.3" />
+                        </svg>
+                        <div class="label">78%</div>
+                    </div>
+                    <div class="details">
+                        <div class="value" id="treasuryPosition">—</div>
+                        <div class="sub">Liquidity Position</div>
+                        <div style="display:flex;gap:1.5rem;margin-top:0.5rem;flex-wrap:wrap;">
+                            <div><span style="color:var(--text-muted);">Settlement Position</span> <span style="color:var(--text-primary);" id="treasurySettlement">—</span></div>
+                            <div><span style="color:var(--text-muted);">Reserve</span> <span style="color:var(--text-primary);" id="treasuryReserve">—</span></div>
+                            <div><span style="color:var(--text-muted);">FX Position</span> <span style="color:var(--text-primary);" id="treasuryFX">—</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-grid" style="margin-top:1.5rem;">
+                    <div class="stat-card"><div class="value blue" id="trCash">—</div><div class="label">Cash Position</div></div>
+                    <div class="stat-card"><div class="value green" id="trLiquidity">—</div><div class="label">Liquidity Ratio</div></div>
+                    <div class="stat-card"><div class="value purple" id="trSettlement">—</div><div class="label">Settlement Position</div></div>
+                    <div class="stat-card"><div class="value yellow" id="trReserve">—</div><div class="label">Reserve Requirement</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Treasury Dashboard</span></div>
+                    <div class="grid-3">
+                        <div><span style="color:var(--text-muted);">Daily Cash Flow</span><br><span style="font-size:1.2rem;font-weight:700;" id="trDailyCF">—</span></div>
+                        <div><span style="color:var(--text-muted);">Settlement Float</span><br><span style="font-size:1.2rem;font-weight:700;" id="trFloat">—</span></div>
+                        <div><span style="color:var(--text-muted);">Reserve Coverage</span><br><span style="font-size:1.2rem;font-weight:700;" id="trCoverage">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI FINANCIAL INTELLIGENCE
+            ============================================================ -->
+            <div class="page" id="page-ai-intelligence">
+                <div class="section-header">
+                    <h2>🧠 AI Financial Intelligence</h2>
+                    <p>Cash flow prediction, liquidity forecasting, fraud detection, settlement optimization, banking insights, and risk analytics.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value purple" id="aiPrediction">—</div><div class="label">Cash Flow Prediction</div></div>
+                    <div class="stat-card"><div class="value green" id="aiLiquidity">—</div><div class="label">Liquidity Forecast</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiFraud">—</div><div class="label">Fraud Detection</div></div>
+                    <div class="stat-card"><div class="value yellow" id="aiOptimize">—</div><div class="label">Settlement Optimization</div></div>
+                </div>
+
+                <div class="ai-banner" style="margin-bottom:1.5rem;">
+                    <span class="icon">🧠</span>
+                    <div class="text">
+                        <strong>AI Financial Intelligence</strong> – Real-time cash flow predictions, liquidity forecasting, fraud detection, and settlement optimization powered by KaTSo AI.
+                        <span style="display:block;font-size:0.75rem;color:var(--text-muted);">Predictive analytics · Risk insights · Banking intelligence</span>
+                    </div>
+                    <button class="btn btn-accent btn-sm" onclick="showToast('🧠 AI insights loaded','success')">📊 Load Insights</button>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AI Predictions</span></div>
+                        <div class="ai-card">
+                            <div class="title">📈 Cash Flow: P 340K projected next 7 days</div>
+                            <div class="desc">Based on transaction patterns and historical data. Confidence: 92%</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--success);">
+                            <div class="title">📊 Liquidity: Position remains healthy</div>
+                            <div class="desc">Liquidity ratio at 78% - above regulatory requirement.</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--warning);">
+                            <div class="title">⚠️ Settlement optimization recommended</div>
+                            <div class="desc">Adjust batch timing to align with peak clearing windows.</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Risk Analytics</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Fraud Risk Score</span><span class="badge badge-success">12/100</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Settlement Risk</span><span class="badge badge-success">Low</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Liquidity Risk</span><span class="badge badge-success">Low</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Banking Insights</span><span class="badge badge-info">12 recommendations</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 Full risk analytics report generated','success')">📊 Generate Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SECURITY
+            ============================================================ -->
+            <div class="page" id="page-security">
+                <div class="section-header">
+                    <h2>🛡️ Security</h2>
+                    <p>Mutual TLS, encryption, API authentication, digital certificates, token validation, threat detection, and audit logging.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="secTLS">✅</div><div class="label">Mutual TLS</div></div>
+                    <div class="stat-card"><div class="value green" id="secEnc">✅</div><div class="label">Encryption</div></div>
+                    <div class="stat-card"><div class="value green" id="secCerts">✅</div><div class="label">Digital Certificates</div></div>
+                    <div class="stat-card"><div class="value green" id="secToken">✅</div><div class="label">Token Validation</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔒 Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Mutual TLS</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Encryption (AES-256)</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>API Authentication</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Digital Certificates</span><span class="badge badge-success">Valid</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Token Validation</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Threat Detection</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: security_controls from KaTSo System Core -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔔 Security Alerts</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>✅ All systems secure</span><span style="color:var(--text-muted);font-size:0.75rem;">Now</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>ℹ️ Certificate renewal completed</span><span style="color:var(--text-muted);font-size:0.75rem;">2h ago</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>✅ Token validation passed</span><span style="color:var(--text-muted);font-size:0.75rem;">4h ago</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Security Audit</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">TLS Handshake</span><br><span class="badge badge-success">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Certificate Status</span><br><span class="badge badge-success">Valid</span></div>
+                        <div><span style="color:var(--text-muted);">Threats Blocked</span><br><span class="badge badge-success">0</span></div>
+                        <div><span style="color:var(--text-muted);">Audit Logs</span><br><span class="badge badge-info">1.2K</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance</h2>
+                    <p>AML/CFT, KYC, data protection, PCI DSS, ISO 27001, regulatory reporting, and risk management.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compAML">✅</div><div class="label">AML/CFT</div></div>
+                    <div class="stat-card"><div class="value green" id="compKYC">✅</div><div class="label">KYC</div></div>
+                    <div class="stat-card"><div class="value green" id="compPCI">✅</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value green" id="compISO">✅</div><div class="label">ISO 27001</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>AML/CFT</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>KYC / KYB</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Data Protection</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>PCI DSS</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>ISO 27001</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Regulatory Reporting</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: compliance_framework from KaTSo System Core -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Risk Management</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Risk Score</span><span class="badge badge-success">12/100</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Compliance Score</span><span class="badge badge-success">98%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Regulatory Reports</span><span class="badge badge-info">12 filed</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 Compliance report generated','success')">📊 Generate Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all open banking, network, and security events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('banking')">Banking</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('mobile')">Mobile</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>system</td><td>Bank Connected</td>
+                                    <td><span class="badge badge-brand">Banking</span></td>
+                                    <td>FNB Botswana linked</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>system</td><td>Mobile Money Sync</td>
+                                    <td><span class="badge badge-info">Mobile</span></td>
+                                    <td>Orange Money reconciled</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>system</td><td>Security Check</td>
+                                    <td><span class="badge badge-danger">Security</span></td>
+                                    <td>TLS validation passed</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>admin@authecorp</td><td>Consent Granted</td>
+                                    <td><span class="badge badge-success">Compliance</span></td>
+                                    <td>Customer consent refreshed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Connect Bank Modal -->
+    <div class="modal-overlay" id="connectModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🔌 Connect Bank</h2><button class="modal-close" onclick="closeModal('connectModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Bank Name</label><input type="text" class="form-input" placeholder="e.g. FNB Botswana" /></div>
+                <div class="form-group"><label class="form-label">API Endpoint</label><input type="url" class="form-input" placeholder="https://api.bank.com/openbanking" /></div>
+                <div class="form-group"><label class="form-label">Authentication</label><select class="form-select"><option>OAuth 2.0</option><option>API Key</option><option>mTLS</option></select></div>
+                <div class="form-group"><label class="form-label">Consent Required</label>
+                    <div class="form-check"><input type="checkbox" checked /> Account Data</div>
+                    <div class="form-check"><input type="checkbox" checked /> Transaction Data</div>
+                    <div class="form-check"><input type="checkbox" /> Payment Initiation</div>
+                </div>
+                <div class="security-warning" style="margin-top:12px;">
+                    <span class="icon">🔐</span>
+                    <span>All connections use mutual TLS and end-to-end encryption. No credentials are stored in plain text.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('connectModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('connectModal');showToast('🏦 Bank connected successfully!','success')">Connect Bank</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Open Banking & Financial Network
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY OPEN BANKING & FINANCIAL NETWORK – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Open Banking Dashboard',
+                gateway: 'Open Banking Gateway',
+                integrations: 'Banking Integrations',
+                'mobile-money': 'Mobile Money Network',
+                'payment-networks': 'Payment Networks',
+                'data-exchange': 'Financial Data Exchange',
+                'third-party': 'Third-Party Providers',
+                treasury: 'Treasury & Liquidity',
+                'ai-intelligence': 'AI Financial Intelligence',
+                security: 'Security',
+                compliance: 'Compliance',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Open Banking';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing open banking data...', 'info');
+            // CONNECTION POINT: API call to fetch open banking metrics
+            setTimeout(() => {
+                const statIds = [
+                    'statVolume', 'statBanks', 'statMobile', 'statProviders', 'statLiquidity', 'statUptime',
+                    'gwCalls', 'gwConsents', 'gwSuccess',
+                    'bankCommercial', 'bankSettlement', 'bankCentral',
+                    'mmOrange', 'mmMyZaka', 'mmSmega',
+                    'gwTotal', 'gwSuccess2', 'gwConsents2', 'gwLatency',
+                    'biTotal', 'biActive', 'biAccounts', 'biBalances',
+                    'mmTotal', 'mmVolume', 'mmWallets', 'mmRecon',
+                    'pnTotal', 'pnVolume', 'pnCross', 'pnFX',
+                    'deTotal', 'deConsents', 'deMerchants', 'deInsights',
+                    'tpTotal', 'tpActive', 'tpAPIs', 'tpRequests',
+                    'treasuryPosition', 'treasurySettlement', 'treasuryReserve', 'treasuryFX',
+                    'trCash', 'trLiquidity', 'trSettlement', 'trReserve',
+                    'trDailyCF', 'trFloat', 'trCoverage',
+                    'aiPrediction', 'aiLiquidity', 'aiFraud', 'aiOptimize'
+                ];
+                statIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update progress bars to 0%
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+
+                showToast('✅ Data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+
+            // Animate treasury gauge
+            const gauge = document.querySelector('.treasury-gauge .meter .progress');
+            if (gauge) {
+                const circ = 2 * Math.PI * 52;
+                gauge.style.strokeDasharray = circ;
+                gauge.style.strokeDashoffset = circ;
+                setTimeout(() => {
+                    gauge.style.transition = 'stroke-dashoffset 1.5s ease';
+                    gauge.style.strokeDashoffset = circ * 0.22; // 78% score
+                }, 300);
+            }
+
+            console.log('🌐 AuthePay Open Banking & Financial Network loaded');
+            console.log('📦 Modules: Open Banking Gateway, Banking Integrations, Mobile Money, Payment Networks, Data Exchange, Third-Party, Treasury, AI Intelligence, Security, Compliance');
+            console.log('🔗 Integrations: Banks, Mobile Money, Visa, Mastercard, SWIFT, Third-Party APIs');
+            console.log('🔐 Security: mTLS, AES-256, OAuth 2.0, OpenID Connect, Digital Certificates');
+            console.log('📋 Compliance: PSD2, AML/CFT, KYC, PCI DSS, ISO 27001, Botswana DPA');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.filterAudit = filterAudit;
+        window.refreshData = refreshData;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Super Admin – Command Center</title>
+    <meta name="description" content="AuthePay Super Admin – Central command center for the entire AutheCorp ecosystem." />
+    <style>
+        /* ============================================================
+           AUTHEPAY SUPER ADMIN PLATFORM – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .topbar-actions .env-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── INFRA CARD ── */
+        .infra-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            transition: var(--transition);
+        }
+        .infra-card:hover {
+            border-color: var(--brand);
+        }
+        .infra-card .name {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .infra-card .status {
+            font-size: 0.75rem;
+        }
+
+        /* ── AI CARD ── */
+        .ai-card {
+            padding: 0.8rem 1rem;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            margin-bottom: 6px;
+            border-left: 3px solid var(--brand);
+            transition: var(--transition);
+        }
+        .ai-card:hover {
+            border-color: var(--brand);
+        }
+        .ai-card .title {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .ai-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-5 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .infra-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── PCI DSS BADGE ── */
+        .pci-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        .pci-badge .check {
+            font-size: 0.8rem;
+        }
+
+        /* ── AI BANNER ── */
+        .ai-banner {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-banner .icon {
+            font-size: 1.5rem;
+        }
+        .ai-banner .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-banner .text strong {
+            color: var(--text-primary);
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+
+        /* ── HEALTH GAUGE ── */
+        .health-gauge {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .health-gauge .meter {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+        .health-gauge .meter svg {
+            transform: rotate(-90deg);
+        }
+        .health-gauge .meter .bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 10;
+        }
+        .health-gauge .meter .progress {
+            fill: none;
+            stroke: var(--brand);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        .health-gauge .meter .label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+        .health-gauge .details {
+            flex: 1;
+        }
+        .health-gauge .details .value {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+        .health-gauge .details .sub {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">⚡</span>
+                <div>
+                    <span>Super Admin</span>
+                    <span class="sub">Command Center</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Executive</div>
+                <a href="#" class="active" data-page="dashboard">📊 Executive Dashboard</a>
+
+                <div class="sidebar-section-label">Administration</div>
+                <a href="#" data-page="users">👥 User Administration</a>
+                <a href="#" data-page="roles">🔐 Role &amp; Access</a>
+                <a href="#" data-page="merchants">🏪 Merchant Management</a>
+
+                <div class="sidebar-section-label">Financial</div>
+                <a href="#" data-page="financial">💰 Financial Controls</a>
+
+                <div class="sidebar-section-label">AI &amp; Security</div>
+                <a href="#" data-page="ai-management">🧠 AI Management</a>
+                <a href="#" data-page="soc">🛡️ Security Operations</a>
+                <a href="#" data-page="compliance">📋 Compliance Center</a>
+
+                <div class="sidebar-section-label">Infrastructure</div>
+                <a href="#" data-page="infrastructure">🏗️ Infrastructure</a>
+
+                <div class="sidebar-section-label">Intelligence</div>
+                <a href="#" data-page="bi">📈 Business Intelligence</a>
+
+                <div class="sidebar-section-label">System</div>
+                <a href="#" data-page="notifications">🔔 Notifications</a>
+                <a href="#" data-page="settings">⚙️ Platform Settings</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> System Active</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · Super Admin</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Executive Dashboard <small>Command Center</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI</span>
+                    <span class="env-badge">🔒 Secure</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('alertModal')">📢 Broadcast</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: EXECUTIVE DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="dashRevenue">—</div>
+                        <div class="label">Total Revenue (MTD)</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="dashTx">—</div>
+                        <div class="label">Active Transactions</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="dashMerchants">—</div>
+                        <div class="label">Merchant Growth</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="dashCustomers">—</div>
+                        <div class="label">Customer Growth</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="dashAIHealth">—</div>
+                        <div class="label">AI Health</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="dashCompliance">—</div>
+                        <div class="label">Compliance Status</div>
+                        <div class="trend">✅</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Platform Activity (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: platform_activity from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 Recent Alerts</span>
+                            <span class="badge badge-danger">3 critical</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-danger">🚨</span> Fraud alert: High-risk tx</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-warning">⚠️</span> API rate limit approaching</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> System health check passed</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span><span class="badge badge-info">ℹ️</span> New merchant onboarded</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🏥 Platform Health</span></div>
+                        <div class="health-gauge" style="justify-content:center;">
+                            <div class="meter" style="width:100px;height:100px;">
+                                <svg width="100" height="100" viewBox="0 0 100 100">
+                                    <circle class="bg" cx="50" cy="50" r="42" />
+                                    <circle class="progress" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="26.4" />
+                                </svg>
+                                <div class="label" style="font-size:1.2rem;">90%</div>
+                            </div>
+                            <div><span style="color:var(--text-muted);">Uptime</span><br><span style="font-size:1.5rem;font-weight:900;">99.98%</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🧠 AI Health</span></div>
+                        <div><span style="color:var(--text-muted);">Router Status</span> <span style="float:right;color:var(--success);">✅ Active</span></div>
+                        <div><span style="color:var(--text-muted);">Model Latency</span> <span style="float:right;color:var(--text-primary);">142ms</span></div>
+                        <div><span style="color:var(--text-muted);">AI Cost (MTD)</span> <span style="float:right;color:var(--text-primary);">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Global Overview</span></div>
+                        <div><span style="color:var(--text-muted);">Total Users</span> <span style="float:right;color:var(--text-primary);" id="dashUsers">—</span></div>
+                        <div><span style="color:var(--text-muted);">Total Merchants</span> <span style="float:right;color:var(--text-primary);" id="dashTotalMerchants">—</span></div>
+                        <div><span style="color:var(--text-muted);">Active Sessions</span> <span style="float:right;color:var(--text-primary);" id="dashSessions">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: USER ADMINISTRATION
+            ============================================================ -->
+            <div class="page" id="page-users">
+                <div class="section-header">
+                    <h2>👥 User Administration</h2>
+                    <p>Manage customers, merchants, developers, institutions, government users, support staff, and super administrators.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="usrCustomers">—</div><div class="label">Customers</div></div>
+                    <div class="stat-card"><div class="value green" id="usrMerchants">—</div><div class="label">Merchants</div></div>
+                    <div class="stat-card"><div class="value purple" id="usrDevelopers">—</div><div class="label">Developers</div></div>
+                    <div class="stat-card"><div class="value yellow" id="usrStaff">—</div><div class="label">Support Staff</div></div>
+                    <div class="stat-card"><div class="value brand" id="usrAdmins">—</div><div class="label">Super Admins</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 User Directory</span>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting users...','info')">📥 Export</button>
+                            <button class="btn btn-brand btn-sm" onclick="showToast('👤 User creation wizard opened','info')">+ Add User</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody>
+                                <tr><td>John Doe</td><td>john@email.com</td><td>Customer</td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-xs">✏️</button> <button class="btn btn-danger btn-xs">🔒</button></td></tr>
+                                <tr><td>ABC Shop</td><td>merchant@abc.com</td><td>Merchant</td><td><span class="badge badge-success">Verified</span></td><td><button class="btn btn-outline btn-xs">✏️</button> <button class="btn btn-danger btn-xs">🔒</button></td></tr>
+                                <tr><td>dev@braincade</td><td>dev@braincade.co</td><td>Developer</td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-xs">✏️</button> <button class="btn btn-danger btn-xs">🔒</button></td></tr>
+                                <tr><td>Support Team</td><td>support@authecorp</td><td>Support Staff</td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-xs">✏️</button> <button class="btn btn-danger btn-xs">🔒</button></td></tr>
+                                <tr><td>Admin User</td><td>admin@authecorp</td><td>Super Admin</td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-xs">✏️</button> <button class="btn btn-danger btn-xs">🔒</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: users from Supabase -->
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: ROLE & ACCESS
+            ============================================================ -->
+            <div class="page" id="page-roles">
+                <div class="section-header">
+                    <h2>🔐 Role &amp; Access Management</h2>
+                    <p>RBAC, permissions, department roles, MFA, session management, login history, and privileged access control.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="rolRoles">—</div><div class="label">Roles</div></div>
+                    <div class="stat-card"><div class="value green" id="rolPermissions">—</div><div class="label">Permissions</div></div>
+                    <div class="stat-card"><div class="value purple" id="rolMFA">—</div><div class="label">MFA Enabled</div></div>
+                    <div class="stat-card"><div class="value yellow" id="rolSessions">—</div><div class="label">Active Sessions</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Roles &amp; Permissions</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Role</th><th>Permissions</th><th>Users</th><th>MFA</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Super Admin</strong></td><td>All permissions</td><td>3</td><td><span class="badge badge-success">✅</span></td></tr>
+                                <tr><td><strong>Admin</strong></td><td>Org management, users</td><td>12</td><td><span class="badge badge-success">✅</span></td></tr>
+                                <tr><td><strong>Compliance Officer</strong></td><td>Compliance, audit, KYC</td><td>4</td><td><span class="badge badge-success">✅</span></td></tr>
+                                <tr><td><strong>Developer</strong></td><td>API access, sandbox</td><td>24</td><td><span class="badge badge-warning">⚠️</span></td></tr>
+                                <tr><td><strong>Support</strong></td><td>Support tickets</td><td>8</td><td><span class="badge badge-success">✅</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: roles from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔐 MFA &amp; Session Management</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>MFA Required</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Session Timeout</span><span>24 hours</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Privileged Access</span><span class="badge badge-success">Control</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('🔐 MFA settings updated','success')">Configure MFA</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Login History</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>admin@authecorp</span><span style="color:var(--text-muted);font-size:0.75rem;">14:23</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>compliance@authecorp</span><span style="color:var(--text-muted);font-size:0.75rem;">13:45</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>dev@braincade</span><span style="color:var(--text-muted);font-size:0.75rem;">12:18</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: MERCHANT MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-merchants">
+                <div class="section-header">
+                    <h2>🏪 Merchant Management</h2>
+                    <p>Merchant approval, suspension, verification, settlement controls, risk level, categories, and analytics.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="merTotal">—</div><div class="label">Total Merchants</div></div>
+                    <div class="stat-card"><div class="value green" id="merActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value yellow" id="merPending">—</div><div class="label">Pending Approval</div></div>
+                    <div class="stat-card"><div class="value red" id="merSuspended">—</div><div class="label">Suspended</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Merchant Queue</span>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting merchants...','info')">📥 Export</button>
+                            <button class="btn btn-brand btn-sm" onclick="showToast('🏪 Merchant approval queue opened','info')">📋 Review</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Business</th><th>ID</th><th>Risk</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody>
+                                <tr><td>ABC Shop</td><td>M-842</td><td><span class="badge badge-success">Low</span></td><td><span class="badge badge-success">Verified</span></td><td><button class="btn btn-outline btn-xs">📋</button></td></tr>
+                                <tr><td>TechHub Ltd</td><td>M-119</td><td><span class="badge badge-warning">Medium</span></td><td><span class="badge badge-warning">Pending</span></td><td><button class="btn btn-brand btn-xs">Approve</button></td></tr>
+                                <tr><td>FastCash Ltd</td><td>M-901</td><td><span class="badge badge-danger">High</span></td><td><span class="badge badge-danger">Suspended</span></td><td><button class="btn btn-danger btn-xs">Review</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: merchants from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ Settlement Controls</span></div>
+                        <div class="form-group"><label class="form-label">Default Settlement</label><select class="form-select"><option>T+1</option><option>T+0</option><option>T+2</option></select></div>
+                        <div class="form-group"><label class="form-label">Risk Threshold</label><select class="form-select"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+                        <button class="btn btn-primary btn-sm" onclick="showToast('💾 Settlement controls saved','success')">💾 Save</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Merchant Analytics</span></div>
+                        <div><span style="color:var(--text-muted);">Top Merchant</span> <span style="float:right;">PayrollCo</span></div>
+                        <div><span style="color:var(--text-muted);">Avg Volume</span> <span style="float:right;">P 45,200</span></div>
+                        <div><span style="color:var(--text-muted);">Growth Rate</span> <span style="float:right;color:var(--success);">▲ 12%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: FINANCIAL CONTROLS
+            ============================================================ -->
+            <div class="page" id="page-financial">
+                <div class="section-header">
+                    <h2>💰 Financial Controls</h2>
+                    <p>Settlement rules, transaction limits, fee configuration, currency management, tax configuration, reserve accounts, and treasury controls.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="finTxLimit">—</div><div class="label">Transaction Limit</div></div>
+                    <div class="stat-card"><div class="value green" id="finFee">—</div><div class="label">Fee Rate</div></div>
+                    <div class="stat-card"><div class="value purple" id="finCurrency">—</div><div class="label">Active Currencies</div></div>
+                    <div class="stat-card"><div class="value yellow" id="finReserve">—</div><div class="label">Reserve Balance</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ Fee Configuration</span></div>
+                        <div class="form-group"><label class="form-label">Transaction Fee (%)</label><input type="number" class="form-input" value="2.5" step="0.1" placeholder="Configurable" /></div>
+                        <div class="form-group"><label class="form-label">Flat Fee (BWP)</label><input type="number" class="form-input" value="3.00" step="0.5" placeholder="Configurable" /></div>
+                        <div class="form-group"><label class="form-label">Tax Rate (%)</label><input type="number" class="form-input" value="0" step="0.1" placeholder="Configurable" /></div>
+                        <button class="btn btn-primary btn-sm" onclick="showToast('💾 Fee configuration saved','success')">💾 Save</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🏦 Treasury Controls</span></div>
+                        <div><span style="color:var(--text-muted);">Settlement Rules</span> <span style="float:right;color:var(--success);">T+1</span></div>
+                        <div><span style="color:var(--text-muted);">Reserve Account</span> <span style="float:right;color:var(--text-primary);">P 234,000</span></div>
+                        <div><span style="color:var(--text-muted);">Currency Management</span> <span style="float:right;color:var(--text-primary);">BWP, USD, EUR</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('🏦 Treasury dashboard opened','info')">Open Treasury</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-ai-management">
+                <div class="section-header">
+                    <h2>🧠 AI Management</h2>
+                    <p>KaTSo AI Router, Kimi, DeepSeek, Qwen configuration, AI usage analytics, AI cost monitoring, and AI model switching.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value purple" id="aiRouterStatus">—</div><div class="label">Router Status</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiUsage">—</div><div class="label">AI Usage (MTD)</div></div>
+                    <div class="stat-card"><div class="value yellow" id="aiCost">—</div><div class="label">AI Cost (MTD)</div></div>
+                    <div class="stat-card"><div class="value green" id="aiModels">—</div><div class="label">Active Models</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Model Configuration</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="infra-card">
+                            <span class="name">🧠 KaTSo AI Router</span>
+                            <span class="status"><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.7rem;">v2.1</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">⚙️ Kimi Engineering Agent</span>
+                            <span class="status"><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.7rem;">42% load</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">🛡️ DeepSeek Fraud Agent</span>
+                            <span class="status"><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.7rem;">28% load</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">👁️ Qwen Vision Agent</span>
+                            <span class="status"><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.7rem;">35% load</span></span>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: ai_models from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AI Usage Analytics</span></div>
+                        <div><span style="color:var(--text-muted);">Total Requests</span> <span style="float:right;">12.4K</span></div>
+                        <div><span style="color:var(--text-muted);">Avg Latency</span> <span style="float:right;">142ms</span></div>
+                        <div><span style="color:var(--text-muted);">Success Rate</span> <span style="float:right;color:var(--success);">99.7%</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 AI usage report generated','success')">📊 Generate Report</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ Model Switching</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Kimi</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>DeepSeek</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Qwen</span><span class="badge badge-success">✅</span></div>
+                        </div>
+                        <button class="btn btn-warning btn-sm" style="margin-top:8px;" onclick="showToast('🔄 Model switching initiated','info')">🔄 Switch Models</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SECURITY OPERATIONS CENTER
+            ============================================================ -->
+            <div class="page" id="page-soc">
+                <div class="section-header">
+                    <h2>🛡️ Security Operations Center</h2>
+                    <p>Threat detection, fraud monitoring, AML alerts, SIEM dashboard, device intelligence, incident response, and security reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="socThreats">—</div><div class="label">Threats Blocked</div></div>
+                    <div class="stat-card"><div class="value red" id="socFraud">—</div><div class="label">Fraud Alerts</div></div>
+                    <div class="stat-card"><div class="value yellow" id="socAML">—</div><div class="label">AML Alerts</div></div>
+                    <div class="stat-card"><div class="value purple" id="socIncidents">—</div><div class="label">Active Incidents</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Security Alerts</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-danger">🚨</span> Suspicious transaction detected</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-warning">⚠️</span> Failed login attempts</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                            <span><span class="badge badge-info">ℹ️</span> Device intelligence scan completed</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: security_alerts from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛡️ Incident Response</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Open Incidents</span><span>3</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Resolved</span><span>12</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>MTTR</span><span>45 min</span></div>
+                        </div>
+                        <button class="btn btn-danger btn-sm" style="margin-top:8px;" onclick="showToast('🚨 Incident response initiated','warning')">🚨 Respond</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 SIEM Dashboard</span></div>
+                        <div><span style="color:var(--text-muted);">Events Logged</span> <span style="float:right;">12.4K</span></div>
+                        <div><span style="color:var(--text-muted);">Critical Events</span> <span style="float:right;">3</span></div>
+                        <div><span style="color:var(--text-muted);">Security Score</span> <span style="float:right;color:var(--success);">98%</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 Security report generated','success')">📊 Generate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE CENTER
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance Center</h2>
+                    <p>PCI DSS, AML/CFT, KYC monitoring, data protection, audit logs, regulatory reports, and compliance calendar.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compPCIDSS">✅</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value green" id="compAML">✅</div><div class="label">AML/CFT</div></div>
+                    <div class="stat-card"><div class="value green" id="compKYC">✅</div><div class="label">KYC Monitoring</div></div>
+                    <div class="stat-card"><div class="value green" id="compDP">✅</div><div class="label">Data Protection</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Regulatory Alignment</span></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>PCI DSS</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>AML/CFT</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>KYC / KYB</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Botswana DPA</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>ISO 27001</span><span class="badge badge-success">✅</span></div>
+                    </div>
+                    <!-- CONNECTION POINT: compliance_framework from KaTSo System Core -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Compliance Calendar</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>PCI DSS Audit</span><span style="color:var(--text-muted);">Due: Aug 2026</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>AML Report</span><span style="color:var(--text-muted);">Due: Jul 2026</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>DPA Review</span><span style="color:var(--text-muted);">Due: Sep 2026</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Regulatory Reports</span></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 PCI DSS report generated','success')">📊 PCI DSS</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 AML report generated','success')">📊 AML</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Audit report generated','success')">📊 Audit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: INFRASTRUCTURE MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-infrastructure">
+                <div class="section-header">
+                    <h2>🏗️ Infrastructure Management</h2>
+                    <p>Cloudflare, Supabase, PostgreSQL, Redis, Object Storage, Queue Workers, API Gateway, and Backup &amp; Recovery.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="infUptime">99.98%</div><div class="label">Uptime</div></div>
+                    <div class="stat-card"><div class="value blue" id="infWorkers">—</div><div class="label">Queue Workers</div></div>
+                    <div class="stat-card"><div class="value purple" id="infRedis">—</div><div class="label">Redis</div></div>
+                    <div class="stat-card"><div class="value yellow" id="infBackup">—</div><div class="label">Backup Status</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Infrastructure Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="infra-card">
+                            <span class="name">☁️ Cloudflare</span>
+                            <span class="status"><span class="badge badge-success">Connected</span> <span style="color:var(--text-muted);font-size:0.7rem;">CDN & Workers</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">🗄️ Supabase</span>
+                            <span class="status"><span class="badge badge-success">Connected</span> <span style="color:var(--text-muted);font-size:0.7rem;">Database healthy</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">🐘 PostgreSQL</span>
+                            <span class="status"><span class="badge badge-success">Operational</span> <span style="color:var(--text-muted);font-size:0.7rem;">98% performance</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">🔄 Redis</span>
+                            <span class="status"><span class="badge badge-success">Operational</span> <span style="color:var(--text-muted);font-size:0.7rem;">12ms latency</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">📦 Object Storage</span>
+                            <span class="status"><span class="badge badge-success">Connected</span> <span style="color:var(--text-muted);font-size:0.7rem;">1.2GB used</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">⚙️ Queue Workers</span>
+                            <span class="status"><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.7rem;">8 workers</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">🚪 API Gateway</span>
+                            <span class="status"><span class="badge badge-success">Operational</span> <span style="color:var(--text-muted);font-size:0.7rem;">99.98% uptime</span></span>
+                        </div>
+                        <div class="infra-card">
+                            <span class="name">💾 Backup &amp; Recovery</span>
+                            <span class="status"><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.7rem;">Daily backups</span></span>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: infrastructure from monitoring system -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 System Metrics</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">CPU</span><br><strong>42%</strong><div class="progress-bar"><div class="progress-fill brand" style="width:42%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Memory</span><br><strong>67%</strong><div class="progress-bar"><div class="progress-fill yellow" style="width:67%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Disk</span><br><strong>34%</strong><div class="progress-bar"><div class="progress-fill green" style="width:34%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Network</span><br><strong>12%</strong><div class="progress-bar"><div class="progress-fill green" style="width:12%;"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: BUSINESS INTELLIGENCE
+            ============================================================ -->
+            <div class="page" id="page-bi">
+                <div class="section-header">
+                    <h2>📈 Business Intelligence</h2>
+                    <p>Revenue analytics, customer analytics, merchant analytics, market intelligence, growth forecasting, AI predictions, and executive reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand" id="biRevenue">—</div><div class="label">Revenue (MTD)</div></div>
+                    <div class="stat-card"><div class="value blue" id="biGrowth">—</div><div class="label">Growth Rate</div></div>
+                    <div class="stat-card"><div class="value green" id="biForecast">—</div><div class="label">Forecast</div></div>
+                    <div class="stat-card"><div class="value purple" id="biInsights">—</div><div class="label">AI Insights</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Revenue by Sector</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Government</span><span>34%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill brand" style="width:34%;"></div></div></div></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Education</span><span>22%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill blue" style="width:22%;"></div></div></div></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Healthcare</span><span>18%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:18%;"></div></div></div></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Commerce</span><span>12%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill purple" style="width:12%;"></div></div></div></div>
+                        </div>
+                        <!-- CONNECTION POINT: revenue_data from Supabase -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AI Predictions</span></div>
+                        <div class="ai-card">
+                            <div class="title">📈 Revenue projected +8.2% next month</div>
+                            <div class="desc">Based on transaction trends and seasonal patterns.</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--success);">
+                            <div class="title">👥 Customer acquisition up 12%</div>
+                            <div class="desc">Merchant onboarding driving growth.</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--warning);">
+                            <div class="title">📊 Market expansion opportunities</div>
+                            <div class="desc">Francistown and Maun show high demand.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Executive Reports</span></div>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Executive report generated','success')">📊 Generate</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📈 Market intelligence report generated','success')">📈 Market Intel</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📋 Customer analytics report generated','success')">📋 Customer</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: NOTIFICATIONS
+            ============================================================ -->
+            <div class="page" id="page-notifications">
+                <div class="section-header">
+                    <h2>🔔 Notifications</h2>
+                    <p>Email, SMS, push notifications, WhatsApp, system alerts, fraud alerts, and compliance alerts.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="notTotal">—</div><div class="label">Total Sent</div></div>
+                    <div class="stat-card"><div class="value green" id="notDelivered">—</div><div class="label">Delivered</div></div>
+                    <div class="stat-card"><div class="value yellow" id="notFailed">—</div><div class="label">Failed</div></div>
+                    <div class="stat-card"><div class="value purple" id="notAlerts">—</div><div class="label">Active Alerts</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Notification Channels</span></div>
+                    <div class="grid-3">
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>📧 Email</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>📱 SMS</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>🔔 Push</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>💬 WhatsApp</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>🛡️ Fraud Alerts</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="service-card" style="text-align:left;padding:0.8rem 1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>📋 Compliance Alerts</span>
+                                <span class="badge badge-success">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: notifications from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔔 System Alerts</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-danger">🚨</span> Critical: API rate limit</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-warning">⚠️</span> Warning: High CPU usage</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                            <span><span class="badge badge-success">✅</span> Info: System update completed</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: PLATFORM SETTINGS
+            ============================================================ -->
+            <div class="page" id="page-settings">
+                <div class="section-header">
+                    <h2>⚙️ Platform Settings</h2>
+                    <p>Branding, feature flags, API settings, regional settings, language settings, maintenance mode, and system configuration.</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ General Settings</span></div>
+                        <div class="form-group"><label class="form-label">Branding</label><input type="text" class="form-input" value="AuthePay" /></div>
+                        <div class="form-group"><label class="form-label">Default Language</label><select class="form-select"><option>English</option><option>Setswana</option><option>Afrikaans</option></select></div>
+                        <div class="form-group"><label class="form-label">Time Zone</label><select class="form-select"><option>Africa/Gaborone</option><option>UTC</option><option>Africa/Johannesburg</option></select></div>
+                        <button class="btn btn-primary" onclick="showToast('💾 Settings saved','success')">💾 Save</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🚩 Feature Flags</span></div>
+                        <div class="form-check"><input type="checkbox" checked /> AI Features Enabled</div>
+                        <div class="form-check"><input type="checkbox" checked /> MFA Required</div>
+                        <div class="form-check"><input type="checkbox" checked /> Open Banking</div>
+                        <div class="form-check"><input type="checkbox" /> Beta Features</div>
+                        <div class="form-check"><input type="checkbox" /> Maintenance Mode</div>
+                        <button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="showToast('🚩 Feature flags updated','success')">Update Flags</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔧 System Configuration</span></div>
+                    <div class="grid-3">
+                        <div><span style="color:var(--text-muted);">Environment</span><br><span class="badge badge-success">Production</span></div>
+                        <div><span style="color:var(--text-muted);">Version</span><br><span style="color:var(--text-primary);">v2.1.0</span></div>
+                        <div><span style="color:var(--text-muted);">API Version</span><br><span style="color:var(--text-primary);">v2.1</span></div>
+                        <div><span style="color:var(--text-muted);">Maintenance</span><br><span class="badge badge-success">Off</span></div>
+                        <div><span style="color:var(--text-muted);">Debug Mode</span><br><span class="badge badge-warning">Off</span></div>
+                        <div><span style="color:var(--text-muted);">Analytics</span><br><span class="badge badge-success">On</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all administrative actions and system events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('admin')">Admin</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('system')">System</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>admin@authecorp</td><td>User Role Changed</td>
+                                    <td><span class="badge badge-brand">Admin</span></td>
+                                    <td>User #1234 role updated</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>system</td><td>Security Alert</td>
+                                    <td><span class="badge badge-danger">Security</span></td>
+                                    <td>Rate limit approaching</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>admin@authecorp</td><td>Merchant Approved</td>
+                                    <td><span class="badge badge-success">System</span></td>
+                                    <td>TechHub Ltd onboarded</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>admin@authecorp</td><td>Settings Updated</td>
+                                    <td><span class="badge badge-info">System</span></td>
+                                    <td>Fee configuration changed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Broadcast Modal -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal">
+            <div class="modal-header"><h2>📢 Broadcast Alert</h2><button class="modal-close" onclick="closeModal('alertModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Alert Type</label><select class="form-select"><option>System Alert</option><option>Security Alert</option><option>Compliance Alert</option><option>Maintenance</option></select></div>
+                <div class="form-group"><label class="form-label">Priority</label><select class="form-select"><option>Info</option><option>Warning</option><option>Critical</option></select></div>
+                <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" rows="3" placeholder="Broadcast message..."></textarea></div>
+                <div class="form-group"><label class="form-label">Channel</label>
+                    <div class="form-check"><input type="checkbox" checked /> Email</div>
+                    <div class="form-check"><input type="checkbox" /> SMS</div>
+                    <div class="form-check"><input type="checkbox" /> Push</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('alertModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('alertModal');showToast('📢 Alert broadcast sent!','success')">Broadcast</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Super Admin Platform
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY SUPER ADMIN PLATFORM – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Executive Dashboard',
+                users: 'User Administration',
+                roles: 'Role & Access Management',
+                merchants: 'Merchant Management',
+                financial: 'Financial Controls',
+                'ai-management': 'AI Management',
+                soc: 'Security Operations Center',
+                compliance: 'Compliance Center',
+                infrastructure: 'Infrastructure Management',
+                bi: 'Business Intelligence',
+                notifications: 'Notifications',
+                settings: 'Platform Settings',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Super Admin';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing command center data...', 'info');
+            // CONNECTION POINT: API call to fetch all platform metrics
+            setTimeout(() => {
+                const statIds = [
+                    'dashRevenue', 'dashTx', 'dashMerchants', 'dashCustomers', 'dashAIHealth', 'dashCompliance',
+                    'dashUsers', 'dashTotalMerchants', 'dashSessions',
+                    'usrCustomers', 'usrMerchants', 'usrDevelopers', 'usrStaff', 'usrAdmins',
+                    'rolRoles', 'rolPermissions', 'rolMFA', 'rolSessions',
+                    'merTotal', 'merActive', 'merPending', 'merSuspended',
+                    'finTxLimit', 'finFee', 'finCurrency', 'finReserve',
+                    'aiRouterStatus', 'aiUsage', 'aiCost', 'aiModels',
+                    'socThreats', 'socFraud', 'socAML', 'socIncidents',
+                    'biRevenue', 'biGrowth', 'biForecast', 'biInsights',
+                    'notTotal', 'notDelivered', 'notFailed', 'notAlerts'
+                ];
+                statIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update progress bars to 0%
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+
+                showToast('✅ Command center data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+
+            // Animate health gauge
+            const gauge = document.querySelector('.health-gauge .meter .progress');
+            if (gauge) {
+                const circ = 2 * Math.PI * 42;
+                gauge.style.strokeDasharray = circ;
+                gauge.style.strokeDashoffset = circ;
+                setTimeout(() => {
+                    gauge.style.transition = 'stroke-dashoffset 1.5s ease';
+                    gauge.style.strokeDashoffset = circ * 0.1; // 90% score
+                }, 300);
+            }
+
+            console.log('⚡ AuthePay Super Admin Platform loaded');
+            console.log('📦 Modules: Executive Dashboard, Users, Roles, Merchants, Financial, AI, SOC, Compliance, Infrastructure, BI, Notifications, Settings, Audit');
+            console.log('🔗 Integrations: All AuthePay modules, KaTSo AI Core, Supabase, Cloudflare');
+            console.log('🛡️ Security: Super Admin access, RBAC, MFA, Audit Logs');
+            console.log('📋 Compliance: PCI DSS, AML/CFT, KYC, Data Protection');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.filterAudit = filterAudit;
+        window.refreshData = refreshData;
+    </script>
+
+</body>
+</html>

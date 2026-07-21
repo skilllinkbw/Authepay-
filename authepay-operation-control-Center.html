@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Operations Center – Command Hub</title>
+    <meta name="description" content="AuthePay Operations Center – Central monitoring and management for payments, merchants, fraud, compliance, and AI operations." />
+    <style>
+        /* ============================================================
+           AUTHEPAY OPERATIONS CENTER – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           Enterprise operations dashboard – mission control
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .topbar-actions .status-badge {
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+        .stat-card .trend.neutral {
+            color: var(--text-muted);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── ACTIVITY FEED ── */
+        .feed-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+        .feed-item .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .feed-item .dot.green {
+            background: var(--success);
+        }
+        .feed-item .dot.yellow {
+            background: var(--warning);
+        }
+        .feed-item .dot.red {
+            background: var(--danger);
+        }
+        .feed-item .dot.blue {
+            background: var(--info);
+        }
+        .feed-item .dot.brand {
+            background: var(--brand);
+        }
+        .feed-item .time {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── SYSTEM HEALTH STATUS ── */
+        .health-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .health-item:last-child {
+            border-bottom: none;
+        }
+        .health-item .label {
+            font-size: 0.85rem;
+        }
+        .health-item .status {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── AI OPS CARD ── */
+        .ai-agent-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .ai-agent-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .ai-agent-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .ai-agent-card .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .ai-agent-card .status {
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── EXECUTIVE KPI ── */
+        .kpi-ring {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+        .kpi-ring svg {
+            transform: rotate(-90deg);
+        }
+        .kpi-ring .bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 6;
+        }
+        .kpi-ring .progress {
+            fill: none;
+            stroke: var(--brand);
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        .kpi-ring .value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">🎯</span>
+                <div>
+                    <span>Ops Center</span>
+                    <span class="sub">Command Hub</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Core</div>
+                <a href="#" class="active" data-page="dashboard">📊 Executive</a>
+                <a href="#" data-page="transactions">💳 Transactions</a>
+                <a href="#" data-page="merchants">🏪 Merchants</a>
+                <a href="#" data-page="customers">👥 Customers</a>
+
+                <div class="sidebar-section-label">Security &amp; Compliance</div>
+                <a href="#" data-page="fraud">🛡️ Fraud</a>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="settlements">💰 Settlements</a>
+
+                <div class="sidebar-section-label">Support &amp; AI</div>
+                <a href="#" data-page="support">🎧 Support</a>
+                <a href="#" data-page="ai-ops">🧠 AI Ops</a>
+
+                <div class="sidebar-section-label">Infrastructure</div>
+                <a href="#" data-page="health">📡 System Health</a>
+                <a href="#" data-page="notifications">🔔 Notifications</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> All systems operational</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v3.0 · Mission Control</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Executive Dashboard <small>Mission Control</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI</span>
+                    <span class="status-badge">🟢 All systems nominal</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="showToast('📊 Report generated','success')">📊 Report</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: EXECUTIVE DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="execRevenue">—</div>
+                        <div class="label">Revenue Today</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="execTx">—</div>
+                        <div class="label">Transactions Today</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="execMerchants">—</div>
+                        <div class="label">Active Merchants</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="execCustomers">—</div>
+                        <div class="label">Active Customers</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="execAI">—</div>
+                        <div class="label">AI Health Score</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="execFraud">—</div>
+                        <div class="label">Fraud Score</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="execCompliance">—</div>
+                        <div class="label">Compliance Score</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="execGrowth">—</div>
+                        <div class="label">Business Growth</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Revenue Trend (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">🎯 Business KPIs</span>
+                            <span class="badge badge-neutral">Live</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>Customer Acquisition</span>
+                                <span class="trend up">▲ Dynamic</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>Merchant Retention</span>
+                                <span class="trend up">▲ Dynamic</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>Transaction Volume</span>
+                                <span class="trend up">▲ Dynamic</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span>AI Efficiency</span>
+                                <span class="trend up">▲ Dynamic</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Live Activity Feed</span></div>
+                        <div id="liveFeed">
+                            <div class="feed-item"><span class="dot green"></span> Payment #TX-8921 completed<span class="time">14:23</span></div>
+                            <div class="feed-item"><span class="dot yellow"></span> Merchant M-119 pending approval<span class="time">13:45</span></div>
+                            <div class="feed-item"><span class="dot red"></span> Fraud alert triggered for TX-8916<span class="time">12:18</span></div>
+                            <div class="feed-item"><span class="dot blue"></span> New customer registration<span class="time">11:02</span></div>
+                            <div class="feed-item"><span class="dot green"></span> Settlement completed for ABC Shop<span class="time">09:30</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: real-time activity feed from Supabase -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🤖 KaTSo AI Status</span></div>
+                        <div><span style="color:var(--text-muted);">AI Router</span> <span style="float:right;color:var(--success);">🟢 Online</span></div>
+                        <div><span style="color:var(--text-muted);">Fraud Engine</span> <span style="float:right;color:var(--success);">🟢 Online</span></div>
+                        <div><span style="color:var(--text-muted);">Compliance AI</span> <span style="float:right;color:var(--success);">🟢 Online</span></div>
+                        <div><span style="color:var(--text-muted);">Kimi Coding</span> <span style="float:right;color:var(--success);">🟢 Online</span></div>
+                        <div><span style="color:var(--text-muted);">DeepSeek Fraud</span> <span style="float:right;color:var(--success);">🟢 Online</span></div>
+                        <div><span style="color:var(--text-muted);">Qwen Vision</span> <span style="float:right;color:var(--success);">🟢 Online</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔔 Critical Alerts</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> All systems nominal</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">Now</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-warning">⚠️</span> Settlement delay for 2 merchants</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">1h ago</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span><span class="badge badge-info">ℹ️</span> API rate limit at 85%</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">2h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: LIVE TRANSACTION MONITORING
+            ============================================================ -->
+            <div class="page" id="page-transactions">
+                <div class="section-header">
+                    <h2>💳 Live Transaction Monitoring</h2>
+                    <p>Real-time payment activity across all channels.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="txSuccess">—</div><div class="label">Successful</div></div>
+                    <div class="stat-card"><div class="value yellow" id="txPending">—</div><div class="label">Pending</div></div>
+                    <div class="stat-card"><div class="value red" id="txFailed">—</div><div class="label">Failed</div></div>
+                    <div class="stat-card"><div class="value blue" id="txReversed">—</div><div class="label">Reversed</div></div>
+                    <div class="stat-card"><div class="value purple" id="txRefund">—</div><div class="label">Refund Queue</div></div>
+                    <div class="stat-card"><div class="value brand" id="txVolume">—</div><div class="label">Total Volume</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Real-Time Activity Feed</span>
+                        <span class="badge badge-success">🟢 Live</span>
+                    </div>
+                    <div id="txFeed">
+                        <div class="feed-item"><span class="dot green"></span> #TX-8921 · P 150.00 · ABC Shop · Orange Money<span class="time">14:23</span></div>
+                        <div class="feed-item"><span class="dot green"></span> #TX-8920 · P 85.00 · QuickBet · MyZaka<span class="time">14:20</span></div>
+                        <div class="feed-item"><span class="dot yellow"></span> #TX-8919 · P 220.00 · TechHub · Processing<span class="time">14:15</span></div>
+                        <div class="feed-item"><span class="dot red"></span> #TX-8918 · P 45.00 · InsureTech · Failed<span class="time">14:10</span></div>
+                        <div class="feed-item"><span class="dot green"></span> #TX-8917 · P 67.00 · GreenEnergy · Smega<span class="time">14:05</span></div>
+                        <div class="feed-item"><span class="dot blue"></span> #TX-8916 · P 12.00 · PayrollCo · Refund Queue<span class="time">14:00</span></div>
+                    </div>
+                    <!-- CONNECTION POINT: transaction stream from Supabase Realtime -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Transaction Breakdown</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">Orange Money</span> <span style="float:right;color:var(--text-primary);" id="txOrange">—</span></div>
+                        <div><span style="color:var(--text-muted);">MyZaka</span> <span style="float:right;color:var(--text-primary);" id="txMyZaka">—</span></div>
+                        <div><span style="color:var(--text-muted);">Smega</span> <span style="float:right;color:var(--text-primary);" id="txSmega">—</span></div>
+                        <div><span style="color:var(--text-muted);">Bank Transfers</span> <span style="float:right;color:var(--text-primary);" id="txBank">—</span></div>
+                        <div><span style="color:var(--text-muted);">Cards</span> <span style="float:right;color:var(--text-primary);" id="txCards">—</span></div>
+                        <div><span style="color:var(--text-muted);">QR</span> <span style="float:right;color:var(--text-primary);" id="txQR">—</span></div>
+                        <div><span style="color:var(--text-muted);">Wallet</span> <span style="float:right;color:var(--text-primary);" id="txWallet">—</span></div>
+                        <div><span style="color:var(--text-muted);">International</span> <span style="float:right;color:var(--text-primary);" id="txInternational">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: MERCHANT OPERATIONS
+            ============================================================ -->
+            <div class="page" id="page-merchants">
+                <div class="section-header">
+                    <h2>🏪 Merchant Operations</h2>
+                    <p>Registration, approval, verification, performance, and settlement.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="merchTotal">—</div><div class="label">Total Merchants</div></div>
+                    <div class="stat-card"><div class="value green" id="merchActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value yellow" id="merchPending">—</div><div class="label">Pending Approval</div></div>
+                    <div class="stat-card"><div class="value purple" id="merchVerified">—</div><div class="label">Verified</div></div>
+                    <div class="stat-card"><div class="value brand" id="merchVolume">—</div><div class="label">Total Volume</div></div>
+                    <div class="stat-card"><div class="value green" id="merchSettled">—</div><div class="label">Settled Today</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Merchant List</span>
+                        <button class="btn btn-brand btn-sm" onclick="openModal('merchantModal')">+ Register</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Business</th><th>ID</th><th>Status</th><th>Volume</th><th>Settlement</th><th>Action</th></tr></thead>
+                            <tbody>
+                                <tr><td>ABC Shop</td><td>M-842</td><td><span class="badge badge-success">Active</span></td><td>P 234K</td><td>P 12,450</td><td><button class="btn btn-outline btn-xs" onclick="showToast('📋 Merchant details','info')">View</button></td></tr>
+                                <tr><td>QuickBet</td><td>M-119</td><td><span class="badge badge-success">Active</span></td><td>P 89K</td><td>P 8,900</td><td><button class="btn btn-outline btn-xs" onclick="showToast('📋 Merchant details','info')">View</button></td></tr>
+                                <tr><td>TechHub</td><td>M-901</td><td><span class="badge badge-warning">Pending</span></td><td>—</td><td>—</td><td><button class="btn btn-brand btn-xs" onclick="showToast('✅ Merchant approved','success')">Approve</button></td></tr>
+                                <tr><td>GreenEnergy</td><td>M-712</td><td><span class="badge badge-success">Active</span></td><td>P 456K</td><td>P 67,400</td><td><button class="btn btn-outline btn-xs" onclick="showToast('📋 Merchant details','info')">View</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Merchant Performance</span></div>
+                        <div><span style="color:var(--text-muted);">Top Merchant</span> <span style="float:right;color:var(--text-primary);" id="topMerchant">—</span></div>
+                        <div><span style="color:var(--text-muted);">Avg Transaction</span> <span style="float:right;color:var(--text-primary);" id="avgTxMerchant">—</span></div>
+                        <div><span style="color:var(--text-muted);">Growth Rate</span> <span style="float:right;color:var(--success);" id="merchantGrowth">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Settlement Status</span></div>
+                        <div><span style="color:var(--text-muted);">Pending Settlement</span> <span style="float:right;color:var(--text-primary);" id="pendingSettlement">—</span></div>
+                        <div><span style="color:var(--text-muted);">Last Settlement</span> <span style="float:right;color:var(--text-secondary);" id="lastSettlement">—</span></div>
+                        <div><span style="color:var(--text-muted);">Next Settlement</span> <span style="float:right;color:var(--text-secondary);" id="nextSettlement">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CUSTOMER MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-customers">
+                <div class="section-header">
+                    <h2>👥 Customer Management</h2>
+                    <p>Profiles, wallet, KYC, verification, and support tickets.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="custTotal">—</div><div class="label">Total Customers</div></div>
+                    <div class="stat-card"><div class="value green" id="custActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value purple" id="custKYC">—</div><div class="label">KYC Verified</div></div>
+                    <div class="stat-card"><div class="value yellow" id="custPendingKYC">—</div><div class="label">Pending KYC</div></div>
+                    <div class="stat-card"><div class="value brand" id="custWallet">—</div><div class="label">Wallet Balance (Total)</div></div>
+                    <div class="stat-card"><div class="value green" id="custTickets">—</div><div class="label">Open Support Tickets</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Customer Profiles</span>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting customers...','info')">📥 Export</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>KYC</th><th>Wallet</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody>
+                                <tr><td>Thabo M.</td><td>thabo@email.com</td><td><span class="badge badge-success">✅</span></td><td>P 1,250</td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-xs" onclick="showToast('📋 Customer details','info')">View</button></td></tr>
+                                <tr><td>Kefilwe N.</td><td>kefilwe@email.com</td><td><span class="badge badge-success">✅</span></td><td>P 850</td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-xs" onclick="showToast('📋 Customer details','info')">View</button></td></tr>
+                                <tr><td>Oatile M.</td><td>oatile@email.com</td><td><span class="badge badge-warning">⏳</span></td><td>—</td><td><span class="badge badge-warning">Pending</span></td><td><button class="btn btn-brand btn-xs" onclick="showToast('✅ KYC approved','success')">Verify</button></td></tr>
+                                <tr><td>Lesego T.</td><td>lesego@email.com</td><td><span class="badge badge-success">✅</span></td><td>P 3,400</td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-xs" onclick="showToast('📋 Customer details','info')">View</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Customer Analytics</span></div>
+                        <div><span style="color:var(--text-muted);">Avg Spend</span> <span style="float:right;color:var(--text-primary);" id="avgSpend">—</span></div>
+                        <div><span style="color:var(--text-muted);">Retention Rate</span> <span style="float:right;color:var(--success);" id="retentionRate">—</span></div>
+                        <div><span style="color:var(--text-muted);">New Today</span> <span style="float:right;color:var(--text-primary);" id="newToday">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🎫 Support Tickets</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>#TK-001 — Payment issue</span><span class="badge badge-warning">Open</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>#TK-002 — Refund request</span><span class="badge badge-info">In Progress</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>#TK-003 — KYC query</span><span class="badge badge-success">Resolved</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: FRAUD MONITORING
+            ============================================================ -->
+            <div class="page" id="page-fraud">
+                <div class="section-header">
+                    <h2>🛡️ Fraud Monitoring</h2>
+                    <p>AI risk scoring, AML alerts, suspicious activity, and case investigation.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="fraudRisk">—</div><div class="label">AI Risk Score</div></div>
+                    <div class="stat-card"><div class="value yellow" id="fraudAML">—</div><div class="label">AML Alerts</div></div>
+                    <div class="stat-card"><div class="value red" id="fraudSuspicious">—</div><div class="label">Suspicious Activity</div></div>
+                    <div class="stat-card"><div class="value blue" id="fraudGeo">—</div><div class="label">Geo-location Alerts</div></div>
+                    <div class="stat-card"><div class="value purple" id="fraudCases">—</div><div class="label">Open Cases</div></div>
+                    <div class="stat-card"><div class="value green" id="fraudResolved">—</div><div class="label">Resolved Cases</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🚨 Fraud Alerts</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-danger">High</span> Unusual transaction pattern</span>
+                                <span class="badge badge-warning">Investigating</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-warning">Medium</span> Multiple failed attempts</span>
+                                <span class="badge badge-info">Monitoring</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span><span class="badge badge-warning">Medium</span> Suspicious merchant activity</span>
+                                <span class="badge badge-info">Reviewing</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-brand btn-sm" style="margin-top:10px;" onclick="showToast('🔍 Case investigation opened','info')">🔍 Investigate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🤖 AI Fraud Intelligence</span></div>
+                        <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--brand);margin-bottom:8px;">
+                            💡 Review merchant M-901 – unusual activity detected
+                        </div>
+                        <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--success);">
+                            ✅ No immediate action required – all systems nominal
+                        </div>
+                        <div style="margin-top:8px;font-size:0.8rem;color:var(--text-muted);">🧠 Powered by DeepSeek Fraud Engine</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE CENTER
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance Center</h2>
+                    <p>Regulatory reports, audit logs, data protection, and PCI DSS status.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compScore2">—</div><div class="label">Compliance Score</div></div>
+                    <div class="stat-card"><div class="value green" id="compPCI2">✅</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value blue" id="compAudit2">—</div><div class="label">Audit Events</div></div>
+                    <div class="stat-card"><div class="value green" id="compBreaches2">0</div><div class="label">Data Breaches</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Bank of Botswana</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>AML/CFT</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Data Protection (DPA)</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>PCI DSS</span><span class="badge badge-success">✅</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Compliance Reports</span></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📄 Regulatory report generated','success')">📄 Generate Report</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📋 Audit log exported','success')">📋 Export Audit Log</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Compliance dashboard opened','info')">📊 View Dashboard</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Audit Log</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Category</th></tr></thead>
+                            <tbody>
+                                <tr><td>2026-07-21 14:23</td><td>admin@authecorp</td><td>KYC Review</td><td><span class="badge badge-info">KYC</span></td></tr>
+                                <tr><td>2026-07-21 13:45</td><td>compliance@authecorp</td><td>AML Alert Escalated</td><td><span class="badge badge-danger">AML</span></td></tr>
+                                <tr><td>2026-07-21 12:18</td><td>system</td><td>Policy Updated</td><td><span class="badge badge-info">Policy</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SETTLEMENT CENTER
+            ============================================================ -->
+            <div class="page" id="page-settlements">
+                <div class="section-header">
+                    <h2>💰 Settlement Center</h2>
+                    <p>Daily, bank, wallet, and merchant settlements with reconciliation.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="settDaily">—</div><div class="label">Daily Settlement</div></div>
+                    <div class="stat-card"><div class="value blue" id="settBank">—</div><div class="label">Bank Settlement</div></div>
+                    <div class="stat-card"><div class="value purple" id="settWallet">—</div><div class="label">Wallet Settlement</div></div>
+                    <div class="stat-card"><div class="value brand" id="settMerchant">—</div><div class="label">Merchant Settlement</div></div>
+                    <div class="stat-card"><div class="value yellow" id="settPending">—</div><div class="label">Pending</div></div>
+                    <div class="stat-card"><div class="value green" id="settRecon">—</div><div class="label">Reconciled</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Settlement Schedule</span>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting settlements...','info')">📥 Export</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Batch</th><th>Type</th><th>Amount</th><th>Merchants</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>#BAT-202</td><td>Bank</td><td>P 245,000</td><td>124</td><td><span class="badge badge-success">Settled</span></td></tr>
+                                <tr><td>#BAT-203</td><td>Merchant</td><td>P 180,000</td><td>98</td><td><span class="badge badge-info">Processing</span></td></tr>
+                                <tr><td>#BAT-204</td><td>Wallet</td><td>P 34,200</td><td>12</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Reconciliation Status</span></div>
+                    <div><span style="color:var(--text-muted);">Matched</span> <span style="float:right;color:var(--success);" id="reconMatched">—</span></div>
+                    <div><span style="color:var(--text-muted);">Unmatched</span> <span style="float:right;color:var(--warning);" id="reconUnmatched">—</span></div>
+                    <div><span style="color:var(--text-muted);">Pending Review</span> <span style="float:right;color:var(--yellow);" id="reconPending">—</span></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CUSTOMER SUPPORT
+            ============================================================ -->
+            <div class="page" id="page-support">
+                <div class="section-header">
+                    <h2>🎧 Customer Support</h2>
+                    <p>Live chat, AI assistant, ticket management, email and SMS support.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="supTickets">—</div><div class="label">Open Tickets</div></div>
+                    <div class="stat-card"><div class="value green" id="supResolved">—</div><div class="label">Resolved Today</div></div>
+                    <div class="stat-card"><div class="value purple" id="supAI">—</div><div class="label">AI-Assisted</div></div>
+                    <div class="stat-card"><div class="value yellow" id="supAvg">—</div><div class="label">Avg Response Time</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">💬 Live Chat</span></div>
+                        <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--brand);margin-bottom:6px;">
+                            <span style="font-weight:600;">Customer #1234:</span> "My payment failed, what should I do?"
+                        </div>
+                        <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--success);margin-bottom:6px;">
+                            <span style="font-weight:600;">🤖 KaTSo AI:</span> "I can help with that. Please provide your transaction ID."
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:6px;">
+                            <input type="text" class="form-input" placeholder="Type a response..." style="flex:1;" />
+                            <button class="btn btn-brand" onclick="showToast('💬 Response sent','success')">Send</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Ticket Management</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>#TK-001 — Payment issue</span>
+                                <span class="badge badge-warning">Open</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>#TK-002 — Refund request</span>
+                                <span class="badge badge-info">In Progress</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span>#TK-003 — KYC query</span>
+                                <span class="badge badge-success">Resolved</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="openModal('ticketModal')">+ New Ticket</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI OPERATIONS
+            ============================================================ -->
+            <div class="page" id="page-ai-ops">
+                <div class="section-header">
+                    <h2>🧠 AI Operations</h2>
+                    <p>KaTSo AI Router, Kimi, DeepSeek Fraud, Qwen Vision, Compliance AI, Monitoring AI, and Automation Engine.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="aiOpsHealth">—</div><div class="label">AI Health Score</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiOpsRequests">—</div><div class="label">AI Requests (24h)</div></div>
+                    <div class="stat-card"><div class="value purple" id="aiOpsLatency">—</div><div class="label">Avg Latency</div></div>
+                    <div class="stat-card"><div class="value green" id="aiOpsSuccess">—</div><div class="label">Success Rate</div></div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="ai-agent-card"><div class="icon">🧠</div><div class="name">KaTSo AI Router</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                    <div class="ai-agent-card"><div class="icon">💻</div><div class="name">Kimi Coding Agent</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                    <div class="ai-agent-card"><div class="icon">🛡️</div><div class="name">DeepSeek Fraud Agent</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                    <div class="ai-agent-card"><div class="icon">👁️</div><div class="name">Qwen Vision Agent</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                    <div class="ai-agent-card"><div class="icon">📋</div><div class="name">Compliance AI</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                    <div class="ai-agent-card"><div class="icon">📡</div><div class="name">Monitoring AI</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                    <div class="ai-agent-card"><div class="icon">⚡</div><div class="name">Automation Engine</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                    <div class="ai-agent-card"><div class="icon">💬</div><div class="name">Customer AI Assistant</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                    <div class="ai-agent-card"><div class="icon">📊</div><div class="name">Business Intelligence AI</div><div class="status"><span class="badge badge-success">🟢 Active</span></div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">⚡ AI Automation Engine</span></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Payment monitoring automation</span><span class="badge badge-success">Active</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Fraud alert escalation</span><span class="badge badge-success">Active</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Compliance reporting</span><span class="badge badge-success">Active</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Customer support triage</span><span class="badge badge-success">Active</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SYSTEM HEALTH
+            ============================================================ -->
+            <div class="page" id="page-health">
+                <div class="section-header">
+                    <h2>📡 System Health</h2>
+                    <p>API, database, Cloudflare, Supabase, queue, storage, and performance metrics.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="healthUptime">—</div><div class="label">System Uptime</div></div>
+                    <div class="stat-card"><div class="value blue" id="healthLatency">—</div><div class="label">Avg Response</div></div>
+                    <div class="stat-card"><div class="value purple" id="healthQueue">—</div><div class="label">Queue Depth</div></div>
+                    <div class="stat-card"><div class="value yellow" id="healthStorage">—</div><div class="label">Storage Used</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Service Status</span></div>
+                        <div class="health-item"><span class="label">🚪 API Gateway</span><span class="status"><span class="badge badge-success">🟢 Online</span></span></div>
+                        <div class="health-item"><span class="label">🗄️ Database</span><span class="status"><span class="badge badge-success">🟢 Online</span></span></div>
+                        <div class="health-item"><span class="label">☁️ Cloudflare</span><span class="status"><span class="badge badge-success">🟢 Online</span></span></div>
+                        <div class="health-item"><span class="label">🔗 Supabase</span><span class="status"><span class="badge badge-success">🟢 Online</span></span></div>
+                        <div class="health-item"><span class="label">📨 Queue Service</span><span class="status"><span class="badge badge-success">🟢 Online</span></span></div>
+                        <div class="health-item"><span class="label">💾 Storage</span><span class="status"><span class="badge badge-success">🟢 Online</span></span></div>
+                        <div class="health-item"><span class="label">🧠 KaTSo AI OS</span><span class="status"><span class="badge badge-success">🟢 Online</span></span></div>
+                        <div class="health-item"><span class="label">🔔 Notification Service</span><span class="status"><span class="badge badge-success">🟢 Online</span></span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Performance Metrics</span></div>
+                        <div><span style="color:var(--text-muted);">CPU</span> <span style="float:right;color:var(--text-primary);" id="cpuUsage">—</span><div class="progress-bar"><div class="progress-fill brand" style="width:0%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Memory</span> <span style="float:right;color:var(--text-primary);" id="memoryUsage">—</span><div class="progress-bar"><div class="progress-fill blue" style="width:0%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Disk</span> <span style="float:right;color:var(--text-primary);" id="diskUsage">—</span><div class="progress-bar"><div class="progress-fill green" style="width:0%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Network</span> <span style="float:right;color:var(--text-primary);" id="networkUsage">—</span><div class="progress-bar"><div class="progress-fill purple" style="width:0%;"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: NOTIFICATION CENTER
+            ============================================================ -->
+            <div class="page" id="page-notifications">
+                <div class="section-header">
+                    <h2>🔔 Notification Center</h2>
+                    <p>Email, SMS, push, fraud, merchant, and system alerts.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="notEmail">—</div><div class="label">Email Alerts</div></div>
+                    <div class="stat-card"><div class="value purple" id="notSMS">—</div><div class="label">SMS Alerts</div></div>
+                    <div class="stat-card"><div class="value green" id="notPush">—</div><div class="label">Push Notifications</div></div>
+                    <div class="stat-card"><div class="value red" id="notFraud">—</div><div class="label">Fraud Alerts</div></div>
+                    <div class="stat-card"><div class="value yellow" id="notMerchant">—</div><div class="label">Merchant Alerts</div></div>
+                    <div class="stat-card"><div class="value info" id="notSystem">—</div><div class="label">System Alerts</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Recent Notifications</span>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📬 All notifications marked read','success')">Mark All Read</button>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-danger">Fraud</span> Unusual transaction detected</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-warning">Merchant</span> M-901 pending approval</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-info">System</span> API rate limit at 85%</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                            <span><span class="badge badge-success">Email</span> Weekly report sent</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Merchant Registration Modal -->
+    <div class="modal-overlay" id="merchantModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🏪 Register Merchant</h2><button class="modal-close" onclick="closeModal('merchantModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Business Name</label><input type="text" class="form-input" placeholder="ABC Shop" /></div>
+                <div class="form-group"><label class="form-label">Registration Number</label><input type="text" class="form-input" placeholder="BW00001951757" /></div>
+                <div class="form-group"><label class="form-label">Contact Email</label><input type="email" class="form-input" placeholder="merchant@abcshop.com" /></div>
+                <div class="form-group"><label class="form-label">Phone Number</label><input type="tel" class="form-input" placeholder="+267 71 234 567" /></div>
+                <div class="form-group"><label class="form-label">Business Type</label><select class="form-select"><option>Retail</option><option>Services</option><option>Transport</option><option>Education</option></select></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('merchantModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('merchantModal');showToast('🏪 Merchant registered successfully!','success')">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Modal -->
+    <div class="modal-overlay" id="ticketModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🎫 New Support Ticket</h2><button class="modal-close" onclick="closeModal('ticketModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" placeholder="Brief description" /></div>
+                <div class="form-group"><label class="form-label">Priority</label><select class="form-select"><option>Low</option><option>Medium</option><option>High</option></select></div>
+                <div class="form-group"><label class="form-label">Category</label><select class="form-select"><option>Payment</option><option>Merchant</option><option>KYC</option><option>General</option></select></div>
+                <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" rows="3" placeholder="Describe the issue..."></textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('ticketModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('ticketModal');showToast('🎫 Ticket created!','success')">Create Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Operations Center Engine
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY OPERATIONS CENTER – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Executive Dashboard',
+                transactions: 'Live Transaction Monitoring',
+                merchants: 'Merchant Operations',
+                customers: 'Customer Management',
+                fraud: 'Fraud Monitoring',
+                compliance: 'Compliance Center',
+                settlements: 'Settlement Center',
+                support: 'Customer Support',
+                'ai-ops': 'AI Operations',
+                health: 'System Health',
+                notifications: 'Notification Center'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Ops Center';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing operations data...', 'info');
+
+            // CONNECTION POINT: API calls to all services
+            // CONNECTION POINT: Supabase queries for real-time metrics
+
+            const statIds = [
+                'execRevenue', 'execTx', 'execMerchants', 'execCustomers', 'execAI', 'execFraud', 'execCompliance',
+                'execGrowth',
+                'txSuccess', 'txPending', 'txFailed', 'txReversed', 'txRefund', 'txVolume',
+                'txOrange', 'txMyZaka', 'txSmega', 'txBank', 'txCards', 'txQR', 'txWallet', 'txInternational',
+                'merchTotal', 'merchActive', 'merchPending', 'merchVerified', 'merchVolume', 'merchSettled',
+                'topMerchant', 'avgTxMerchant', 'merchantGrowth',
+                'pendingSettlement', 'lastSettlement', 'nextSettlement',
+                'custTotal', 'custActive', 'custKYC', 'custPendingKYC', 'custWallet', 'custTickets',
+                'avgSpend', 'retentionRate', 'newToday',
+                'fraudRisk', 'fraudAML', 'fraudSuspicious', 'fraudGeo', 'fraudCases', 'fraudResolved',
+                'compScore2', 'compPCI2', 'compAudit2', 'compBreaches2',
+                'settDaily', 'settBank', 'settWallet', 'settMerchant', 'settPending', 'settRecon',
+                'reconMatched', 'reconUnmatched', 'reconPending',
+                'supTickets', 'supResolved', 'supAI', 'supAvg',
+                'aiOpsHealth', 'aiOpsRequests', 'aiOpsLatency', 'aiOpsSuccess',
+                'healthUptime', 'healthLatency', 'healthQueue', 'healthStorage',
+                'cpuUsage', 'memoryUsage', 'diskUsage', 'networkUsage',
+                'notEmail', 'notSMS', 'notPush', 'notFraud', 'notMerchant', 'notSystem'
+            ];
+
+            statIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '—';
+            });
+
+            // Reset progress bars
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                bar.style.width = '0%';
+            });
+
+            setTimeout(() => {
+                showToast('✅ Data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── SIMULATE LIVE FEED UPDATES ──
+        let feedInterval;
+
+        function startLiveFeed() {
+            const feed = document.getElementById('liveFeed');
+            if (!feed) return;
+
+            const messages = [
+                { dot: 'green', msg: 'Payment #TX-' + Math.floor(8000 + Math.random() * 2000) + ' completed',
+                    time: new Date().toLocaleTimeString() },
+                { dot: 'yellow', msg: 'Merchant M-' + Math.floor(100 + Math.random() * 900) + ' pending approval',
+                    time: new Date().toLocaleTimeString() },
+                { dot: 'red', msg: 'Fraud alert triggered for TX-' + Math.floor(8000 + Math.random() * 2000),
+                    time: new Date().toLocaleTimeString() },
+                { dot: 'blue', msg: 'New customer registration', time: new Date().toLocaleTimeString() },
+                { dot: 'green', msg: 'Settlement completed for merchant', time: new Date().toLocaleTimeString() }
+            ];
+
+            feedInterval = setInterval(() => {
+                const msg = messages[Math.floor(Math.random() * messages.length)];
+                const item = document.createElement('div');
+                item.className = 'feed-item';
+                item.innerHTML = `
+                            <span class="dot ${msg.dot}"></span>
+                            ${msg.msg}
+                            <span class="time">${msg.time}</span>
+                        `;
+                feed.insertBefore(item, feed.firstChild);
+                if (feed.children.length > 6) {
+                    feed.removeChild(feed.lastChild);
+                }
+            }, 8000);
+        }
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+            startLiveFeed();
+
+            console.log('🎯 AuthePay Operations Center loaded');
+            console.log('📦 Modules: Executive, Transactions, Merchants, Customers, Fraud, Compliance, Settlements, Support, AI Ops, Health, Notifications');
+            console.log('🔗 All systems connected to KaTSo AI OS');
+            console.log('📡 Live monitoring active');
+            console.log('🛡️ Security: PCI DSS, AML/CFT, Data Protection');
+            console.log('🤖 AI Agents: KaTSo AI Router, Kimi, DeepSeek, Qwen, Compliance AI, Monitoring AI, Automation Engine');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.refreshData = refreshData;
+    </script>
+
+</body>
+</html>

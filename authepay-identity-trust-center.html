@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Identity &amp; Trust Center</title>
+    <meta name="description" content="AuthePay Identity & Trust Center – KYC, Document Verification, Signature Guard, Face Verification, Fraud Intelligence." />
+    <style>
+        /* ============================================================
+           AUTHEPAY IDENTITY & TRUST CENTER – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --shadow-glow: 0 0 40px rgba(255, 107, 0, 0.08);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .topbar-actions .env-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── TRUST SCORE GAUGE ── */
+        .trust-gauge {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .trust-gauge .meter {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+        .trust-gauge .meter svg {
+            transform: rotate(-90deg);
+        }
+        .trust-gauge .meter .bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 10;
+        }
+        .trust-gauge .meter .progress {
+            fill: none;
+            stroke: var(--brand);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        .trust-gauge .meter .label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+        .trust-gauge .details {
+            flex: 1;
+        }
+        .trust-gauge .details .value {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+        .trust-gauge .details .sub {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .trust-gauge .details .badges {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ── VERIFICATION ITEM ── */
+        .verification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .verification-item:last-child {
+            border-bottom: none;
+        }
+        .verification-item .left .label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .verification-item .left .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .verification-item .right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .trust-gauge {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-5 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+
+        /* ── AI BANNER ── */
+        .ai-banner {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-banner .icon {
+            font-size: 1.5rem;
+        }
+        .ai-banner .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-banner .text strong {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">🛡️</span>
+                <div>
+                    <span>Identity &amp; Trust</span>
+                    <span class="sub">Center</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Identity</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="customer">👤 Customer Identity</a>
+                <a href="#" data-page="kyc">📋 KYC Verification</a>
+                <a href="#" data-page="documents">📄 Document Verification</a>
+
+                <div class="sidebar-section-label">Verification</div>
+                <a href="#" data-page="signature">✍️ Signature Guard</a>
+                <a href="#" data-page="face">📸 Face Verification</a>
+                <a href="#" data-page="business">🏢 Business Verification</a>
+
+                <div class="sidebar-section-label">Intelligence &amp; Trust</div>
+                <a href="#" data-page="fraud">🔍 Fraud Intelligence</a>
+                <a href="#" data-page="trust">🛡️ Trust Center</a>
+                <a href="#" data-page="ai-engine">🧠 AI Verification Engine</a>
+
+                <div class="sidebar-section-label">Compliance</div>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Live</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · AI Powered</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Identity Dashboard <small>Trust Center</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI</span>
+                    <span class="env-badge">🔒 Secure</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('verifyModal')">✅ New Verification</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="statTotal">—</div>
+                        <div class="label">Total Identities</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statVerified">—</div>
+                        <div class="label">Verified</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="statPending">—</div>
+                        <div class="label">Pending Verification</div>
+                        <div class="trend">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value red" id="statFlagged">—</div>
+                        <div class="label">Flagged / Fraud</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="statTrust">—</div>
+                        <div class="label">Avg Trust Score</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="statDevices">—</div>
+                        <div class="label">Verified Devices</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Verification Trends (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: verification_trends from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 Recent Verifications</span>
+                            <a href="#" onclick="navigateTo('kyc');return false;" style="font-size:0.8rem;color:var(--brand);">View all</a>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> John Doe – KYC passed</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-warning">⏳</span> ABC Corp – KYB pending</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-danger">🚨</span> Forged ID detected</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span><span class="badge badge-success">✅</span> Sarah M. – Face match 98%</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛡️ Trust Score Overview</span></div>
+                        <div class="trust-gauge">
+                            <div class="meter">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <circle class="bg" cx="60" cy="60" r="52" />
+                                    <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="65.3" />
+                                </svg>
+                                <div class="label">86</div>
+                            </div>
+                            <div class="details">
+                                <div class="value">86/100</div>
+                                <div class="sub">Average Trust Score</div>
+                                <div class="badges">
+                                    <span class="badge badge-success">High Trust</span>
+                                    <span class="badge badge-info">Verified</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🤖 AI Verification Engine</span></div>
+                        <div><span style="color:var(--text-muted);">Total AI Verifications</span> <span style="float:right;color:var(--text-primary);" id="aiTotal">—</span></div>
+                        <div><span style="color:var(--text-muted);">AI Fraud Detected</span> <span style="float:right;color:var(--danger);" id="aiFraud">—</span></div>
+                        <div><span style="color:var(--text-muted);">OCR Accuracy</span> <span style="float:right;color:var(--success);" id="aiOcr">—</span></div>
+                        <div><span style="color:var(--text-muted);">DeepSeek Engine</span> <span style="float:right;color:var(--success);">✅ Active</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Compliance</span></div>
+                        <div><span style="color:var(--text-muted);">Data Protection</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Consent Management</span> <span style="float:right;color:var(--success);">98%</span></div>
+                        <div><span style="color:var(--text-muted);">Audit Logs</span> <span style="float:right;color:var(--text-primary);">1.2K</span></div>
+                        <div><span style="color:var(--text-muted);">AML/CFT</span> <span style="float:right;color:var(--success);">✅</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CUSTOMER IDENTITY
+            ============================================================ -->
+            <div class="page" id="page-customer">
+                <div class="section-header">
+                    <h2>👤 Customer Identity</h2>
+                    <p>User registration, identity verification, biometrics, and digital identity wallet.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="custTotal">—</div><div class="label">Total Users</div></div>
+                    <div class="stat-card"><div class="value green" id="custVerified">—</div><div class="label">Verified</div></div>
+                    <div class="stat-card"><div class="value purple" id="custBiometric">—</div><div class="label">Biometric Enabled</div></div>
+                    <div class="stat-card"><div class="value yellow" id="custWallet">—</div><div class="label">Digital Wallets</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Identity Management</span><button class="btn btn-brand btn-sm" onclick="openModal('verifyModal')">+ New Identity</button></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>User</th><th>Email</th><th>Verification</th><th>Trust Score</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>John Doe</td><td>john@email.com</td><td><span class="badge badge-success">Verified</span></td><td>92</td><td><span class="badge badge-success">Active</span></td></tr>
+                                <tr><td>Sarah M.</td><td>sarah@email.com</td><td><span class="badge badge-success">Verified</span></td><td>88</td><td><span class="badge badge-success">Active</span></td></tr>
+                                <tr><td>Mike R.</td><td>mike@email.com</td><td><span class="badge badge-warning">Pending</span></td><td>—</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                                <tr><td>Anna K.</td><td>anna@email.com</td><td><span class="badge badge-danger">Flagged</span></td><td>34</td><td><span class="badge badge-danger">Review</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: customer_identities from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔐 Biometric Verification</span></div>
+                        <div class="verification-item"><div class="left"><div class="label">Face Verification</div><div class="desc">Active</div></div><div class="right"><span class="badge badge-success">Enabled</span></div></div>
+                        <div class="verification-item"><div class="left"><div class="label">Fingerprint</div><div class="desc">Active</div></div><div class="right"><span class="badge badge-success">Enabled</span></div></div>
+                        <div class="verification-item"><div class="left"><div class="label">Voice Recognition</div><div class="desc">In development</div></div><div class="right"><span class="badge badge-neutral">Beta</span></div></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('🔐 Biometric settings opened','info')">Manage</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">👛 Digital Identity Wallet</span></div>
+                        <div><span style="color:var(--text-muted);">Active Wallets</span> <span style="float:right;" id="walletCount">—</span></div>
+                        <div><span style="color:var(--text-muted);">Verifiable Credentials</span> <span style="float:right;" id="vcCount">—</span></div>
+                        <div><span style="color:var(--text-muted);">Last Accessed</span> <span style="float:right;" id="lastAccess">—</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('👛 Wallet opened','info')">Open Wallet</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: KYC VERIFICATION
+            ============================================================ -->
+            <div class="page" id="page-kyc">
+                <div class="section-header">
+                    <h2>📋 KYC Verification</h2>
+                    <p>Individual KYC, business KYC, enhanced due diligence, and risk classification.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="kycCompleted">—</div><div class="label">KYC Completed</div></div>
+                    <div class="stat-card"><div class="value yellow" id="kycPending">—</div><div class="label">Pending</div></div>
+                    <div class="stat-card"><div class="value red" id="kycFailed">—</div><div class="label">Failed / Rejected</div></div>
+                    <div class="stat-card"><div class="value purple" id="kycEDD">—</div><div class="label">Enhanced Due Diligence</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 KYC Queue</span><button class="btn btn-brand btn-sm" onclick="showToast('📋 New KYC case opened','info')">+ New KYC</button></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>User</th><th>Type</th><th>Risk</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody>
+                                <tr><td>John Doe</td><td>Individual</td><td><span class="badge badge-success">Low</span></td><td><span class="badge badge-success">Verified</span></td><td><button class="btn btn-outline btn-xs">📋</button></td></tr>
+                                <tr><td>ABC Corp</td><td>Business</td><td><span class="badge badge-warning">Medium</span></td><td><span class="badge badge-warning">Pending</span></td><td><button class="btn btn-brand btn-xs">Review</button></td></tr>
+                                <tr><td>Sarah M.</td><td>Individual</td><td><span class="badge badge-success">Low</span></td><td><span class="badge badge-success">Verified</span></td><td><button class="btn btn-outline btn-xs">📋</button></td></tr>
+                                <tr><td>TechHub Ltd</td><td>Business</td><td><span class="badge badge-danger">High</span></td><td><span class="badge badge-danger">Rejected</span></td><td><button class="btn btn-danger btn-xs">Escalate</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: kyc_verifications from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔄 Enhanced Due Diligence</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>Cases Under Review</span><span>3</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>Escalated</span><span>1</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Completed</span><span>12</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📋 EDD cases loaded','info')">View All</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Risk Classification</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Low Risk</span><span class="badge badge-success">78%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Medium Risk</span><span class="badge badge-warning">15%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>High Risk</span><span class="badge badge-danger">7%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DOCUMENT VERIFICATION
+            ============================================================ -->
+            <div class="page" id="page-documents">
+                <div class="section-header">
+                    <h2>📄 Document Verification</h2>
+                    <p>National ID, passport, driver's licence, birth certificate, academic certificates, utility bills, and more.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="docTotal">—</div><div class="label">Total Documents</div></div>
+                    <div class="stat-card"><div class="value green" id="docVerified">—</div><div class="label">Verified</div></div>
+                    <div class="stat-card"><div class="value red" id="docRejected">—</div><div class="label">Rejected</div></div>
+                    <div class="stat-card"><div class="value yellow" id="docPending2">—</div><div class="label">Pending</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Document Types</span></div>
+                    <div class="grid-4">
+                        <div class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">National ID</div>
+                        <div class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Passport</div>
+                        <div class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Driver's Licence</div>
+                        <div class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Birth Certificate</div>
+                        <div class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Academic Certificates</div>
+                        <div class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Utility Bills</div>
+                        <div class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Company Documents</div>
+                        <div class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Bank Statements</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Recent Document Verifications</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>User</th><th>Document Type</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody>
+                                <tr><td>John Doe</td><td>National ID</td><td>2026-07-21</td><td><span class="badge badge-success">Verified</span></td><td><button class="btn btn-outline btn-xs">📋</button></td></tr>
+                                <tr><td>ABC Corp</td><td>Company Registration</td><td>2026-07-20</td><td><span class="badge badge-warning">Pending</span></td><td><button class="btn btn-brand btn-xs">Review</button></td></tr>
+                                <tr><td>Sarah M.</td><td>Passport</td><td>2026-07-19</td><td><span class="badge badge-success">Verified</span></td><td><button class="btn btn-outline btn-xs">📋</button></td></tr>
+                                <tr><td>Mike R.</td><td>Driver's Licence</td><td>2026-07-18</td><td><span class="badge badge-danger">Rejected</span></td><td><button class="btn btn-danger btn-xs">Appeal</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: document_verifications from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📤 Upload Document</span></div>
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Document Type</label><select class="form-select"><option>National ID</option><option>Passport</option><option>Driver's Licence</option><option>Birth Certificate</option></select></div>
+                        <div class="form-group"><label class="form-label">User ID</label><input type="text" class="form-input" placeholder="User ID" /></div>
+                    </div>
+                    <div class="form-group"><label class="form-label">Upload File</label><input type="file" class="form-input" style="padding:6px;" /></div>
+                    <button class="btn btn-brand" onclick="showToast('📄 Document uploaded for verification','success')">📤 Upload &amp; Verify</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SIGNATURE GUARD
+            ============================================================ -->
+            <div class="page" id="page-signature">
+                <div class="section-header">
+                    <h2>✍️ Signature Guard</h2>
+                    <p>Signature capture, comparison, digital signature verification, history, alerts, and tamper detection.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="sigTotal">—</div><div class="label">Total Signatures</div></div>
+                    <div class="stat-card"><div class="value green" id="sigVerified">—</div><div class="label">Verified</div></div>
+                    <div class="stat-card"><div class="value red" id="sigFraud">—</div><div class="label">Forgery Detected</div></div>
+                    <div class="stat-card"><div class="value yellow" id="sigAlerts">—</div><div class="label">Active Alerts</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Signature History</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>User</th><th>Document</th><th>Date</th><th>Match Score</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>John Doe</td><td>Contract #001</td><td>2026-07-21</td><td>98%</td><td><span class="badge badge-success">Authentic</span></td></tr>
+                                <tr><td>ABC Corp</td><td>Agreement #002</td><td>2026-07-20</td><td>67%</td><td><span class="badge badge-warning">Review</span></td></tr>
+                                <tr><td>Sarah M.</td><td>Invoice #003</td><td>2026-07-19</td><td>99%</td><td><span class="badge badge-success">Authentic</span></td></tr>
+                                <tr><td>Mike R.</td><td>Contract #004</td><td>2026-07-18</td><td>34%</td><td><span class="badge badge-danger">Forgery</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: signature_history from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">✍️ Verify Signature</span></div>
+                        <div class="form-group"><label class="form-label">Upload Signature</label><input type="file" class="form-input" style="padding:6px;" /></div>
+                        <div class="form-group"><label class="form-label">Reference Signature</label><input type="file" class="form-input" style="padding:6px;" /></div>
+                        <button class="btn btn-brand" onclick="showToast('✍️ Signature verification complete','success')">🔍 Verify</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔔 Signature Alerts</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>🚨 Forged signature detected</span><span class="badge badge-danger">New</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>⚠️ Signature mismatch</span><span class="badge badge-warning">Review</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>✅ All other signatures verified</span><span class="badge badge-success">Clear</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: FACE VERIFICATION
+            ============================================================ -->
+            <div class="page" id="page-face">
+                <div class="section-header">
+                    <h2>📸 Face Verification</h2>
+                    <p>Selfie verification, face match, liveness detection, duplicate detection, and fraud alerts.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="faceTotal">—</div><div class="label">Total Matches</div></div>
+                    <div class="stat-card"><div class="value green" id="faceMatch">—</div><div class="label">Match Rate</div></div>
+                    <div class="stat-card"><div class="value purple" id="faceLiveness">—</div><div class="label">Liveness Checks</div></div>
+                    <div class="stat-card"><div class="value red" id="faceFraud">—</div><div class="label">Fraud Detected</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📸 Recent Face Verifications</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>User</th><th>Match Score</th><th>Liveness</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody>
+                                <tr><td>John Doe</td><td>98%</td><td><span class="badge badge-success">Passed</span></td><td><span class="badge badge-success">Verified</span></td><td><button class="btn btn-outline btn-xs">📋</button></td></tr>
+                                <tr><td>Sarah M.</td><td>92%</td><td><span class="badge badge-success">Passed</span></td><td><span class="badge badge-success">Verified</span></td><td><button class="btn btn-outline btn-xs">📋</button></td></tr>
+                                <tr><td>Mike R.</td><td>45%</td><td><span class="badge badge-danger">Failed</span></td><td><span class="badge badge-danger">Flagged</span></td><td><button class="btn btn-danger btn-xs">Investigate</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: face_verifications from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📸 Perform Face Verification</span></div>
+                        <div class="form-group"><label class="form-label">Upload Selfie</label><input type="file" class="form-input" style="padding:6px;" /></div>
+                        <div class="form-group"><label class="form-label">Upload ID Photo</label><input type="file" class="form-input" style="padding:6px;" /></div>
+                        <button class="btn btn-brand" onclick="showToast('📸 Face verification completed','success')">🔍 Verify</button>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📸 Liveness check started','info')">🧪 Start Liveness</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🚨 Duplicate Detection</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>Duplicate Faces Found</span><span>2</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>Potential Identity Theft</span><span>1</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Resolved</span><span>1</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('🔍 Duplicate investigation opened','info')">Investigate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: BUSINESS VERIFICATION
+            ============================================================ -->
+            <div class="page" id="page-business">
+                <div class="section-header">
+                    <h2>🏢 Business Verification</h2>
+                    <p>Company registration, directors verification, tax verification, bank verification, business address, and trust score.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="bizTotal">—</div><div class="label">Total Businesses</div></div>
+                    <div class="stat-card"><div class="value green" id="bizVerified">—</div><div class="label">Verified</div></div>
+                    <div class="stat-card"><div class="value yellow" id="bizPending">—</div><div class="label">Pending</div></div>
+                    <div class="stat-card"><div class="value purple" id="bizTrust">—</div><div class="label">Avg Trust Score</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Business Verification Queue</span><button class="btn btn-brand btn-sm" onclick="showToast('🏢 New business verification started','info')">+ New</button></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Business</th><th>Registration</th><th>Directors</th><th>Trust Score</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>ABC Corp</td><td>BW00001951757</td><td>3 verified</td><td>94</td><td><span class="badge badge-success">Verified</span></td></tr>
+                                <tr><td>TechHub Ltd</td><td>BW00001951758</td><td>1 pending</td><td>—</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                                <tr><td>GreenEnergy Co</td><td>BW00001951759</td><td>2 verified</td><td>88</td><td><span class="badge badge-success">Verified</span></td></tr>
+                                <tr><td>FastCash Ltd</td><td>BW00001951760</td><td>0</td><td>—</td><td><span class="badge badge-danger">Rejected</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: business_verifications from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Business Trust Score</span></div>
+                        <div class="trust-gauge" style="justify-content:center;">
+                            <div class="meter" style="width:100px;height:100px;">
+                                <svg width="100" height="100" viewBox="0 0 100 100">
+                                    <circle class="bg" cx="50" cy="50" r="42" />
+                                    <circle class="progress" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="42.2" />
+                                </svg>
+                                <div class="label" style="font-size:1.2rem;">84</div>
+                            </div>
+                            <div><span style="color:var(--text-muted);">Average</span><br><span style="font-size:1.5rem;font-weight:900;">84/100</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔍 Verification Steps</span></div>
+                        <div class="verification-item"><div class="left"><div class="label">Company Registration</div></div><div class="right"><span class="badge badge-success">✅</span></div></div>
+                        <div class="verification-item"><div class="left"><div class="label">Directors Verification</div></div><div class="right"><span class="badge badge-success">✅</span></div></div>
+                        <div class="verification-item"><div class="left"><div class="label">Tax Verification</div></div><div class="right"><span class="badge badge-warning">⏳</span></div></div>
+                        <div class="verification-item"><div class="left"><div class="label">Bank Verification</div></div><div class="right"><span class="badge badge-neutral">Pending</span></div></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📋 Verification details loaded','info')">View All</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: FRAUD INTELLIGENCE
+            ============================================================ -->
+            <div class="page" id="page-fraud">
+                <div class="section-header">
+                    <h2>🔍 Fraud Intelligence</h2>
+                    <p>Identity fraud, forged documents, fake accounts, suspicious behaviour, and investigation queue.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value red" id="fraudTotal">—</div><div class="label">Total Fraud Cases</div></div>
+                    <div class="stat-card"><div class="value yellow" id="fraudOpen">—</div><div class="label">Open Investigations</div></div>
+                    <div class="stat-card"><div class="value green" id="fraudResolved">—</div><div class="label">Resolved</div></div>
+                    <div class="stat-card"><div class="value purple" id="fraudRisk">—</div><div class="label">AI Risk Score</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Investigation Queue</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Case ID</th><th>Type</th><th>User</th><th>Risk Score</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody>
+                                <tr><td>#F-001</td><td>Identity Fraud</td><td>Mike R.</td><td>95</td><td><span class="badge badge-danger">Critical</span></td><td><button class="btn btn-danger btn-xs">Investigate</button></td></tr>
+                                <tr><td>#F-002</td><td>Forged Document</td><td>ABC Corp</td><td>78</td><td><span class="badge badge-warning">Review</span></td><td><button class="btn btn-warning btn-xs">Review</button></td></tr>
+                                <tr><td>#F-003</td><td>Fake Account</td><td>Unknown</td><td>62</td><td><span class="badge badge-warning">Review</span></td><td><button class="btn btn-warning btn-xs">Review</button></td></tr>
+                                <tr><td>#F-004</td><td>Suspicious Behaviour</td><td>TechHub Ltd</td><td>45</td><td><span class="badge badge-info">Monitoring</span></td><td><button class="btn btn-outline btn-xs">Monitor</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: fraud_cases from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🤖 AI Risk Score</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Identity Fraud</span><span class="badge badge-danger">High</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Document Forgery</span><span class="badge badge-warning">Medium</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Fake Accounts</span><span class="badge badge-warning">Medium</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Suspicious Behaviour</span><span class="badge badge-success">Low</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: KaTSo AI Core – fraud intelligence -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Fraud Trends</span></div>
+                        <div><span style="color:var(--text-muted);">This Month</span> <span style="float:right;">12 cases</span></div>
+                        <div><span style="color:var(--text-muted);">Last Month</span> <span style="float:right;">9 cases</span></div>
+                        <div><span style="color:var(--text-muted);">Change</span> <span style="float:right;color:var(--danger);">▲ 33%</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 Full fraud report generated','success')">📊 Generate Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: TRUST CENTER
+            ============================================================ -->
+            <div class="page" id="page-trust">
+                <div class="section-header">
+                    <h2>🛡️ Trust Center</h2>
+                    <p>Verification certificates, trust scores, verification badges, timelines, audit trails, and trust reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand" id="trustScore">—</div><div class="label">Trust Score</div></div>
+                    <div class="stat-card"><div class="value green" id="trustBadges">—</div><div class="label">Badges Issued</div></div>
+                    <div class="stat-card"><div class="value blue" id="trustCertificates">—</div><div class="label">Certificates</div></div>
+                    <div class="stat-card"><div class="value purple" id="trustAudits">—</div><div class="label">Audit Records</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Trust Overview</span></div>
+                    <div class="trust-gauge" style="justify-content:center;">
+                        <div class="meter" style="width:150px;height:150px;">
+                            <svg width="150" height="150" viewBox="0 0 150 150">
+                                <circle class="bg" cx="75" cy="75" r="62" />
+                                <circle class="progress" cx="75" cy="75" r="62" stroke-dasharray="389.6" stroke-dashoffset="62.3" />
+                            </svg>
+                            <div class="label" style="font-size:2rem;">86</div>
+                        </div>
+                        <div>
+                            <div style="font-size:1.5rem;font-weight:900;">86/100</div>
+                            <div class="sub">Overall Trust Score</div>
+                            <div class="badges" style="justify-content:center;margin-top:8px;">
+                                <span class="badge badge-success">✅ Verified</span>
+                                <span class="badge badge-info">🔒 Secure</span>
+                                <span class="badge badge-brand">🏅 Trusted</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Verification Timeline</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>✅ KYC Verified</span><span style="color:var(--text-muted);font-size:0.75rem;">2026-07-21</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>✅ Face Match</span><span style="color:var(--text-muted);font-size:0.75rem;">2026-07-20</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>✅ Document Verified</span><span style="color:var(--text-muted);font-size:0.75rem;">2026-07-19</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>✅ Business Verified</span><span style="color:var(--text-muted);font-size:0.75rem;">2026-07-18</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Trust Reports</span></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Trust report generated','success')">📊 Generate Trust Report</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📋 Verification certificate issued','success')">📋 Issue Certificate</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📜 Audit trail exported','success')">📜 Export Audit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI VERIFICATION ENGINE
+            ============================================================ -->
+            <div class="page" id="page-ai-engine">
+                <div class="section-header">
+                    <h2>🧠 AI Verification Engine</h2>
+                    <p>KaTSo AI Router, Qwen Vision, DeepSeek Fraud Engine, Kimi Engineering Agent, OCR Processing, and Verification Decision.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value purple" id="aiRouter">—</div><div class="label">AI Router</div></div>
+                    <div class="stat-card"><div class="value green" id="aiOcr2">—</div><div class="label">OCR Accuracy</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiDeepSeek">—</div><div class="label">DeepSeek Fraud Engine</div></div>
+                    <div class="stat-card"><div class="value yellow" id="aiKimi">—</div><div class="label">Kimi Engineering Agent</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🧠 AI Processing Pipeline</span></div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-around;padding:1rem 0;">
+                        <div style="text-align:center;"><div style="font-size:2rem;">📤</div><div>Input</div></div>
+                        <div style="text-align:center;color:var(--brand);">→</div>
+                        <div style="text-align:center;"><div style="font-size:2rem;">🧠</div><div>KaTSo Router</div></div>
+                        <div style="text-align:center;color:var(--brand);">→</div>
+                        <div style="text-align:center;"><div style="font-size:2rem;">👁️</div><div>Qwen Vision</div></div>
+                        <div style="text-align:center;color:var(--brand);">→</div>
+                        <div style="text-align:center;"><div style="font-size:2rem;">🔍</div><div>DeepSeek Fraud</div></div>
+                        <div style="text-align:center;color:var(--brand);">→</div>
+                        <div style="text-align:center;"><div style="font-size:2rem;">⚙️</div><div>Kimi Agent</div></div>
+                        <div style="text-align:center;color:var(--brand);">→</div>
+                        <div style="text-align:center;"><div style="font-size:2rem;">✅</div><div>Decision</div></div>
+                    </div>
+                    <!-- CONNECTION POINT: KaTSo AI Core – verification agents -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AI Performance</span></div>
+                        <div><span style="color:var(--text-muted);">Total AI Verifications</span> <span style="float:right;" id="aiPerfTotal">—</span></div>
+                        <div><span style="color:var(--text-muted);">Avg Decision Time</span> <span style="float:right;" id="aiPerfTime">—</span></div>
+                        <div><span style="color:var(--text-muted);">Fraud Detection Rate</span> <span style="float:right;" id="aiPerfFraud">—</span></div>
+                        <div><span style="color:var(--text-muted);">OCR Accuracy</span> <span style="float:right;" id="aiPerfOcr">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ AI Configuration</span></div>
+                        <div class="form-check"><input type="checkbox" checked /> Qwen Vision</div>
+                        <div class="form-check"><input type="checkbox" checked /> DeepSeek Fraud</div>
+                        <div class="form-check"><input type="checkbox" checked /> Kimi Agent</div>
+                        <div class="form-check"><input type="checkbox" /> OCR Processing</div>
+                        <button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="showToast('💾 AI configuration saved','success')">💾 Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance</h2>
+                    <p>Data Protection, Consent Management, Audit Logs, AML/CFT, Regulatory Reports, and Record Retention.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compScore3">98%</div><div class="label">Compliance Score</div></div>
+                    <div class="stat-card"><div class="value green" id="compData">✅</div><div class="label">Data Protection</div></div>
+                    <div class="stat-card"><div class="value blue" id="compAudit3">1.2K</div><div class="label">Audit Events</div></div>
+                    <div class="stat-card"><div class="value green" id="compRetention">✅</div><div class="label">Record Retention</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Botswana Data Protection Act</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Consent Management</span><span class="badge badge-success">98%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>AML/CFT</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Record Retention (7 years)</span><span class="badge badge-success">✅</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: compliance_framework from KaTSo System Core -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Regulatory Reports</span></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Data Protection report generated','success')">📊 Data Protection</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 AML report generated','success')">📊 AML Report</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Audit report generated','success')">📊 Audit Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all identity, verification, and trust events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('identity')">Identity</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('verification')">Verification</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>system</td><td>KYC Verified</td>
+                                    <td><span class="badge badge-success">Verification</span></td>
+                                    <td>John Doe – KYC passed</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>system</td><td>Face Match</td>
+                                    <td><span class="badge badge-info">Identity</span></td>
+                                    <td>Sarah M. – 98% match</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>system</td><td>Fraud Alert</td>
+                                    <td><span class="badge badge-danger">Security</span></td>
+                                    <td>Forged ID detected</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>admin@authecorp</td><td>Consent Updated</td>
+                                    <td><span class="badge badge-brand">Compliance</span></td>
+                                    <td>User consent refresh</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Verification Modal -->
+    <div class="modal-overlay" id="verifyModal">
+        <div class="modal">
+            <div class="modal-header"><h2>✅ New Verification</h2><button class="modal-close" onclick="closeModal('verifyModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">User ID</label><input type="text" class="form-input" placeholder="User ID" /></div>
+                <div class="form-group"><label class="form-label">Verification Type</label><select class="form-select"><option>KYC</option><option>KYB</option><option>Face</option><option>Document</option></select></div>
+                <div class="form-group"><label class="form-label">Upload Document</label><input type="file" class="form-input" style="padding:6px;" /></div>
+                <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" rows="2" placeholder="Additional information..."></textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('verifyModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('verifyModal');showToast('✅ Verification submitted','success')">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Identity & Trust Center Engine
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY IDENTITY & TRUST CENTER – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Identity Dashboard',
+                customer: 'Customer Identity',
+                kyc: 'KYC Verification',
+                documents: 'Document Verification',
+                signature: 'Signature Guard',
+                face: 'Face Verification',
+                business: 'Business Verification',
+                fraud: 'Fraud Intelligence',
+                trust: 'Trust Center',
+                'ai-engine': 'AI Verification Engine',
+                compliance: 'Compliance',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Identity & Trust';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing identity data...', 'info');
+            // CONNECTION POINT: API call to fetch identity metrics
+            setTimeout(() => {
+                const statIds = [
+                    'statTotal', 'statVerified', 'statPending', 'statFlagged', 'statTrust', 'statDevices',
+                    'aiTotal', 'aiFraud', 'aiOcr',
+                    'custTotal', 'custVerified', 'custBiometric', 'custWallet',
+                    'walletCount', 'vcCount', 'lastAccess',
+                    'kycCompleted', 'kycPending', 'kycFailed', 'kycEDD',
+                    'docTotal', 'docVerified', 'docRejected', 'docPending2',
+                    'sigTotal', 'sigVerified', 'sigFraud', 'sigAlerts',
+                    'faceTotal', 'faceMatch', 'faceLiveness', 'faceFraud',
+                    'bizTotal', 'bizVerified', 'bizPending', 'bizTrust',
+                    'fraudTotal', 'fraudOpen', 'fraudResolved', 'fraudRisk',
+                    'trustScore', 'trustBadges', 'trustCertificates', 'trustAudits',
+                    'aiRouter', 'aiOcr2', 'aiDeepSeek', 'aiKimi',
+                    'aiPerfTotal', 'aiPerfTime', 'aiPerfFraud', 'aiPerfOcr'
+                ];
+                statIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update progress bars to 0%
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+
+                showToast('✅ Data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+
+            // Animate trust gauge
+            const gauge = document.querySelector('.trust-gauge .meter .progress');
+            if (gauge) {
+                const circ = 2 * Math.PI * 52;
+                gauge.style.strokeDasharray = circ;
+                gauge.style.strokeDashoffset = circ;
+                setTimeout(() => {
+                    gauge.style.transition = 'stroke-dashoffset 1.5s ease';
+                    gauge.style.strokeDashoffset = circ * 0.14; // 86% score
+                }, 300);
+            }
+
+            console.log('🛡️ AuthePay Identity & Trust Center loaded');
+            console.log('📦 Modules: Customer Identity, KYC, Documents, Signature, Face, Business, Fraud, Trust, AI Engine, Compliance, Audit');
+            console.log('🤖 AI: KaTSo Router, Qwen Vision, DeepSeek Fraud, Kimi Agent');
+            console.log('🔗 Integrations: AuthePay Gateway, KaTSo AI Core, Supabase ready');
+            console.log('📋 Compliance: Botswana DPA, AML/CFT, Consent Management, Record Retention');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.filterAudit = filterAudit;
+        window.refreshData = refreshData;
+    </script>
+
+</body>
+</html>
