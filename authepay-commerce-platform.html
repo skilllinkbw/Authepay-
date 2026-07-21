@@ -1,0 +1,2061 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Commerce Platform</title>
+    <meta name="description" content="AuthePay Commerce – Merchant Marketplace, E-Commerce, Checkout, Billing, Subscriptions, AI Commerce." />
+    <style>
+        /* ============================================================
+           AUTHEPAY COMMERCE PLATFORM – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── SERVICE CARD ── */
+        .service-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .service-card:hover {
+            border-color: var(--brand);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .service-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .service-card .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .service-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .service-card .status {
+            margin-top: 6px;
+        }
+
+        /* ── PRODUCT CARD ── */
+        .product-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .product-card:hover {
+            border-color: var(--brand);
+        }
+        .product-card .left .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .product-card .left .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .product-card .right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* ── ORDER CARD ── */
+        .order-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .order-card:hover {
+            border-color: var(--brand);
+        }
+        .order-card .left .id {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .order-card .left .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .order-card .right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* ── AI CARD ── */
+        .ai-card {
+            padding: 0.8rem 1rem;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            margin-bottom: 6px;
+            border-left: 3px solid var(--brand);
+            transition: var(--transition);
+        }
+        .ai-card:hover {
+            border-color: var(--brand);
+        }
+        .ai-card .title {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .ai-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── SUBSCRIPTION CARD ── */
+        .sub-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .sub-card:hover {
+            border-color: var(--brand);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .sub-card .plan {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .sub-card .price {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--brand);
+        }
+        .sub-card .features {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .sub-card .features li {
+            list-style: none;
+            padding: 2px 0;
+        }
+        .sub-card .features li::before {
+            content: '✓ ';
+            color: var(--success);
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .sub-card {
+                grid-column: span 1;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-5 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .product-card,
+            .order-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .product-card .right,
+            .order-card .right {
+                justify-content: center;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── PCI DSS BADGE ── */
+        .pci-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        .pci-badge .check {
+            font-size: 0.8rem;
+        }
+
+        /* ── AI BANNER ── */
+        .ai-banner {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-banner .icon {
+            font-size: 1.5rem;
+        }
+        .ai-banner .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-banner .text strong {
+            color: var(--text-primary);
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">🛒</span>
+                <div>
+                    <span>Commerce</span>
+                    <span class="sub">Platform</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Core</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="marketplace">🏪 Marketplace</a>
+                <a href="#" data-page="ecommerce">🛍️ E-Commerce</a>
+                <a href="#" data-page="checkout">💳 Checkout</a>
+
+                <div class="sidebar-section-label">Billing &amp; Subscriptions</div>
+                <a href="#" data-page="billing">📄 Billing Engine</a>
+                <a href="#" data-page="subscriptions">🔄 Subscriptions</a>
+
+                <div class="sidebar-section-label">Wallet &amp; Orders</div>
+                <a href="#" data-page="wallet">👛 Digital Wallet</a>
+                <a href="#" data-page="orders">📦 Order Management</a>
+
+                <div class="sidebar-section-label">Customers &amp; AI</div>
+                <a href="#" data-page="customers">👥 Customer Relationship</a>
+                <a href="#" data-page="ai-commerce">🧠 AI Commerce Engine</a>
+
+                <div class="sidebar-section-label">Analytics &amp; Security</div>
+                <a href="#" data-page="analytics">📈 Analytics</a>
+                <a href="#" data-page="security">🛡️ Security</a>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Live</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · AI Powered</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Commerce Dashboard <small>Platform</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> AI Commerce</span>
+                    <span class="pci-badge"><span class="check">✅</span> PCI DSS</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('productModal')">➕ Add Product</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="statRevenue">—</div>
+                        <div class="label">Revenue (MTD)</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="statOrders">—</div>
+                        <div class="label">Orders</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statCustomers">—</div>
+                        <div class="label">Customers</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="statMerchants">—</div>
+                        <div class="label">Merchants</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="statSubscriptions">—</div>
+                        <div class="label">Active Subscriptions</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statConversion">—</div>
+                        <div class="label">Conversion Rate</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Sales (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: sales_data from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 Recent Activity</span>
+                            <a href="#" onclick="navigateTo('orders');return false;" style="font-size:0.8rem;color:var(--brand);">View all</a>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">🛒</span> New order #ORD-001</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-brand">🔄</span> Subscription renewed</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-info">🏪</span> New merchant joined</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span><span class="badge badge-accent">🧠</span> AI recommendation</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🏪 Marketplace</span></div>
+                        <div><span style="color:var(--text-muted);">Merchants</span> <span style="float:right;color:var(--text-primary);" id="mpMerchants">—</span></div>
+                        <div><span style="color:var(--text-muted);">Products</span> <span style="float:right;color:var(--text-primary);" id="mpProducts">—</span></div>
+                        <div><span style="color:var(--text-muted);">Reviews</span> <span style="float:right;color:var(--text-primary);" id="mpReviews">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛍️ E-Commerce</span></div>
+                        <div><span style="color:var(--text-muted);">Orders (MTD)</span> <span style="float:right;color:var(--text-primary);" id="ecOrders">—</span></div>
+                        <div><span style="color:var(--text-muted);">Inventory Items</span> <span style="float:right;color:var(--text-primary);" id="ecInventory">—</span></div>
+                        <div><span style="color:var(--text-muted);">Coupons Active</span> <span style="float:right;color:var(--text-primary);" id="ecCoupons">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🧠 AI Commerce</span></div>
+                        <div><span style="color:var(--text-muted);">Recommendations</span> <span style="float:right;color:var(--text-primary);" id="aiRecs">—</span></div>
+                        <div><span style="color:var(--text-muted);">Sales Forecast</span> <span style="float:right;color:var(--text-primary);" id="aiForecast">—</span></div>
+                        <div><span style="color:var(--text-muted);">Fraud Detected</span> <span style="float:right;color:var(--success);" id="aiFraud">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: MARKETPLACE
+            ============================================================ -->
+            <div class="page" id="page-marketplace">
+                <div class="section-header">
+                    <h2>🏪 Merchant Marketplace</h2>
+                    <p>Business directory, online stores, product catalog, service marketplace, digital products, vendor marketplace, and customer reviews.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="mkMerchants">—</div><div class="label">Total Merchants</div></div>
+                    <div class="stat-card"><div class="value green" id="mkStores">—</div><div class="label">Active Stores</div></div>
+                    <div class="stat-card"><div class="value purple" id="mkProducts">—</div><div class="label">Products</div></div>
+                    <div class="stat-card"><div class="value yellow" id="mkReviews2">—</div><div class="label">Reviews</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Merchant Directory</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Merchant</th><th>Store</th><th>Products</th><th>Rating</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>ABC Shop</td><td>ABC Online</td><td>24</td><td>⭐ 4.8</td><td><span class="badge badge-success">Active</span></td></tr>
+                                <tr><td>TechHub Ltd</td><td>TechHub Store</td><td>18</td><td>⭐ 4.6</td><td><span class="badge badge-success">Active</span></td></tr>
+                                <tr><td>GreenEnergy</td><td>EcoMart</td><td>12</td><td>⭐ 4.9</td><td><span class="badge badge-success">Active</span></td></tr>
+                                <tr><td>QuickBet</td><td>QuickShop</td><td>8</td><td>⭐ 4.2</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: marketplace_merchants from Supabase -->
+                </div>
+
+                <div class="grid-3">
+                    <div class="service-card"><div class="icon">🏪</div><div class="name">Business Directory</div><div class="desc">Find and connect</div><div class="status"><span class="badge badge-success">Live</span></div></div>
+                    <div class="service-card"><div class="icon">🛍️</div><div class="name">Online Stores</div><div class="desc">Merchant storefronts</div><div class="status"><span class="badge badge-success">Live</span></div></div>
+                    <div class="service-card"><div class="icon">📦</div><div class="name">Product Catalog</div><div class="desc">Browse products</div><div class="status"><span class="badge badge-success">Live</span></div></div>
+                    <div class="service-card"><div class="icon">💼</div><div class="name">Service Marketplace</div><div class="desc">Book services</div><div class="status"><span class="badge badge-success">Live</span></div></div>
+                    <div class="service-card"><div class="icon">💻</div><div class="name">Digital Products</div><div class="desc">Digital downloads</div><div class="status"><span class="badge badge-success">Live</span></div></div>
+                    <div class="service-card"><div class="icon">⭐</div><div class="name">Customer Reviews</div><div class="desc">Ratings &amp; feedback</div><div class="status"><span class="badge badge-success">Live</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: E-COMMERCE
+            ============================================================ -->
+            <div class="page" id="page-ecommerce">
+                <div class="section-header">
+                    <h2>🛍️ E-Commerce Engine</h2>
+                    <p>Shopping cart, product management, inventory management, order management, shipping management, discount engine, and coupon management.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="ecTotal">—</div><div class="label">Total Products</div></div>
+                    <div class="stat-card"><div class="value green" id="ecInStock">—</div><div class="label">In Stock</div></div>
+                    <div class="stat-card"><div class="value red" id="ecLowStock">—</div><div class="label">Low Stock</div></div>
+                    <div class="stat-card"><div class="value purple" id="ecCoupons2">—</div><div class="label">Active Coupons</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Products</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="product-card">
+                            <div class="left"><div class="name">Premium Widget</div><div class="meta">SKU: PW-001 · 234 in stock</div></div>
+                            <div class="right"><span class="badge badge-success">In Stock</span><span style="color:var(--text-muted);font-size:0.8rem;">P 299.00</span></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="left"><div class="name">Deluxe Bundle</div><div class="meta">SKU: DB-002 · 45 in stock</div></div>
+                            <div class="right"><span class="badge badge-success">In Stock</span><span style="color:var(--text-muted);font-size:0.8rem;">P 499.00</span></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="left"><div class="name">Pro Membership</div><div class="meta">SKU: PM-003 · Digital</div></div>
+                            <div class="right"><span class="badge badge-warning">Low Stock</span><span style="color:var(--text-muted);font-size:0.8rem;">P 99.00/mo</span></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="left"><div class="name">Eco-Friendly Kit</div><div class="meta">SKU: EF-004 · 12 in stock</div></div>
+                            <div class="right"><span class="badge badge-danger">Out of Stock</span><span style="color:var(--text-muted);font-size:0.8rem;">P 149.00</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: ecommerce_products from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛒 Shopping Cart</span></div>
+                        <div><span style="color:var(--text-muted);">Active Carts</span> <span style="float:right;">342</span></div>
+                        <div><span style="color:var(--text-muted);">Abandoned Carts</span> <span style="float:right;">89</span></div>
+                        <div><span style="color:var(--text-muted);">Recovery Rate</span> <span style="float:right;">12%</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('🛒 Cart management opened','info')">Manage</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🎫 Coupon Management</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>SUMMER20</span><span>20% off</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>WELCOME10</span><span>10% off</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>FLASH25</span><span>25% off</span><span class="badge badge-warning">Expiring</span></div>
+                        </div>
+                        <button class="btn btn-brand btn-sm" style="margin-top:8px;" onclick="showToast('🎫 New coupon created','success')">+ New Coupon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CHECKOUT
+            ============================================================ -->
+            <div class="page" id="page-checkout">
+                <div class="section-header">
+                    <h2>💳 Checkout Platform</h2>
+                    <p>One-click checkout, QR checkout, payment links, hosted checkout, mobile checkout, guest checkout, and multi-payment options.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="chTotal">—</div><div class="label">Total Checkouts</div></div>
+                    <div class="stat-card"><div class="value blue" id="chConversion">—</div><div class="label">Conversion Rate</div></div>
+                    <div class="stat-card"><div class="value purple" id="chMobile">—</div><div class="label">Mobile Checkouts</div></div>
+                    <div class="stat-card"><div class="value yellow" id="chGuest">—</div><div class="label">Guest Checkouts</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Checkout Options</span></div>
+                    <div class="grid-3">
+                        <div class="service-card"><div class="icon">⚡</div><div class="name">One-Click Checkout</div><div class="desc">Saved payment methods</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                        <div class="service-card"><div class="icon">📱</div><div class="name">QR Checkout</div><div class="desc">Scan to pay</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                        <div class="service-card"><div class="icon">🔗</div><div class="name">Payment Links</div><div class="desc">Shareable links</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                        <div class="service-card"><div class="icon">🌐</div><div class="name">Hosted Checkout</div><div class="desc">AuthePay hosted</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                        <div class="service-card"><div class="icon">📲</div><div class="name">Mobile Checkout</div><div class="desc">Mobile-optimized</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                        <div class="service-card"><div class="icon">👤</div><div class="name">Guest Checkout</div><div class="desc">No account needed</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    </div>
+                    <!-- CONNECTION POINT: checkout_options from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">💳 Multi-Payment Options</span></div>
+                    <div class="grid-5">
+                        <span class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Orange Money</span>
+                        <span class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">MyZaka</span>
+                        <span class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Smega</span>
+                        <span class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Visa</span>
+                        <span class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Mastercard</span>
+                        <span class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Wallet</span>
+                        <span class="badge badge-brand" style="padding:8px 16px;font-size:0.85rem;">Bank Transfer</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: BILLING ENGINE
+            ============================================================ -->
+            <div class="page" id="page-billing">
+                <div class="section-header">
+                    <h2>📄 Billing Engine</h2>
+                    <p>Invoice generation, recurring billing, subscription plans, automatic renewals, usage billing, tax management, and billing reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="billTotal">—</div><div class="label">Total Invoices</div></div>
+                    <div class="stat-card"><div class="value green" id="billPaid">—</div><div class="label">Paid</div></div>
+                    <div class="stat-card"><div class="value red" id="billUnpaid">—</div><div class="label">Unpaid</div></div>
+                    <div class="stat-card"><div class="value yellow" id="billOverdue">—</div><div class="label">Overdue</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Recent Invoices</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>#Invoice</th><th>Customer</th><th>Amount</th><th>Status</th><th>Due</th></tr></thead>
+                            <tbody>
+                                <tr><td>INV-001</td><td>ABC Shop</td><td>P 12,450</td><td><span class="badge badge-success">Paid</span></td><td>Jul 21</td></tr>
+                                <tr><td>INV-002</td><td>TechHub Ltd</td><td>P 8,900</td><td><span class="badge badge-success">Paid</span></td><td>Jul 20</td></tr>
+                                <tr><td>INV-003</td><td>GreenEnergy</td><td>P 45,000</td><td><span class="badge badge-warning">Unpaid</span></td><td>Jul 25</td></tr>
+                                <tr><td>INV-004</td><td>QuickBet</td><td>P 2,300</td><td><span class="badge badge-danger">Overdue</span></td><td>Jul 15</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: invoices from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ Billing Settings</span></div>
+                        <div class="form-group"><label class="form-label">Tax Rate (%)</label><input type="number" class="form-input" value="0" placeholder="Configurable" /></div>
+                        <div class="form-group"><label class="form-label">Payment Terms</label><select class="form-select"><option>Net 30</option><option>Net 15</option><option>Due on receipt</option></select></div>
+                        <button class="btn btn-primary btn-sm" onclick="showToast('💾 Billing settings saved','success')">💾 Save</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Billing Summary</span></div>
+                        <div><span style="color:var(--text-muted);">Total Billed (MTD)</span><br><strong>P 68,650</strong></div>
+                        <div><span style="color:var(--text-muted);">Collected</span><br><strong>P 45,350</strong></div>
+                        <div><span style="color:var(--text-muted);">Outstanding</span><br><strong>P 23,300</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SUBSCRIPTIONS
+            ============================================================ -->
+            <div class="page" id="page-subscriptions">
+                <div class="section-header">
+                    <h2>🔄 Subscription Management</h2>
+                    <p>Monthly plans, annual plans, free trials, upgrade &amp; downgrade, cancellation, auto renewals, and subscription analytics.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="subTotal">—</div><div class="label">Total Subscriptions</div></div>
+                    <div class="stat-card"><div class="value green" id="subActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value purple" id="subTrial">—</div><div class="label">Free Trials</div></div>
+                    <div class="stat-card"><div class="value yellow" id="subRevenue">—</div><div class="label">MRR</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Subscription Plans</span></div>
+                    <div class="grid-3">
+                        <div class="sub-card">
+                            <div class="plan">Starter</div>
+                            <div class="price">P 99</div>
+                            <ul class="features">
+                                <li>10 products</li>
+                                <li>Basic support</li>
+                                <li>Monthly billing</li>
+                            </ul>
+                            <button class="btn btn-outline btn-sm" style="margin-top:10px;">Manage</button>
+                        </div>
+                        <div class="sub-card" style="border-color:var(--brand);">
+                            <div class="plan">Pro</div>
+                            <div class="price">P 299</div>
+                            <ul class="features">
+                                <li>Unlimited products</li>
+                                <li>Priority support</li>
+                                <li>Monthly billing</li>
+                                <li>Advanced analytics</li>
+                            </ul>
+                            <button class="btn btn-brand btn-sm" style="margin-top:10px;">Manage</button>
+                        </div>
+                        <div class="sub-card">
+                            <div class="plan">Enterprise</div>
+                            <div class="price">Custom</div>
+                            <ul class="features">
+                                <li>Custom features</li>
+                                <li>Dedicated support</li>
+                                <li>Annual billing</li>
+                                <li>API access</li>
+                            </ul>
+                            <button class="btn btn-outline btn-sm" style="margin-top:10px;">Contact</button>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: subscription_plans from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Subscription Analytics</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">Active Subscribers</span><br><strong>342</strong></div>
+                        <div><span style="color:var(--text-muted);">Churn Rate</span><br><strong>2.4%</strong></div>
+                        <div><span style="color:var(--text-muted);">Avg Lifetime</span><br><strong>14 months</strong></div>
+                        <div><span style="color:var(--text-muted);">MRR</span><br><strong>P 45,200</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DIGITAL WALLET
+            ============================================================ -->
+            <div class="page" id="page-wallet">
+                <div class="section-header">
+                    <h2>👛 Digital Wallet</h2>
+                    <p>Customer wallet, merchant wallet, loyalty points, gift cards, cashback, rewards, and wallet transfers.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand" id="walBalance">—</div><div class="label">Total Wallet Balance</div></div>
+                    <div class="stat-card"><div class="value blue" id="walCustomers">—</div><div class="label">Customer Wallets</div></div>
+                    <div class="stat-card"><div class="value green" id="walMerchants">—</div><div class="label">Merchant Wallets</div></div>
+                    <div class="stat-card"><div class="value purple" id="walPoints">—</div><div class="label">Loyalty Points</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Wallet Overview</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="product-card">
+                            <div class="left"><div class="name">👤 Customer Wallets</div><div class="meta">Active: 1,247</div></div>
+                            <div class="right"><span style="color:var(--text-muted);">P 234,000</span></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="left"><div class="name">🏪 Merchant Wallets</div><div class="meta">Active: 342</div></div>
+                            <div class="right"><span style="color:var(--text-muted);">P 567,000</span></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="left"><div class="name">🎁 Gift Cards</div><div class="meta">Issued: 89</div></div>
+                            <div class="right"><span style="color:var(--text-muted);">P 12,450</span></div>
+                        </div>
+                        <div class="product-card">
+                            <div class="left"><div class="name">⭐ Loyalty Points</div><div class="meta">Total earned: 45,672</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: wallets from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">💳 Wallet Transfers</span></div>
+                        <div class="form-group"><label class="form-label">From</label><select class="form-select"><option>Customer Wallet</option><option>Merchant Wallet</option></select></div>
+                        <div class="form-group"><label class="form-label">To</label><input type="text" class="form-input" placeholder="Wallet ID or email" /></div>
+                        <div class="form-group"><label class="form-label">Amount</label><input type="number" class="form-input" placeholder="0.00" /></div>
+                        <button class="btn btn-brand" onclick="showToast('💳 Wallet transfer completed','success')">💳 Transfer</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🎯 Rewards &amp; Cashback</span></div>
+                        <div><span style="color:var(--text-muted);">Cashback Earned (MTD)</span><br><strong>P 12,450</strong></div>
+                        <div><span style="color:var(--text-muted);">Rewards Redeemed</span><br><strong>342</strong></div>
+                        <div><span style="color:var(--text-muted);">Active Promotions</span><br><span class="badge badge-success">5</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('🎯 Rewards program updated','success')">Manage Rewards</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: ORDER MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-orders">
+                <div class="section-header">
+                    <h2>📦 Order Management</h2>
+                    <p>New orders, processing, fulfilled, cancelled, returns, refunds, and order tracking.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="ordTotal">—</div><div class="label">Total Orders</div></div>
+                    <div class="stat-card"><div class="value green" id="ordNew">—</div><div class="label">New</div></div>
+                    <div class="stat-card"><div class="value yellow" id="ordProcessing">—</div><div class="label">Processing</div></div>
+                    <div class="stat-card"><div class="value purple" id="ordFulfilled">—</div><div class="label">Fulfilled</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Orders</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="order-card">
+                            <div class="left"><div class="id">#ORD-001</div><div class="meta">ABC Shop · P 12,450 · 3 items</div></div>
+                            <div class="right"><span class="badge badge-success">Fulfilled</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="order-card">
+                            <div class="left"><div class="id">#ORD-002</div><div class="meta">TechHub Ltd · P 8,900 · 2 items</div></div>
+                            <div class="right"><span class="badge badge-info">Processing</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="order-card">
+                            <div class="left"><div class="id">#ORD-003</div><div class="meta">GreenEnergy · P 45,000 · 5 items</div></div>
+                            <div class="right"><span class="badge badge-warning">Pending</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="order-card">
+                            <div class="left"><div class="id">#ORD-004</div><div class="meta">QuickBet · P 2,300 · 1 item</div></div>
+                            <div class="right"><span class="badge badge-danger">Cancelled</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="order-card">
+                            <div class="left"><div class="id">#ORD-005</div><div class="meta">Customer #1234 · P 890 · 1 item</div></div>
+                            <div class="right"><span class="badge badge-warning">Return</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: orders from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📦 Order Tracking</span></div>
+                        <div class="form-group"><label class="form-label">Order ID</label><input type="text" class="form-input" placeholder="#ORD-001" /></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📦 Order status loaded','info')">🔍 Track</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">↩️ Refunds</span></div>
+                        <div><span style="color:var(--text-muted);">Refunds Processed</span> <span style="float:right;">12</span></div>
+                        <div><span style="color:var(--text-muted);">Refund Amount</span> <span style="float:right;">P 8,200</span></div>
+                        <div><span style="color:var(--text-muted);">Pending Refunds</span> <span style="float:right;">3</span></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('↩️ Refund processed','success')">Process Refund</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CUSTOMER RELATIONSHIP
+            ============================================================ -->
+            <div class="page" id="page-customers">
+                <div class="section-header">
+                    <h2>👥 Customer Relationship</h2>
+                    <p>Customer profiles, purchase history, loyalty programme, marketing campaigns, customer support, AI recommendations, and customer analytics.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="crTotal">—</div><div class="label">Total Customers</div></div>
+                    <div class="stat-card"><div class="value green" id="crActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value purple" id="crLoyalty">—</div><div class="label">Loyalty Members</div></div>
+                    <div class="stat-card"><div class="value yellow" id="crLTV">—</div><div class="label">Avg LTV</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Customer Profiles</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>Orders</th><th>LTV</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>John Doe</td><td>john@email.com</td><td>12</td><td>P 4,500</td><td><span class="badge badge-success">Active</span></td></tr>
+                                <tr><td>Sarah M.</td><td>sarah@email.com</td><td>8</td><td>P 3,200</td><td><span class="badge badge-success">Active</span></td></tr>
+                                <tr><td>Mike R.</td><td>mike@email.com</td><td>3</td><td>P 890</td><td><span class="badge badge-warning">Inactive</span></td></tr>
+                                <tr><td>Anna K.</td><td>anna@email.com</td><td>15</td><td>P 6,700</td><td><span class="badge badge-success">VIP</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: customers from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🎯 Loyalty Programme</span></div>
+                        <div><span style="color:var(--text-muted);">Members</span> <span style="float:right;">342</span></div>
+                        <div><span style="color:var(--text-muted);">Points Issued</span> <span style="float:right;">45,672</span></div>
+                        <div><span style="color:var(--text-muted);">Points Redeemed</span> <span style="float:right;">12,450</span></div>
+                        <button class="btn btn-brand btn-sm" style="margin-top:8px;" onclick="showToast('🎯 Loyalty programme updated','success')">Manage</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Customer Analytics</span></div>
+                        <div><span style="color:var(--text-muted);">Retention Rate</span> <span style="float:right;">76%</span></div>
+                        <div><span style="color:var(--text-muted);">Avg Order Value</span> <span style="float:right;">P 340</span></div>
+                        <div><span style="color:var(--text-muted);">Repeat Rate</span> <span style="float:right;">62%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI COMMERCE ENGINE
+            ============================================================ -->
+            <div class="page" id="page-ai-commerce">
+                <div class="section-header">
+                    <h2>🧠 AI Commerce Engine</h2>
+                    <p>Product recommendations, sales forecasting, dynamic pricing, fraud detection, customer insights, inventory prediction, and business intelligence.</p>
+                </div>
+
+                <div class="ai-banner" style="margin-bottom:1.5rem;">
+                    <span class="icon">🧠</span>
+                    <div class="text">
+                        <strong>AI Commerce Engine</strong> – Intelligent product recommendations, sales forecasting, dynamic pricing, fraud detection, and customer insights powered by KaTSo AI.
+                        <span style="display:block;font-size:0.75rem;color:var(--text-muted);">Real-time intelligence · Predictive analytics · Business insights</span>
+                    </div>
+                    <button class="btn btn-accent btn-sm" onclick="showToast('🧠 AI insights loaded','success')">📊 Load Insights</button>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value purple" id="aiRecs2">—</div><div class="label">Recommendations</div></div>
+                    <div class="stat-card"><div class="value green" id="aiForecast2">—</div><div class="label">Sales Forecast</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiPricing">—</div><div class="label">Dynamic Pricing</div></div>
+                    <div class="stat-card"><div class="value yellow" id="aiInventory">—</div><div class="label">Inventory Prediction</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AI Insights</span></div>
+                        <div class="ai-card">
+                            <div class="title">📈 Sales forecast: +12% next quarter</div>
+                            <div class="desc">Based on seasonal trends and customer acquisition.</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--success);">
+                            <div class="title">🛒 Top recommended products</div>
+                            <div class="desc">Premium Widget, Deluxe Bundle, Eco-Friendly Kit</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--warning);">
+                            <div class="title">📦 Inventory prediction: Restock Eco-Friendly Kit</div>
+                            <div class="desc">Low stock detected. Order 50 units to meet demand.</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--danger);">
+                            <div class="title">🛡️ Fraud detection: 0 high-risk orders</div>
+                            <div class="desc">All transactions passed security checks.</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Business Intelligence</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Revenue Forecast</span><span>P 1.45M</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Customer Insights</span><span>VIP: 45 customers</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Product Performance</span><span>Premium Widget: Top seller</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 Full business intelligence report generated','success')">📊 Generate Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: ANALYTICS
+            ============================================================ -->
+            <div class="page" id="page-analytics">
+                <div class="section-header">
+                    <h2>📈 Analytics</h2>
+                    <p>Sales dashboard, revenue reports, product performance, merchant performance, customer insights, conversion analytics, and executive dashboard.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand" id="anRevenue">—</div><div class="label">Revenue (MTD)</div></div>
+                    <div class="stat-card"><div class="value blue" id="anOrders">—</div><div class="label">Orders</div></div>
+                    <div class="stat-card"><div class="value green" id="anConversion">—</div><div class="label">Conversion Rate</div></div>
+                    <div class="stat-card"><div class="value purple" id="anAOV">—</div><div class="label">Avg Order Value</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Revenue by Channel</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Online Store</span><span>42%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill brand" style="width:42%;"></div></div></div></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Marketplace</span><span>28%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill blue" style="width:28%;"></div></div></div></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Subscriptions</span><span>18%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill purple" style="width:18%;"></div></div></div></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Other</span><span>12%</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:12%;"></div></div></div></div>
+                        </div>
+                        <!-- CONNECTION POINT: analytics_data from Supabase -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Top Products</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Premium Widget</span><span>P 45,200</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Deluxe Bundle</span><span>P 34,800</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Pro Membership</span><span>P 23,400</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Eco-Friendly Kit</span><span>P 12,300</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Executive Dashboard</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">Revenue Growth</span><br><span class="trend up">▲ 22%</span></div>
+                        <div><span style="color:var(--text-muted);">Customer Growth</span><br><span class="trend up">▲ 15%</span></div>
+                        <div><span style="color:var(--text-muted);">Order Growth</span><br><span class="trend up">▲ 18%</span></div>
+                        <div><span style="color:var(--text-muted);">Profit Margin</span><br><span class="trend up">▲ 8%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SECURITY
+            ============================================================ -->
+            <div class="page" id="page-security">
+                <div class="section-header">
+                    <h2>🛡️ Security</h2>
+                    <p>Secure checkout, PCI DSS, fraud monitoring, data protection, audit logs, access control, and compliance reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="secPCI">✅</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value green" id="secFraud">✅</div><div class="label">Fraud Monitoring</div></div>
+                    <div class="stat-card"><div class="value green" id="secData">✅</div><div class="label">Data Protection</div></div>
+                    <div class="stat-card"><div class="value blue" id="secAudit2">1.2K</div><div class="label">Audit Logs</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔒 Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Secure Checkout</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>PCI DSS</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Fraud Monitoring</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Data Protection</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Access Control</span><span class="badge badge-success">RBAC</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: security_controls from KaTSo System Core -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔔 Security Alerts</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>✅ All systems secure</span><span style="color:var(--text-muted);font-size:0.75rem;">Now</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>ℹ️ PCI DSS audit passed</span><span style="color:var(--text-muted);font-size:0.75rem;">2h ago</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>✅ Fraud monitoring clear</span><span style="color:var(--text-muted);font-size:0.75rem;">4h ago</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance</h2>
+                    <p>Secure checkout, PCI DSS, fraud monitoring, data protection, audit logs, access control, and compliance reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compScore2">98%</div><div class="label">Compliance Score</div></div>
+                    <div class="stat-card"><div class="value green" id="compPCI2">✅</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value blue" id="compAudit3">1.2K</div><div class="label">Audit Events</div></div>
+                    <div class="stat-card"><div class="value green" id="compDP">✅</div><div class="label">Data Protection</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>PCI DSS</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Data Protection</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Botswana DPA</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Audit Logs</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: compliance_framework from KaTSo System Core -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Compliance Reports</span></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Compliance report generated','success')">📊 PCI DSS</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Data Protection report generated','success')">📊 Data Protection</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Audit report generated','success')">📊 Audit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all commerce, order, and security events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('order')">Order</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('payment')">Payment</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>system</td><td>Order Placed</td>
+                                    <td><span class="badge badge-brand">Order</span></td>
+                                    <td>#ORD-001 completed</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>system</td><td>Payment Processed</td>
+                                    <td><span class="badge badge-success">Payment</span></td>
+                                    <td>P 12,450 via Orange Money</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>system</td><td>Security Check</td>
+                                    <td><span class="badge badge-danger">Security</span></td>
+                                    <td>PCI DSS compliance check</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>admin@authecorp</td><td>Product Added</td>
+                                    <td><span class="badge badge-info">Commerce</span></td>
+                                    <td>New product: Pro Membership</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <div class="modal-header"><h2>➕ Add Product</h2><button class="modal-close" onclick="closeModal('productModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Product Name</label><input type="text" class="form-input" placeholder="Product name" /></div>
+                <div class="form-group"><label class="form-label">Category</label><select class="form-select"><option>Electronics</option><option>Clothing</option><option>Digital</option><option>Service</option></select></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Price (BWP)</label><input type="number" class="form-input" placeholder="0.00" /></div>
+                    <div class="form-group"><label class="form-label">Stock</label><input type="number" class="form-input" placeholder="100" /></div>
+                </div>
+                <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" rows="2" placeholder="Product description..."></textarea></div>
+                <div class="form-check"><input type="checkbox" checked /> Enable AI recommendations</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('productModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('productModal');showToast('🛍️ Product added!','success')">Add Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Commerce Platform
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY COMMERCE PLATFORM – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Commerce Dashboard',
+                marketplace: 'Merchant Marketplace',
+                ecommerce: 'E-Commerce Engine',
+                checkout: 'Checkout Platform',
+                billing: 'Billing Engine',
+                subscriptions: 'Subscription Management',
+                wallet: 'Digital Wallet',
+                orders: 'Order Management',
+                customers: 'Customer Relationship',
+                'ai-commerce': 'AI Commerce Engine',
+                analytics: 'Analytics',
+                security: 'Security',
+                compliance: 'Compliance',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Commerce Platform';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing commerce data...', 'info');
+            // CONNECTION POINT: API call to fetch commerce metrics
+            setTimeout(() => {
+                const statIds = [
+                    'statRevenue', 'statOrders', 'statCustomers', 'statMerchants', 'statSubscriptions', 'statConversion',
+                    'mpMerchants', 'mpProducts', 'mpReviews',
+                    'ecOrders', 'ecInventory', 'ecCoupons',
+                    'aiRecs', 'aiForecast', 'aiFraud',
+                    'mkMerchants', 'mkStores', 'mkProducts', 'mkReviews2',
+                    'ecTotal', 'ecInStock', 'ecLowStock', 'ecCoupons2',
+                    'chTotal', 'chConversion', 'chMobile', 'chGuest',
+                    'billTotal', 'billPaid', 'billUnpaid', 'billOverdue',
+                    'subTotal', 'subActive', 'subTrial', 'subRevenue',
+                    'walBalance', 'walCustomers', 'walMerchants', 'walPoints',
+                    'ordTotal', 'ordNew', 'ordProcessing', 'ordFulfilled',
+                    'crTotal', 'crActive', 'crLoyalty', 'crLTV',
+                    'aiRecs2', 'aiForecast2', 'aiPricing', 'aiInventory',
+                    'anRevenue', 'anOrders', 'anConversion', 'anAOV'
+                ];
+                statIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update progress bars to 0%
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+
+                showToast('✅ Data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+
+            console.log('🛒 AuthePay Commerce Platform loaded');
+            console.log('📦 Modules: Marketplace, E-Commerce, Checkout, Billing, Subscriptions, Wallet, Orders, Customers, AI Commerce, Analytics, Security, Compliance');
+            console.log('🧠 AI: Product Recommendations, Sales Forecasting, Dynamic Pricing, Fraud Detection, Inventory Prediction');
+            console.log('🔗 Integrations: AuthePay Gateway, KaTSo AI Core, Supabase ready');
+            console.log('🛡️ Security: PCI DSS, Fraud Monitoring, Data Protection, Audit Logs');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.filterAudit = filterAudit;
+        window.refreshData = refreshData;
+    </script>
+
+</body>
+</html>

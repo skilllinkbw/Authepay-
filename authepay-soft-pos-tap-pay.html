@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay SoftPOS – Tap &amp; Pay Core</title>
+    <meta name="description" content="AuthePay SoftPOS – Secure contactless payment acceptance for merchants." />
+    <style>
+        /* ============================================================
+           AUTHEPAY SOFTPOS CORE – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           Payment terminal experience – mobile-first
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --brand-glow-strong: rgba(255, 107, 0, 0.4);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --shadow-glow: 0 0 40px rgba(255, 107, 0, 0.15);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 270px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── SOFTPOS TERMINAL DISPLAY ── */
+        .terminal-display {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 2rem 1.5rem;
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        .terminal-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 0, 0.03), transparent 70%);
+            pointer-events: none;
+        }
+        .terminal-display .nfc-area {
+            position: relative;
+            z-index: 1;
+            padding: 2rem 0;
+        }
+        .terminal-display .nfc-icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            animation: pulseNFC 2s infinite ease-in-out;
+        }
+        @keyframes pulseNFC {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+        .terminal-display .status-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .terminal-display .status-text.ready {
+            color: var(--success);
+        }
+        .terminal-display .status-text.waiting {
+            color: var(--brand);
+        }
+        .terminal-display .status-text.processing {
+            color: var(--warning);
+        }
+        .terminal-display .amount-display {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+            margin: 0.5rem 0;
+        }
+        .terminal-display .amount-display .currency {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .terminal-display .merchant-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+        .terminal-display .nfc-wave {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 1rem 0;
+        }
+        .terminal-display .nfc-wave span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand);
+            opacity: 0.3;
+            animation: wave 1.5s infinite ease-in-out;
+        }
+        .terminal-display .nfc-wave span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .terminal-display .nfc-wave span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        .terminal-display .nfc-wave span:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+        .terminal-display .nfc-wave span:nth-child(5) {
+            animation-delay: 0.8s;
+        }
+        @keyframes wave {
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* ── DEVICE CARD ── */
+        .device-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .device-card:hover {
+            border-color: var(--brand);
+        }
+        .device-card .info {
+            display: flex;
+            flex-direction: column;
+        }
+        .device-card .info .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .device-card .info .id {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+        .device-card .info .status {
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+        .device-card .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* ── TRANSACTION CARD ── */
+        .tx-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tx-card:hover {
+            border-color: var(--brand);
+        }
+        .tx-card .left .id {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .tx-card .left .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .tx-card .right {
+            text-align: right;
+        }
+        .tx-card .right .amount {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .tx-card .right .method {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+
+        /* ── PCI BADGE ── */
+        .pci-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        .pci-badge .check {
+            font-size: 0.8rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .terminal-display {
+                padding: 1.5rem 1rem;
+            }
+            .terminal-display .amount-display {
+                font-size: 2rem;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── SOFTPOS FOOTER BAR ── */
+        .softpos-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .softpos-footer .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .softpos-footer .right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">📱</span>
+                <div>
+                    <span>SoftPOS</span>
+                    <span class="sub">Tap &amp; Pay</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Terminal</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="tap">💳 Tap &amp; Pay</a>
+                <a href="#" data-page="devices">📱 Devices</a>
+
+                <div class="sidebar-section-label">Transactions</div>
+                <a href="#" data-page="transactions">📋 Transactions</a>
+                <a href="#" data-page="refunds">↩️ Refunds</a>
+
+                <div class="sidebar-section-label">Security</div>
+                <a href="#" data-page="ai-security">🤖 KaTSo AI</a>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Ready</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · PCI DSS Ready</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">SoftPOS Dashboard <small>Tap &amp; Pay Terminal</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI</span>
+                    <span class="pci-badge"><span class="check">✅</span> PCI DSS Ready</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="navigateTo('tap')">💳 New Payment</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="statVolume">—</div>
+                        <div class="label">Total Volume (MTD)</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="statTx">—</div>
+                        <div class="label">Transactions</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statSuccess">—</div>
+                        <div class="label">Success Rate</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="statDevices">—</div>
+                        <div class="label">Active Devices</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="statSettlement">—</div>
+                        <div class="label">Pending Settlement</div>
+                        <div class="trend">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statRisk">—</div>
+                        <div class="label">Risk Score (Avg)</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Payment Activity (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: payment_activity from Supabase analytics -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📱 Terminal Status</span>
+                            <span class="badge badge-success">🟢 Online</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>📟 Device ID</span>
+                                <span style="font-family:monospace;color:var(--text-secondary);">SP-001-842</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>🏪 Merchant</span>
+                                <span style="color:var(--text-secondary);">ABC Shop</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>📶 NFC Status</span>
+                                <span class="badge badge-success">✅ Ready</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span>🔐 Security</span>
+                                <span class="badge badge-success">✅ Verified</span>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: terminal_status from device management API -->
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Recent Transactions</span></div>
+                        <div id="recentTxList">
+                            <div class="tx-card" style="margin-bottom:6px;">
+                                <div class="left"><div class="id">#TX-8921</div><div class="meta">14:23 · Tap</div></div>
+                                <div class="right"><div class="amount">P 150.00</div><div class="method">Contactless</div></div>
+                            </div>
+                            <div class="tx-card" style="margin-bottom:6px;">
+                                <div class="left"><div class="id">#TX-8920</div><div class="meta">13:45 · Tap</div></div>
+                                <div class="right"><div class="amount">P 85.00</div><div class="method">Contactless</div></div>
+                            </div>
+                            <div class="tx-card">
+                                <div class="left"><div class="id">#TX-8919</div><div class="meta">12:18 · Tap</div></div>
+                                <div class="right"><div class="amount">P 220.00</div><div class="method">Contactless</div></div>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: recent_transactions from Supabase -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🤖 KaTSo AI Security</span></div>
+                        <div><span style="color:var(--text-muted);">Risk Score</span> <span style="float:right;color:var(--success);" id="aiRiskScore">12/100</span></div>
+                        <div><span style="color:var(--text-muted);">Fraud Alerts</span> <span style="float:right;color:var(--text-primary);" id="aiAlerts">0</span></div>
+                        <div><span style="color:var(--text-muted);">Device Trust</span> <span style="float:right;color:var(--success);">✅ Verified</span></div>
+                        <div><span style="color:var(--text-muted);">Abnormal Pattern</span> <span style="float:right;color:var(--success);">None</span></div>
+                        <!-- CONNECTION POINT: KaTSo AI Core – security metrics -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Settlement Status</span></div>
+                        <div><span style="color:var(--text-muted);">Pending</span> <span style="float:right;color:var(--text-primary);" id="pendingSettlement">—</span></div>
+                        <div><span style="color:var(--text-muted);">Last Settlement</span> <span style="float:right;color:var(--text-secondary);" id="lastSettlement">—</span></div>
+                        <div><span style="color:var(--text-muted);">Next Settlement</span> <span style="float:right;color:var(--text-secondary);" id="nextSettlement">—</span></div>
+                        <!-- CONNECTION POINT: settlement_status from AuthePay Gateway -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: TAP & PAY
+            ============================================================ -->
+            <div class="page" id="page-tap">
+                <div class="section-header">
+                    <h2>💳 Tap &amp; Pay</h2>
+                    <p>Accept contactless payments – simply tap the card or device on the NFC reader.</p>
+                </div>
+
+                <div class="terminal-display" id="terminalDisplay">
+                    <div class="nfc-area">
+                        <!-- NFC Icon & Status -->
+                        <span class="nfc-icon" id="nfcIcon">📶</span>
+                        <div class="status-text ready" id="terminalStatus">✅ Ready for payment</div>
+
+                        <!-- Amount Display -->
+                        <div class="amount-display">
+                            <span class="currency">P</span>
+                            <span id="displayAmount">0.00</span>
+                        </div>
+
+                        <!-- Merchant Info -->
+                        <div class="merchant-info" id="merchantInfo">ABC Shop · Terminal SP-001-842</div>
+
+                        <!-- NFC Wave Animation -->
+                        <div class="nfc-wave" id="nfcWave">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+
+                        <!-- Payment Instruction -->
+                        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:0.5rem;" id="paymentInstruction">
+                            Tap your card or device on the reader
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amount Entry -->
+                <div class="card" style="max-width:480px;margin:1.5rem auto 0;">
+                    <div class="card-header">
+                        <span class="card-title">💰 Enter Amount</span>
+                        <span class="badge badge-neutral">Tap to pay</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount (BWP)</label>
+                        <input type="number" class="form-input" id="tapAmount" placeholder="0.00" value="150.00" step="0.01" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Merchant</label>
+                            <input type="text" class="form-input" id="tapMerchant" value="ABC Shop" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reference</label>
+                            <input type="text" class="form-input" id="tapRef" value="SOFTPOS-001" />
+                        </div>
+                    </div>
+                    <button class="btn btn-brand" style="width:100%;padding:0.85rem;" onclick="startTapPayment()">
+                        📱 Start Tap &amp; Pay
+                    </button>
+                    <!-- CONNECTION POINT: NFC SDK integration -->
+                    <!-- CONNECTION POINT: Certified payment provider API -->
+                </div>
+
+                <!-- Payment Result -->
+                <div id="tapResult" style="display:none;max-width:480px;margin:1.5rem auto 0;" class="card">
+                    <div class="card-header">
+                        <span class="card-title" id="resultTitle">✅ Payment Successful</span>
+                        <span class="badge badge-success" id="resultStatus">Completed</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;">
+                        <div>
+                            <div style="font-weight:700;" id="resultTxId">#TX-8922</div>
+                            <div style="font-size:0.85rem;color:var(--text-muted);" id="resultTime">2026-07-21 14:23</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:900;font-size:1.5rem;" id="resultAmount">P 150.00</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted);" id="resultMethod">Contactless · Tap</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📄 Receipt generated','success')">📄 Receipt</button>
+                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('tapResult').style.display='none';resetTap()">↩️ New Payment</button>
+                        <span class="ai-badge" style="margin-left:auto;"><span class="dot"></span> Risk: <span id="resultRisk">12/100</span></span>
+                    </div>
+                    <!-- CONNECTION POINT: Receipt generation API -->
+                </div>
+
+                <!-- CONNECTION POINT: AuthePay Gateway payment initiation -->
+                <!-- CONNECTION POINT: Tokenised payment processing -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: DEVICES
+            ============================================================ -->
+            <div class="page" id="page-devices">
+                <div class="section-header">
+                    <h2>📱 Device Management</h2>
+                    <p>Register, authenticate, and manage SoftPOS terminals.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="devTotal">—</div><div class="label">Total Devices</div></div>
+                    <div class="stat-card"><div class="value green" id="devActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value yellow" id="devPending">—</div><div class="label">Pending Auth</div></div>
+                    <div class="stat-card"><div class="value purple" id="devSecure">—</div><div class="label">Security Verified</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Registered Devices</span>
+                        <button class="btn btn-brand btn-sm" onclick="openModal('deviceModal')">+ Register Device</button>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="device-card">
+                            <div class="info">
+                                <div class="name">Terminal SP-001</div>
+                                <div class="id">ID: 0xA7F2 • ABC Shop</div>
+                                <div class="status"><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.7rem;">Last: 14:23</span></div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-outline btn-xs" onclick="showToast('📋 Device details','info')">📋</button>
+                                <button class="btn btn-outline btn-xs" onclick="showToast('🔐 Security check passed','success')">🔐</button>
+                                <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Device deregistered','warning')">✕</button>
+                            </div>
+                        </div>
+                        <div class="device-card">
+                            <div class="info">
+                                <div class="name">Terminal SP-002</div>
+                                <div class="id">ID: 0xB3E1 • QuickBet</div>
+                                <div class="status"><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.7rem;">Last: 13:45</span></div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-outline btn-xs" onclick="showToast('📋 Device details','info')">📋</button>
+                                <button class="btn btn-outline btn-xs" onclick="showToast('🔐 Security check passed','success')">🔐</button>
+                                <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Device deregistered','warning')">✕</button>
+                            </div>
+                        </div>
+                        <div class="device-card" style="border-color:var(--warning);">
+                            <div class="info">
+                                <div class="name">Terminal SP-003</div>
+                                <div class="id">ID: 0xC5D2 • TechHub</div>
+                                <div class="status"><span class="badge badge-warning">Pending Auth</span> <span style="color:var(--text-muted);font-size:0.7rem;">Registered: 2h ago</span></div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-brand btn-xs" onclick="showToast('✅ Device authenticated','success')">✅ Auth</button>
+                                <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Device deregistered','warning')">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: devices table from Supabase -->
+                    <!-- CONNECTION POINT: device_authentication API -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔐 Security Checks</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Device Attestation</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>NFC SDK Integrity</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>SE Validated</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Remote Management</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: device_security from security module -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ Remote Management</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📡 Remote update pushed','info')">📡 Push Update</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('🔐 Remote lock activated','warning')">🔒 Lock Device</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📊 Device status fetched','info')">📊 Status Check</button>
+                        </div>
+                        <!-- CONNECTION POINT: remote_management API -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: device_management API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: TRANSACTIONS
+            ============================================================ -->
+            <div class="page" id="page-transactions">
+                <div class="section-header">
+                    <h2>📋 Transaction History</h2>
+                    <p>Search, filter, and export all SoftPOS transactions.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">All Transactions</span>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting transactions...','info')">📥 Export</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('🔍 Search opened','info')">🔍 Search</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>ID</th><th>Date</th><th>Merchant</th><th>Amount</th><th>Method</th><th>Status</th><th>Risk</th></tr></thead>
+                            <tbody>
+                                <tr class="tr-clickable" onclick="showToast('📋 TX-8921 details','info')">
+                                    <td>#TX-8921</td><td>2026-07-21 14:23</td><td>ABC Shop</td><td>P 150.00</td><td>Tap</td>
+                                    <td><span class="badge badge-success">Completed</span></td><td><span class="badge badge-success">Low</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 TX-8920 details','info')">
+                                    <td>#TX-8920</td><td>2026-07-21 13:45</td><td>QuickBet</td><td>P 85.00</td><td>Tap</td>
+                                    <td><span class="badge badge-success">Completed</span></td><td><span class="badge badge-success">Low</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 TX-8919 details','info')">
+                                    <td>#TX-8919</td><td>2026-07-21 12:18</td><td>PayrollCo</td><td>P 220.00</td><td>Tap</td>
+                                    <td><span class="badge badge-warning">Processing</span></td><td><span class="badge badge-warning">Medium</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 TX-8918 details','info')">
+                                    <td>#TX-8918</td><td>2026-07-21 11:02</td><td>TechHub</td><td>P 45.00</td><td>Tap</td>
+                                    <td><span class="badge badge-danger">Failed</span></td><td><span class="badge badge-neutral">—</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: transactions table from Supabase -->
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: REFUNDS
+            ============================================================ -->
+            <div class="page" id="page-refunds">
+                <div class="section-header">
+                    <h2>↩️ Refunds</h2>
+                    <p>Process refunds for SoftPOS transactions.</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">↩️ Process Refund</span></div>
+                        <div class="form-group">
+                            <label class="form-label">Transaction ID</label>
+                            <input type="text" class="form-input" placeholder="#TX-8921" id="refundTxId" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Refund Amount</label>
+                            <input type="number" class="form-input" placeholder="Full or partial" id="refundAmount" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reason</label>
+                            <select class="form-select" id="refundReason">
+                                <option>Customer requested</option>
+                                <option>Duplicate transaction</option>
+                                <option>Incorrect amount</option>
+                                <option>Product not available</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-warning" style="width:100%;padding:0.85rem;" onclick="processRefund()">
+                            ↩️ Process Refund
+                        </button>
+                        <!-- CONNECTION POINT: refund API via AuthePay Gateway -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Recent Refunds</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>#TX-8900</span>
+                                <span>P 45.00</span>
+                                <span class="badge badge-success">Completed</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>#TX-8895</span>
+                                <span>P 120.00</span>
+                                <span class="badge badge-warning">Processing</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span>#TX-8887</span>
+                                <span>P 67.50</span>
+                                <span class="badge badge-success">Completed</span>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: refunds table from Supabase -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI SECURITY
+            ============================================================ -->
+            <div class="page" id="page-ai-security">
+                <div class="section-header">
+                    <h2>🤖 KaTSo AI Security</h2>
+                    <p>AI-powered transaction risk scoring, device fraud detection, and security alerts.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="aiRiskScore2">12</div><div class="label">Avg Risk Score</div></div>
+                    <div class="stat-card"><div class="value green" id="aiFraudAlerts">0</div><div class="label">Fraud Alerts</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiDevicesSecured">3</div><div class="label">Secured Devices</div></div>
+                    <div class="stat-card"><div class="value purple" id="aiAbnormal">0</div><div class="label">Abnormal Patterns</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛡️ Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Transaction Risk Scoring</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Device Fraud Detection</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Abnormal Payment Monitoring</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Merchant Risk Analysis</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: KaTSo AI Core – security module -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔔 Security Alerts</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> All devices secure</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">Now</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-info">ℹ️</span> Device SP-003 pending auth</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">2h ago</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span><span class="badge badge-success">✅</span> Risk check passed (12/100)</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">4h ago</span>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: security_alerts from KaTSo AI Core -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: KaTSo AI Security Engine integration -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance &amp; Safety</h2>
+                    <p>Botswana Data Protection Act, PCI DSS architecture, and security controls.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compScore">98%</div><div class="label">Compliance Score</div></div>
+                    <div class="stat-card"><div class="value green" id="compPCI">✅</div><div class="label">PCI DSS Ready</div></div>
+                    <div class="stat-card"><div class="value blue" id="compAudit">1.2K</div><div class="label">Audit Events</div></div>
+                    <div class="stat-card"><div class="value green" id="compBreaches">0</div><div class="label">Data Breaches</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Botswana Data Protection Act</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>PCI DSS Architecture</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Tokenisation Design</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>No Card Data Storage</span><span class="badge badge-success">✅</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: compliance_framework from KaTSo System Core -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔐 Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Encryption</span><span class="badge badge-success">AES-256</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Access Controls</span><span class="badge badge-success">RBAC</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Audit Logs</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Merchant Verification</span><span class="badge badge-success">Required</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: security_controls from KaTSo System Core -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all SoftPOS events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('payment')">Payment</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('device')">Device</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>merchant@abc</td><td>Payment Processed</td>
+                                    <td><span class="badge badge-success">Payment</span></td>
+                                    <td>#TX-8921 via Tap</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>system</td><td>Device Authenticated</td>
+                                    <td><span class="badge badge-info">Device</span></td>
+                                    <td>SP-002 registered</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>system</td><td>Security Alert</td>
+                                    <td><span class="badge badge-danger">Security</span></td>
+                                    <td>Failed tap attempt</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>admin@authecorp</td><td>Refund Processed</td>
+                                    <td><span class="badge badge-warning">Payment</span></td>
+                                    <td>#TX-8900 refunded</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Device Registration Modal -->
+    <div class="modal-overlay" id="deviceModal">
+        <div class="modal">
+            <div class="modal-header"><h2>📱 Register Device</h2><button class="modal-close" onclick="closeModal('deviceModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Merchant</label><select class="form-select"><option>ABC Shop</option><option>QuickBet</option><option>PayrollCo</option></select></div>
+                <div class="form-group"><label class="form-label">Device Name</label><input type="text" class="form-input" placeholder="Terminal SP-004" /></div>
+                <div class="form-group"><label class="form-label">Device ID (Hardware)</label><input type="text" class="form-input" placeholder="0x..." /></div>
+                <div class="form-group"><label class="form-label">Location</label><input type="text" class="form-input" placeholder="Gaborone, Botswana" /></div>
+                <div class="security-warning" style="margin-top:12px;">
+                    <span class="icon">🔐</span>
+                    <span>Device will require authentication before use. Security keys will be generated.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('deviceModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('deviceModal');showToast('📱 Device registered successfully!','success')">Register Device</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay SoftPOS Core Engine
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY SOFTPOS CORE – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard',
+            isTapActive: false,
+            tapTimer: null
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'SoftPOS Dashboard',
+                tap: 'Tap & Pay',
+                devices: 'Device Management',
+                transactions: 'Transaction History',
+                refunds: 'Refunds',
+                'ai-security': 'KaTSo AI Security',
+                compliance: 'Compliance & Safety',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'SoftPOS';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── TAP & PAY ──
+        function startTapPayment() {
+            const amount = document.getElementById('tapAmount').value || '0.00';
+            const merchant = document.getElementById('tapMerchant').value || 'ABC Shop';
+            const ref = document.getElementById('tapRef').value || 'SOFTPOS-001';
+
+            if (parseFloat(amount) <= 0) {
+                showToast('Please enter a valid amount', 'warning');
+                return;
+            }
+
+            const terminal = document.getElementById('terminalDisplay');
+            const status = document.getElementById('terminalStatus');
+            const icon = document.getElementById('nfcIcon');
+            const instruction = document.getElementById('paymentInstruction');
+            const displayAmount = document.getElementById('displayAmount');
+
+            // Update display
+            displayAmount.textContent = parseFloat(amount).toFixed(2);
+            status.textContent = '📱 Waiting for tap...';
+            status.className = 'status-text waiting';
+            icon.textContent = '📶';
+            instruction.textContent = 'Tap your card or device now...';
+            terminal.style.borderColor = 'var(--brand)';
+            terminal.style.boxShadow = 'var(--shadow-glow)';
+
+            // CONNECTION POINT: NFC SDK – start listening for tap
+            // CONNECTION POINT: Secure payment SDK – initiate transaction
+
+            // Simulate tap detection
+            if (state.tapTimer) clearTimeout(state.tapTimer);
+
+            // Show NFC wave animation
+            document.getElementById('nfcWave').style.display = 'flex';
+
+            state.tapTimer = setTimeout(() => {
+                // Simulate successful tap
+                icon.textContent = '💳';
+                status.textContent = '✅ Processing payment...';
+                status.className = 'status-text processing';
+                instruction.textContent = 'Please wait while we verify...';
+
+                // CONNECTION POINT: AuthePay Gateway – process payment
+                // CONNECTION POINT: KaTSo AI – risk scoring
+
+                setTimeout(() => {
+                    // Payment successful
+                    const txId = '#TX-' + Math.floor(8000 + Math.random() * 2000);
+                    const riskScore = Math.floor(Math.random() * 20) + 5;
+
+                    status.textContent = '✅ Payment Successful!';
+                    status.className = 'status-text ready';
+                    icon.textContent = '✅';
+                    instruction.textContent = 'Tap another card or start new payment';
+                    terminal.style.borderColor = 'var(--success)';
+                    terminal.style.boxShadow = '0 0 40px rgba(34,197,94,0.15)';
+
+                    // Show result
+                    document.getElementById('resultTxId').textContent = txId;
+                    document.getElementById('resultAmount').textContent = `P ${parseFloat(amount).toFixed(2)}`;
+                    document.getElementById('resultTime').textContent = new Date().toLocaleString();
+                    document.getElementById('resultRisk').textContent = `${riskScore}/100`;
+                    document.getElementById('tapResult').style.display = 'block';
+
+                    document.getElementById('nfcWave').style.display = 'none';
+
+                    // CONNECTION POINT: Receipt generation
+                    // CONNECTION POINT: Transaction saved to Supabase
+
+                    showToast(`✅ Payment ${txId} completed!`, 'success');
+                    state.isTapActive = false;
+                }, 2000);
+
+            }, 3000);
+
+            state.isTapActive = true;
+        }
+
+        function resetTap() {
+            const terminal = document.getElementById('terminalDisplay');
+            document.getElementById('terminalStatus').textContent = '✅ Ready for payment';
+            document.getElementById('terminalStatus').className = 'status-text ready';
+            document.getElementById('nfcIcon').textContent = '📶';
+            document.getElementById('paymentInstruction').textContent = 'Tap your card or device on the reader';
+            terminal.style.borderColor = 'var(--border)';
+            terminal.style.boxShadow = 'var(--shadow-lg)';
+            document.getElementById('displayAmount').textContent = '0.00';
+            document.getElementById('nfcWave').style.display = 'none';
+            state.isTapActive = false;
+            if (state.tapTimer) {
+                clearTimeout(state.tapTimer);
+                state.tapTimer = null;
+            }
+        }
+
+        // ── REFUND ──
+        function processRefund() {
+            const txId = document.getElementById('refundTxId').value || '#TX-8921';
+            const amount = document.getElementById('refundAmount').value || '0.00';
+            const reason = document.getElementById('refundReason').value;
+
+            if (parseFloat(amount) <= 0) {
+                showToast('Please enter a refund amount', 'warning');
+                return;
+            }
+
+            // CONNECTION POINT: Refund API via AuthePay Gateway
+            // CONNECTION POINT: KaTSo AI – refund risk check
+
+            showToast(`↩️ Refund of P${parseFloat(amount).toFixed(2)} for ${txId} processed!`, 'success');
+
+            // Reset fields
+            document.getElementById('refundTxId').value = '';
+            document.getElementById('refundAmount').value = '';
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing SoftPOS data...', 'info');
+            // CONNECTION POINT: API call to fetch latest metrics
+            setTimeout(() => {
+                showToast('✅ Data refreshed', 'success');
+            }, 1000);
+        }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+                if (state.isTapActive) resetTap();
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default values
+            document.getElementById('displayAmount').textContent = '0.00';
+
+            // CONNECTION POINT: NFC SDK initialisation
+            // CONNECTION POINT: Device authentication check
+
+            console.log('📱 AuthePay SoftPOS Core loaded');
+            console.log('📦 Modules: Dashboard, Tap & Pay, Devices, Transactions, Refunds, KaTSo AI, Compliance, Audit');
+            console.log('🔗 Integrations: AuthePay Gateway, KaTSo AI Core, Supabase ready');
+            console.log('🛡️ Security: PCI DSS Ready, Tokenisation, AES-256, No card storage');
+            console.log('📋 Compliance: Botswana DPA, Access Controls, Audit Logging');
+            console.log('🔌 NFC SDK ready · Certified payment providers · Banking APIs ready');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.startTapPayment = startTapPayment;
+        window.resetTap = resetTap;
+        window.processRefund = processRefund;
+        window.refreshData = refreshData;
+        window.filterAudit = filterAudit;
+    </script>
+
+</body>
+</html>

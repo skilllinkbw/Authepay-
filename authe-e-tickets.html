@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AutheTicket Core – Digital Ticketing Platform</title>
+    <meta name="description" content="AutheTicket – Secure digital ticketing powered by AuthePay Gateway and KaTSo AI." />
+    <style>
+        /* ============================================================
+           AUTHE TICKET CORE – STYLES
+           Brand: AutheCorp / AuthePay
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           ============================================================ */
+
+        /* ── RESET & VARIABLES ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --brand-glow-strong: rgba(255, 107, 0, 0.4);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 270px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .badge-ka tso {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+        .tr-clickable {
+            cursor: pointer;
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── TICKET CARD ── */
+        .ticket-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            transition: var(--transition);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+        .ticket-card:hover {
+            border-color: var(--brand);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .ticket-card .ticket-type {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+        .ticket-card .ticket-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 4px 0;
+        }
+        .ticket-card .ticket-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .ticket-card .ticket-status {
+            margin-top: 8px;
+        }
+        .ticket-card .ticket-qr {
+            text-align: center;
+            padding: 12px;
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            margin-top: 8px;
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            font-family: monospace;
+            color: var(--text-muted);
+        }
+
+        /* ── QR SCANNER VIEW ── */
+        .scanner-view {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
+            background: #000;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin: 0 auto;
+            border: 2px solid var(--border);
+        }
+        .scanner-view .frame {
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            border: 3px solid var(--brand);
+            border-radius: 12px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .scanner-view .frame .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: var(--brand);
+            border-style: solid;
+            border-width: 0;
+        }
+        .scanner-view .frame .corner.tl {
+            top: -3px;
+            left: -3px;
+            border-top-width: 4px;
+            border-left-width: 4px;
+            border-radius: 4px 0 0 0;
+        }
+        .scanner-view .frame .corner.tr {
+            top: -3px;
+            right: -3px;
+            border-top-width: 4px;
+            border-right-width: 4px;
+            border-radius: 0 4px 0 0;
+        }
+        .scanner-view .frame .corner.bl {
+            bottom: -3px;
+            left: -3px;
+            border-bottom-width: 4px;
+            border-left-width: 4px;
+            border-radius: 0 0 0 4px;
+        }
+        .scanner-view .frame .corner.br {
+            bottom: -3px;
+            right: -3px;
+            border-bottom-width: 4px;
+            border-right-width: 4px;
+            border-radius: 0 0 4px 0;
+        }
+        .scanner-view .scan-line {
+            position: absolute;
+            width: 60%;
+            height: 2px;
+            background: var(--brand);
+            opacity: 0.8;
+            animation: scanMove 2s infinite ease-in-out;
+            box-shadow: 0 0 12px var(--brand);
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        @keyframes scanMove {
+            0% {
+                top: 20%;
+            }
+            50% {
+                top: 70%;
+            }
+            100% {
+                top: 20%;
+            }
+        }
+        .scanner-view .hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 16px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .scanner-view .hint {
+                font-size: 0.7rem;
+                padding: 4px 12px;
+                white-space: nowrap;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── KaTSo AI Security Badge ── */
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* ── VERIFICATION RESULT ── */
+        .verify-result {
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .verify-result.valid {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid var(--success);
+        }
+        .verify-result.invalid {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--danger);
+        }
+        .verify-result .icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .verify-result h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+        .verify-result p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── MANUAL ENTRY ── */
+        .manual-entry {
+            display: flex;
+            gap: 8px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .manual-entry input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 1rem;
+            text-align: center;
+            letter-spacing: 4px;
+            font-weight: 600;
+            font-family: monospace;
+        }
+        .manual-entry input:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">🎟️</span>
+                <div>
+                    <span>AutheTicket</span>
+                    <span class="sub">Core Module</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Core</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="tickets">🎫 Tickets</a>
+                <a href="#" data-page="create-ticket">➕ Create Ticket</a>
+
+                <div class="sidebar-section-label">Verification</div>
+                <a href="#" data-page="scanner">📷 QR Scanner</a>
+                <a href="#" data-page="verify">✅ Verify Ticket</a>
+
+                <div class="sidebar-section-label">Business</div>
+                <a href="#" data-page="sales">📈 Sales</a>
+                <a href="#" data-page="customers">👥 Customers</a>
+                <a href="#" data-page="reports">📄 Reports</a>
+
+                <div class="sidebar-section-label">Security</div>
+                <a href="#" data-page="ai-security">🤖 KaTSo AI</a>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="audit">📜 Audit Logs</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Live</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.1 · KaTSo AI active</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Ticket Dashboard <small>Digital Ticketing Platform</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI Security</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('createTicketModal')">➕ New Ticket</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand">1,247</div>
+                        <div class="label">Total Tickets Sold</div>
+                        <div class="trend up">▲ 18%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green">342</div>
+                        <div class="label">Active Tickets</div>
+                        <div class="trend up">▲ 12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow">P 45.2K</div>
+                        <div class="label">Revenue (MTD)</div>
+                        <div class="trend up">▲ 22%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue">1,234</div>
+                        <div class="label">Scans Today</div>
+                        <div class="trend up">▲ 8%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple">0</div>
+                        <div class="label">Fraud Alerts</div>
+                        <div class="trend">✅ Protected</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green">98.7%</div>
+                        <div class="label">Verification Rate</div>
+                        <div class="trend up">▲ 0.3%</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Ticket Sales (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">🕐 Recent Ticket Scans</span>
+                            <a href="#" onclick="navigateTo('verify');return false;" style="font-size:0.8rem;color:var(--brand);">View all</a>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> VIP – Thabo M.</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> General – Kefilwe N.</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-danger">❌</span> Invalid – Fake attempt</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span><span class="badge badge-success">✅</span> Student – Oatile M.</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🎫 Ticket Types</span></div>
+                        <div><span style="color:var(--text-muted);">Events</span> <span style="float:right;color:var(--text-primary);">342</span></div>
+                        <div><span style="color:var(--text-muted);">Transport</span> <span style="float:right;color:var(--text-primary);">89</span></div>
+                        <div><span style="color:var(--text-muted);">Access Passes</span> <span style="float:right;color:var(--text-primary);">156</span></div>
+                        <div><span style="color:var(--text-muted);">Services</span> <span style="float:right;color:var(--text-primary);">67</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🤖 KaTSo AI Security</span></div>
+                        <div><span style="color:var(--text-muted);">Risk Score</span> <span style="float:right;color:var(--success);">12/100</span></div>
+                        <div><span style="color:var(--text-muted);">Fraud Attempts</span> <span style="float:right;color:var(--text-primary);">0</span></div>
+                        <div><span style="color:var(--text-muted);">Duplicate Detection</span> <span style="float:right;color:var(--success);">Active</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Compliance</span></div>
+                        <div><span style="color:var(--text-muted);">DPA Compliant</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Consent</span> <span style="float:right;color:var(--success);">98%</span></div>
+                        <div><span style="color:var(--text-muted);">Audit Logs</span> <span style="float:right;color:var(--text-primary);">1.2K</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: TICKETS
+            ============================================================ -->
+            <div class="page" id="page-tickets">
+                <div class="section-header">
+                    <h2>🎫 All Tickets</h2>
+                    <p>Manage all digital tickets across events, transport, services, and access passes.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Ticket Inventory</span>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting tickets...','info')">📥 Export</button>
+                            <button class="btn btn-brand btn-sm" onclick="openModal('createTicketModal')">➕ New Ticket</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>ID</th><th>Title</th><th>Type</th><th>Price</th><th>Sold</th><th>Status</th><th>QR</th></tr></thead>
+                            <tbody>
+                                <tr class="tr-clickable" onclick="showToast('📋 Ticket #TK-001 details','info')">
+                                    <td>#TK-001</td><td>Music Fest 2026</td><td><span class="badge badge-brand">Event</span></td>
+                                    <td>P 150.00</td><td>342/500</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td><span class="badge badge-info">QR</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 Ticket #TK-002 details','info')">
+                                    <td>#TK-002</td><td>Gaborone Express</td><td><span class="badge badge-info">Transport</span></td>
+                                    <td>P 85.00</td><td>89/120</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td><span class="badge badge-info">QR</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 Ticket #TK-003 details','info')">
+                                    <td>#TK-003</td><td>Tech Summit Entry</td><td><span class="badge badge-accent">Access</span></td>
+                                    <td>P 250.00</td><td>156/200</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td><span class="badge badge-info">QR</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 Ticket #TK-004 details','info')">
+                                    <td>#TK-004</td><td>Consultation Session</td><td><span class="badge badge-neutral">Service</span></td>
+                                    <td>P 350.00</td><td>12/30</td>
+                                    <td><span class="badge badge-warning">Limited</span></td>
+                                    <td><span class="badge badge-info">QR</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Ticket Categories</span></div>
+                        <div><span style="color:var(--text-muted);">Events</span> <span style="float:right;color:var(--text-primary);">342 sold</span><div class="progress-bar"><div class="progress-fill brand" style="width:68%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Transport</span> <span style="float:right;color:var(--text-primary);">89 sold</span><div class="progress-bar"><div class="progress-fill blue" style="width:74%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Access Passes</span> <span style="float:right;color:var(--text-primary);">156 sold</span><div class="progress-bar"><div class="progress-fill purple" style="width:78%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Services</span> <span style="float:right;color:var(--text-primary);">67 sold</span><div class="progress-bar"><div class="progress-fill green" style="width:40%;"></div></div></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📈 Ticket Status</span></div>
+                        <div><span style="color:var(--text-muted);">Active</span> <span style="float:right;color:var(--success);">342</span></div>
+                        <div><span style="color:var(--text-muted);">Used/Scanned</span> <span style="float:right;color:var(--text-muted);">1,234</span></div>
+                        <div><span style="color:var(--text-muted);">Expired</span> <span style="float:right;color:var(--warning);">45</span></div>
+                        <div><span style="color:var(--text-muted);">Refunded</span> <span style="float:right;color:var(--danger);">12</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📡 Integrations</span></div>
+                        <div><span style="color:var(--text-muted);">AuthePay Gateway</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">KaTSo AI Security</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">AutheBook</span> <span style="float:right;color:var(--success);">✅</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CREATE TICKET
+            ============================================================ -->
+            <div class="page" id="page-create-ticket">
+                <div class="section-header">
+                    <h2>➕ Create New Ticket</h2>
+                    <p>Create secure digital tickets for events, transport, services, or access passes.</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📝 Ticket Details</span></div>
+                        <div class="form-group">
+                            <label class="form-label">Ticket Title</label>
+                            <input type="text" class="form-input" id="ticketTitle" placeholder="e.g. Music Fest 2026" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ticket Type</label>
+                            <select class="form-select" id="ticketType">
+                                <option value="event">Event</option>
+                                <option value="transport">Transport</option>
+                                <option value="access">Access Pass</option>
+                                <option value="service">Educational / Business Service</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Price (BWP)</label>
+                                <input type="number" class="form-input" id="ticketPrice" placeholder="0.00" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Quantity</label>
+                                <input type="number" class="form-input" id="ticketQuantity" placeholder="100" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea" id="ticketDesc" rows="3" placeholder="Describe the ticket, venue, terms..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Validity Period</label>
+                            <div class="form-row">
+                                <input type="date" class="form-input" id="ticketValidFrom" />
+                                <input type="date" class="form-input" id="ticketValidTo" />
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="ticketAISecurity" checked />
+                            <label for="ticketAISecurity">Enable KaTSo AI fraud detection</label>
+                        </div>
+                        <button class="btn btn-brand" style="width:100%;padding:0.85rem;margin-top:0.5rem;" onclick="createTicket()">
+                            🎫 Create Ticket
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Ticket Preview</span></div>
+                        <div id="ticketPreview" style="text-align:center;padding:1.5rem 0;color:var(--text-muted);">
+                            <div style="font-size:3rem;margin-bottom:0.5rem;">🎫</div>
+                            <p>Fill in the ticket details and preview will appear here</p>
+                            <p style="font-size:0.85rem;">QR code will be generated automatically</p>
+                        </div>
+                        <div id="ticketPreviewResult" style="display:none;background:var(--bg-input);padding:1.5rem;border-radius:var(--radius);margin-top:1rem;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div>
+                                    <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;" id="previewType">Event</div>
+                                    <div style="font-size:1.2rem;font-weight:700;" id="previewTitle">Music Fest 2026</div>
+                                    <div style="font-size:0.85rem;color:var(--text-muted);" id="previewPrice">P 150.00</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:2.5rem;font-family:monospace;color:var(--text-muted);" id="previewQR">⬛</div>
+                                    <div style="font-size:0.65rem;color:var(--text-muted);">QR Code</div>
+                                </div>
+                            </div>
+                            <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-muted);" id="previewStatus">
+                                <span class="badge badge-success">Ready</span> · Valid: 2026-07-21 to 2026-07-25
+                            </div>
+                            <div style="margin-top:8px;font-size:0.7rem;color:var(--text-muted);">
+                                <span class="ai-badge"><span class="dot"></span> KaTSo AI Security</span>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: AuthePay Gateway Integration -->
+                        <div style="margin-top:1rem;padding:1rem;background:rgba(255,107,0,0.06);border-radius:var(--radius);border:1px dashed rgba(255,107,0,0.3);">
+                            <div style="font-size:0.75rem;color:var(--text-muted);">🔌 AuthePay Gateway Connection</div>
+                            <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px;">
+                                Payment will be processed through AuthePay Gateway<br />
+                                <span style="font-size:0.7rem;color:var(--text-muted);">Transaction ID will be linked automatically</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: QR SCANNER
+            ============================================================ -->
+            <div class="page" id="page-scanner">
+                <div class="section-header">
+                    <h2>📷 QR Ticket Scanner</h2>
+                    <p>Scan QR codes to verify and check-in ticket holders.</p>
+                </div>
+
+                <div style="max-width:420px;margin:0 auto;">
+                    <div class="scanner-view" id="scannerView">
+                        <div class="frame">
+                            <div class="corner tl"></div>
+                            <div class="corner tr"></div>
+                            <div class="corner bl"></div>
+                            <div class="corner br"></div>
+                        </div>
+                        <div class="scan-line"></div>
+                        <span class="hint">📷 Point camera at QR code</span>
+                    </div>
+
+                    <div style="display:flex;gap:12px;margin-top:16px;justify-content:center;">
+                        <button class="btn btn-brand" id="scanBtn" style="flex:1;">📷 Scan</button>
+                        <button class="btn btn-outline" id="simulateBtn" style="flex:1;">🔧 Simulate</button>
+                    </div>
+
+                    <div class="manual-entry" style="margin-top:12px;">
+                        <input type="text" id="manualCode" placeholder="Enter 6‑digit code" maxlength="6" />
+                        <button class="btn btn-outline" id="manualBtn" style="flex:0.4;">Check</button>
+                    </div>
+
+                    <div class="status-bar" style="display:flex;justify-content:space-between;margin-top:12px;font-size:0.8rem;color:var(--text-muted);">
+                        <span id="scanStatus">🔴 Not scanning</span>
+                        <span id="scanCount">Scans today: 0</span>
+                    </div>
+
+                    <!-- Result Area -->
+                    <div id="scanResult" style="display:none;" class="verify-result"></div>
+
+                    <!-- Scan History -->
+                    <div class="card" style="margin-top:16px;">
+                        <div class="card-header"><span class="card-title">📋 Recent Scans</span></div>
+                        <div id="scanHistory">
+                            <div style="padding:8px 0;color:var(--text-muted);text-align:center;">No scans yet</div>
+                        </div>
+                    </div>
+
+                    <!-- CONNECTION POINT: KaTSo AI Security -->
+                    <div style="padding:1rem;background:rgba(139,92,246,0.06);border-radius:var(--radius);border:1px solid rgba(139,92,246,0.15);margin-top:12px;">
+                        <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;">
+                            <span class="ai-badge"><span class="dot"></span> KaTSo AI Security</span>
+                            <span style="color:var(--text-muted);font-size:0.7rem;margin-left:auto;">Real-time fraud detection</span>
+                        </div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">
+                            🔍 QR manipulation detection · Duplicate ticket prevention · Risk scoring
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: VERIFY TICKET
+            ============================================================ -->
+            <div class="page" id="page-verify">
+                <div class="section-header">
+                    <h2>✅ Verify Ticket</h2>
+                    <p>Check ticket validity, status, and holder information.</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔍 Enter Ticket Code</span></div>
+                        <div class="form-group">
+                            <label class="form-label">Ticket ID or QR Code</label>
+                            <input type="text" class="form-input" id="verifyCode" placeholder="e.g. A1B2C3 or TK-001" />
+                        </div>
+                        <button class="btn btn-brand" onclick="verifyTicket()">✅ Verify Now</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Verification Result</span></div>
+                        <div id="verifyResult">
+                            <div style="text-align:center;padding:1.5rem 0;color:var(--text-muted);">
+                                <div style="font-size:3rem;margin-bottom:0.5rem;">🔍</div>
+                                <p>Enter a ticket code to verify</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Verification Statistics</span></div>
+                    <div class="stat-grid">
+                        <div class="stat-card"><div class="value green">1,234</div><div class="label">Valid Scans</div></div>
+                        <div class="stat-card"><div class="value red">12</div><div class="label">Invalid Attempts</div></div>
+                        <div class="stat-card"><div class="value yellow">3</div><div class="label">Duplicate Detected</div></div>
+                        <div class="stat-card"><div class="value blue">98.7%</div><div class="label">Success Rate</div></div>
+                    </div>
+                    <!-- CONNECTION POINT: KaTSo AI Fraud Detection -->
+                    <div style="background:rgba(139,92,246,0.06);padding:0.8rem 1rem;border-radius:var(--radius);border-left:3px solid var(--accent);">
+                        <span style="font-size:0.8rem;color:var(--text-muted);">🤖 KaTSo AI Security: </span>
+                        <span style="font-size:0.8rem;color:var(--success);">No fraud patterns detected · All clear</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SALES
+            ============================================================ -->
+            <div class="page" id="page-sales">
+                <div class="section-header">
+                    <h2>📈 Sales &amp; Revenue</h2>
+                    <p>Track ticket sales, revenue, and performance metrics.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand">P 45.2K</div><div class="label">Revenue (MTD)</div><div class="trend up">▲ 22%</div></div>
+                    <div class="stat-card"><div class="value blue">1,247</div><div class="label">Tickets Sold</div><div class="trend up">▲ 18%</div></div>
+                    <div class="stat-card"><div class="value purple">P 36.20</div><div class="label">Avg Ticket Price</div><div class="trend up">▲ 5%</div></div>
+                    <div class="stat-card"><div class="value green">342</div><div class="label">Active Tickets</div><div class="trend up">▲ 12%</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Sales by Ticket Type</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span>Events</span>
+                            <span>342 sold · P 51,300</span>
+                            <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill brand" style="width:68%;"></div></div></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span>Transport</span>
+                            <span>89 sold · P 7,565</span>
+                            <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill blue" style="width:18%;"></div></div></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span>Access Passes</span>
+                            <span>156 sold · P 39,000</span>
+                            <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill purple" style="width:31%;"></div></div></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                            <span>Services</span>
+                            <span>67 sold · P 23,450</span>
+                            <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:13%;"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: AuthePay Gateway Settlement -->
+                <div style="padding:1rem;background:rgba(255,107,0,0.06);border-radius:var(--radius);border:1px dashed rgba(255,107,0,0.3);">
+                    <div style="font-size:0.75rem;color:var(--text-muted);">💰 AuthePay Gateway Settlement</div>
+                    <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px;">
+                        Pending settlement: <strong>P 34,200</strong> · Next settlement: <span style="color:var(--text-muted);">T+1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CUSTOMERS
+            ============================================================ -->
+            <div class="page" id="page-customers">
+                <div class="section-header">
+                    <h2>👥 Customers</h2>
+                    <p>Manage ticket holders, customer records, and consent preferences.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Customer Records</span>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting customers...','info')">📥 Export</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Tickets</th><th>Consent</th></tr></thead>
+                            <tbody>
+                                <tr><td>Thabo M.</td><td>thabo@email.com</td><td>+267 71 234 567</td><td>3</td><td><span class="badge badge-success">✅</span></td></tr>
+                                <tr><td>Kefilwe N.</td><td>kefilwe@email.com</td><td>+267 72 345 678</td><td>1</td><td><span class="badge badge-success">✅</span></td></tr>
+                                <tr><td>Oatile M.</td><td>oatile@email.com</td><td>+267 73 456 789</td><td>2</td><td><span class="badge badge-success">✅</span></td></tr>
+                                <tr><td>Lesego T.</td><td>lesego@email.com</td><td>+267 74 567 890</td><td>5</td><td><span class="badge badge-warning">⏳</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: Data Protection / Consent Management -->
+                <div style="padding:1rem;background:rgba(59,130,246,0.06);border-radius:var(--radius);border:1px solid rgba(59,130,246,0.15);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:0.8rem;color:var(--text-muted);">🔐 Data Protection &amp; Consent</span>
+                        <span class="badge badge-success">Botswana DPA Compliant</span>
+                    </div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">
+                        Consent rate: 98% · Data retention: 7 years · Right to deletion supported
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: REPORTS
+            ============================================================ -->
+            <div class="page" id="page-reports">
+                <div class="section-header">
+                    <h2>📄 Reports</h2>
+                    <p>Generate and export compliance, sales, and audit reports.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Sales Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Complete sales and revenue summary.</p>
+                        <button class="btn btn-brand btn-sm" onclick="generateReport('sales')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Compliance Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">DPA, AML, and audit compliance status.</p>
+                        <button class="btn btn-brand btn-sm" onclick="generateReport('compliance')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Audit Log Export</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Complete audit trail for selected period.</p>
+                        <button class="btn btn-brand btn-sm" onclick="generateReport('audit')">📄 Generate</button>
+                    </div>
+                </div>
+
+                <div id="reportOutput" style="display:none;" class="card">
+                    <div class="card-header"><span class="card-title">📄 Report Generated</span><button class="btn btn-outline btn-sm" onclick="downloadReport()">⬇ Download</button></div>
+                    <div id="reportContent" style="background:var(--bg-input);padding:1.5rem;border-radius:var(--radius);font-family:monospace;font-size:0.8rem;color:var(--text-secondary);white-space:pre-wrap;max-height:300px;overflow-y:auto;"></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: KaTSo AI SECURITY
+            ============================================================ -->
+            <div class="page" id="page-ai-security">
+                <div class="section-header">
+                    <h2>🤖 KaTSo AI Security</h2>
+                    <p>AI-powered fraud detection, risk scoring, and ticket security monitoring.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green">12</div><div class="label">Avg Risk Score</div></div>
+                    <div class="stat-card"><div class="value green">0</div><div class="label">Fraud Alerts</div></div>
+                    <div class="stat-card"><div class="value blue">1,247</div><div class="label">Tickets Analyzed</div></div>
+                    <div class="stat-card"><div class="value purple">0</div><div class="label">Duplicate Detections</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛡️ Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Fraud Detection</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>QR Manipulation Detection</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Duplicate Ticket Detection</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Risk Scoring</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Security Events</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>✅ Ticket #TK-001 verified</span><span style="color:var(--text-muted);font-size:0.75rem;">14:23</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>✅ Risk check passed</span><span style="color:var(--text-muted);font-size:0.75rem;">13:45</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>⚠️ Invalid QR attempt blocked</span><span style="color:var(--text-muted);font-size:0.75rem;">12:18</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: KaTSo AI Core Integration -->
+                <div style="padding:1rem;background:rgba(139,92,246,0.08);border-radius:var(--radius);border:1px solid rgba(139,92,246,0.2);">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:1.2rem;">🧠</span>
+                        <span style="font-weight:600;color:var(--text-primary);">Connected to KaTSo AI Core</span>
+                        <span class="badge badge-success" style="margin-left:auto;">Active</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">
+                        Fraud detection · Risk scoring · Suspicious activity monitoring · Real-time alerts
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance &amp; Safety</h2>
+                    <p>Botswana Data Protection Act, consent management, and security governance.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green">98%</div><div class="label">Compliance Score</div></div>
+                    <div class="stat-card"><div class="value green">1,247</div><div class="label">Consents Recorded</div></div>
+                    <div class="stat-card"><div class="value blue">100%</div><div class="label">Audit Coverage</div></div>
+                    <div class="stat-card"><div class="value green">0</div><div class="label">Data Breaches</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Botswana Data Protection Act</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Bank of Botswana</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>FIA AML/CFT</span><span class="badge badge-success">✅</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔒 Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Encryption Ready</span><span class="badge badge-success">AES-256</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Access Control</span><span class="badge badge-success">RBAC</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Audit Logging</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT LOGS
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all ticket and security events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('ticket')">Ticket</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('payment')">Payment</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>admin@authecorp</td><td>Ticket Created</td>
+                                    <td><span class="badge badge-brand">Ticket</span></td>
+                                    <td>#TK-001 Music Fest</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>system</td><td>Ticket Scanned</td>
+                                    <td><span class="badge badge-success">Ticket</span></td>
+                                    <td>#TK-001 verified ✅</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>system</td><td>Fraud Attempt Blocked</td>
+                                    <td><span class="badge badge-danger">Security</span></td>
+                                    <td>Invalid QR detected</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>merchant@abc</td><td>Payment Received</td>
+                                    <td><span class="badge badge-info">Payment</span></td>
+                                    <td>#TX-8921 via AuthePay</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Create Ticket Modal -->
+    <div class="modal-overlay" id="createTicketModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🎫 Create New Ticket</h2><button class="modal-close" onclick="closeModal('createTicketModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Ticket Title</label><input type="text" class="form-input" placeholder="Music Fest 2026" id="modalTicketTitle" /></div>
+                <div class="form-group"><label class="form-label">Type</label><select class="form-select" id="modalTicketType"><option>Event</option><option>Transport</option><option>Access Pass</option><option>Service</option></select></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Price (BWP)</label><input type="number" class="form-input" placeholder="150.00" id="modalTicketPrice" /></div>
+                    <div class="form-group"><label class="form-label">Quantity</label><input type="number" class="form-input" placeholder="100" id="modalTicketQty" /></div>
+                </div>
+                <div class="form-group"><label class="form-label">Validity</label><input type="date" class="form-input" id="modalTicketValid" /></div>
+                <div class="form-check"><input type="checkbox" checked /> Enable KaTSo AI fraud detection</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('createTicketModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('createTicketModal');showToast('🎫 Ticket created successfully!','success')">Create Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AutheTicket Core Engine
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHE TICKET CORE – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard',
+            isDark: true,
+            scanCount: 0,
+            scanHistory: [],
+            tickets: [
+                { id: '#TK-001', title: 'Music Fest 2026', type: 'Event', price: 150, sold: 342, total: 500,
+                    status: 'Active' },
+                { id: '#TK-002', title: 'Gaborone Express', type: 'Transport', price: 85, sold: 89, total: 120,
+                    status: 'Active' },
+                { id: '#TK-003', title: 'Tech Summit Entry', type: 'Access', price: 250, sold: 156, total: 200,
+                    status: 'Active' },
+                { id: '#TK-004', title: 'Consultation Session', type: 'Service', price: 350, sold: 12, total: 30,
+                    status: 'Limited' }
+            ],
+            validTickets: {
+                'A1B2C3': { attendee: 'Thabo M.', type: 'VIP', seat: 'Row A, Seat 12', used: false,
+                event: 'Music Fest 2026' },
+                'D4E5F6': { attendee: 'Kefilwe N.', type: 'General', seat: null, used: false, event: 'Tech Summit' },
+                'G7H8I9': { attendee: 'Oatile M.', type: 'Student', seat: 'Row C, Seat 5', used: true,
+                    usedAt: '2026-07-20 14:30' },
+            }
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Ticket Dashboard',
+                tickets: 'All Tickets',
+                'create-ticket': 'Create Ticket',
+                scanner: 'QR Scanner',
+                verify: 'Verify Ticket',
+                sales: 'Sales & Revenue',
+                customers: 'Customers',
+                reports: 'Reports',
+                'ai-security': 'KaTSo AI Security',
+                compliance: 'Compliance & Safety',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'AutheTicket';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── CREATE TICKET ──
+        function createTicket() {
+            const title = document.getElementById('ticketTitle').value || 'New Ticket';
+            const type = document.getElementById('ticketType').value;
+            const price = document.getElementById('ticketPrice').value || '0.00';
+            const qty = document.getElementById('ticketQuantity').value || '100';
+            const desc = document.getElementById('ticketDesc').value || '';
+
+            const typeLabels = { event: 'Event', transport: 'Transport', access: 'Access Pass', service: 'Service' };
+
+            // Show preview
+            const preview = document.getElementById('ticketPreviewResult');
+            preview.style.display = 'block';
+            document.getElementById('previewType').textContent = typeLabels[type] || 'Event';
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewPrice').textContent = `P ${parseFloat(price).toFixed(2)}`;
+            document.getElementById('previewQR').textContent = '⬛';
+
+            showToast(`🎫 Ticket "${title}" created successfully!`, 'success');
+
+            // CONNECTION POINT: API call to create ticket in database
+            // CONNECTION POINT: Supabase insert into tickets table
+            // CONNECTION POINT: KaTSo AI risk assessment
+        }
+
+        // ── QR SCANNER ──
+        function validateTicket(code) {
+            return new Promise((resolve) => {
+                const ticket = state.validTickets[code];
+                if (!ticket) {
+                    resolve({ valid: false, reason: 'Ticket not found' });
+                    return;
+                }
+                if (ticket.used) {
+                    resolve({ valid: false, reason: 'already_used', usedAt: ticket.usedAt, attendee: ticket.attendee });
+                    return;
+                }
+                resolve({
+                    valid: true,
+                    attendee: ticket.attendee,
+                    type: ticket.type,
+                    seat: ticket.seat,
+                    event: ticket.event,
+                    code: code,
+                    ticketId: 'tix-' + code
+                });
+            });
+        }
+
+        function showScanResult(result) {
+            const el = document.getElementById('scanResult');
+            el.style.display = 'block';
+
+            if (result.valid) {
+                el.className = 'verify-result valid';
+                el.innerHTML = `
+                            <div class="icon">✅</div>
+                            <h3>Valid Ticket</h3>
+                            <p><strong>Attendee:</strong> ${result.attendee}</p>
+                            <p><strong>Type:</strong> ${result.type}</p>
+                            <p><strong>Seat:</strong> ${result.seat || 'General Admission'}</p>
+                            <p><strong>Event:</strong> ${result.event}</p>
+                            <button class="btn btn-success" style="margin-top:10px;" onclick="checkInTicket('${result.code}')">✅ Check-in</button>
+                        `;
+                // CONNECTION POINT: API call to mark ticket as used
+                // CONNECTION POINT: KaTSo AI fraud check
+            } else {
+                el.className = 'verify-result invalid';
+                const reasonMsg = result.reason === 'already_used' ?
+                    `⚠️ Already used ${result.usedAt ? 'at ' + result.usedAt : ''}` :
+                    '⛔ Ticket not found or invalid';
+                el.innerHTML = `
+                            <div class="icon">❌</div>
+                            <h3>Invalid Ticket</h3>
+                            <p>${reasonMsg}</p>
+                            ${result.attendee ? `<p><strong>Attendee:</strong> ${result.attendee}</p>` : ''}
+                        `;
+                // CONNECTION POINT: KaTSo AI fraud alert
+            }
+            document.getElementById('scanStatus').textContent = '✅ Done';
+        }
+
+        function checkInTicket(code) {
+            if (state.validTickets[code]) {
+                state.validTickets[code].used = true;
+                state.validTickets[code].usedAt = new Date().toLocaleString();
+                // CONNECTION POINT: API call to update ticket status
+                // CONNECTION POINT: KaTSo AI audit log
+                showToast(`✅ Checked in ${state.validTickets[code].attendee}`, 'success');
+                addScanHistory(code, 'Checked in', true);
+                state.scanCount++;
+                updateScanStats();
+                // Re-scan to show updated status
+                validateTicket(code).then(showScanResult);
+            }
+        }
+
+        function startScan() {
+            document.getElementById('scanStatus').textContent = '📷 Scanning...';
+            const codes = Object.keys(state.validTickets);
+            const randomCode = codes[Math.floor(Math.random() * codes.length)];
+            const useInvalid = Math.random() < 0.3;
+            const codeToScan = useInvalid ? 'XXXXXX' : randomCode;
+
+            setTimeout(() => {
+                validateTicket(codeToScan).then(result => {
+                    showScanResult(result);
+                    if (!result.valid) {
+                        addScanHistory(codeToScan, 'Invalid', false);
+                    } else {
+                        addScanHistory(codeToScan, 'Scanned', true);
+                    }
+                    state.scanCount++;
+                    updateScanStats();
+                    document.getElementById('scanStatus').textContent = '🔴 Ready';
+                });
+            }, 1200);
+        }
+
+        function manualCheck() {
+            const code = document.getElementById('manualCode').value.trim().toUpperCase();
+            if (!code) return;
+            validateTicket(code).then(result => {
+                showScanResult(result);
+                if (!result.valid) {
+                    addScanHistory(code, 'Invalid', false);
+                } else {
+                    addScanHistory(code, 'Scanned', true);
+                }
+                state.scanCount++;
+                updateScanStats();
+                document.getElementById('manualCode').value = '';
+            });
+        }
+
+        function addScanHistory(code, status, success) {
+            const time = new Date().toLocaleTimeString();
+            state.scanHistory.unshift({ code, status, success, time });
+            renderScanHistory();
+        }
+
+        function renderScanHistory() {
+            const container = document.getElementById('scanHistory');
+            if (state.scanHistory.length === 0) {
+                container.innerHTML = '<div style="padding:8px 0;color:var(--text-muted);text-align:center;">No scans yet</div>';
+                return;
+            }
+            container.innerHTML = state.scanHistory.slice(0, 10).map(h =>
+                `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+                            <span>${h.code}</span>
+                            <span style="color:${h.success ? 'var(--success)' : 'var(--danger)'};font-weight:600;">${h.status}</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">${h.time}</span>
+                        </div>`
+            ).join('');
+        }
+
+        function updateScanStats() {
+            document.getElementById('scanCount').textContent = `Scans today: ${state.scanCount}`;
+        }
+
+        // ── VERIFY TICKET ──
+        function verifyTicket() {
+            const code = document.getElementById('verifyCode').value.trim().toUpperCase();
+            if (!code) {
+                showToast('Please enter a ticket code', 'warning');
+                return;
+            }
+            const resultDiv = document.getElementById('verifyResult');
+            validateTicket(code).then(result => {
+                if (result.valid) {
+                    resultDiv.innerHTML = `
+                                <div style="background:rgba(34,197,94,0.1);padding:1.5rem;border-radius:var(--radius);border:2px solid var(--success);">
+                                    <div style="font-size:2rem;">✅</div>
+                                    <h3 style="margin:8px 0 4px;">Valid Ticket</h3>
+                                    <p><strong>Attendee:</strong> ${result.attendee}</p>
+                                    <p><strong>Type:</strong> ${result.type}</p>
+                                    <p><strong>Event:</strong> ${result.event}</p>
+                                    <p style="color:var(--text-muted);font-size:0.85rem;">Ticket ID: ${result.code}</p>
+                                </div>
+                            `;
+                    // CONNECTION POINT: KaTSo AI risk check
+                } else {
+                    const reasonMsg = result.reason === 'already_used' ?
+                        `⚠️ Already used ${result.usedAt ? 'at ' + result.usedAt : ''}` :
+                        '⛔ Ticket not found or invalid';
+                    resultDiv.innerHTML = `
+                                <div style="background:rgba(239,68,68,0.1);padding:1.5rem;border-radius:var(--radius);border:2px solid var(--danger);">
+                                    <div style="font-size:2rem;">❌</div>
+                                    <h3 style="margin:8px 0 4px;">Invalid Ticket</h3>
+                                    <p>${reasonMsg}</p>
+                                    ${result.attendee ? `<p><strong>Attendee:</strong> ${result.attendee}</p>` : ''}
+                                </div>
+                            `;
+                }
+            });
+        }
+
+        // ── REPORTS ──
+        function generateReport(type) {
+            const output = document.getElementById('reportOutput');
+            const content = document.getElementById('reportContent');
+            if (!output || !content) return;
+
+            let report = `=== AUTHE TICKET REPORT ===\n`;
+            report += `Generated: ${new Date().toLocaleString()}\n`;
+            report += `Type: ${type}\n`;
+            report += `================================\n\n`;
+
+            if (type === 'sales') {
+                report += `SALES REPORT\n`;
+                report += `────────────\n`;
+                report += `Total Tickets Sold: 1,247\n`;
+                report += `Revenue (MTD): P 45,200\n`;
+                report += `Avg Ticket Price: P 36.20\n`;
+                report += `\nBy Type:\n`;
+                report += `  Events: 342 sold · P 51,300\n`;
+                report += `  Transport: 89 sold · P 7,565\n`;
+                report += `  Access Passes: 156 sold · P 39,000\n`;
+                report += `  Services: 67 sold · P 23,450\n`;
+            } else if (type === 'compliance') {
+                report += `COMPLIANCE REPORT\n`;
+                report += `─────────────────\n`;
+                report += `Compliance Score: 98%\n`;
+                report += `Consents Recorded: 1,247\n`;
+                report += `Data Protection: ✅ Compliant\n`;
+                report += `Botswana DPA: ✅\n`;
+                report += `Bank of Botswana: ✅\n`;
+                report += `FIA AML/CFT: ✅\n`;
+            } else if (type === 'audit') {
+                report += `AUDIT LOG EXPORT\n`;
+                report += `────────────────\n`;
+                report += `Total Events: 1,234\n`;
+                report += `\nRecent Events:\n`;
+                report += `  14:23 | Ticket Created | #TK-001\n`;
+                report += `  13:45 | Ticket Scanned | #TK-001\n`;
+                report += `  12:18 | Fraud Blocked | Invalid QR\n`;
+            }
+
+            content.textContent = report;
+            output.style.display = 'block';
+            output.scrollIntoView({ behavior: 'smooth' });
+            showToast(`✅ ${type} report generated`, 'success');
+        }
+
+        function downloadReport() {
+            const content = document.getElementById('reportContent');
+            if (!content || !content.textContent) {
+                showToast('No report to download', 'warning');
+                return;
+            }
+            const blob = new Blob([content.textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `autheticket-report-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📥 Report downloaded', 'success');
+        }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing ticket data...', 'info');
+            setTimeout(() => {
+                showToast('✅ Data refreshed', 'success');
+            }, 1000);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+            if (e.key === 'Enter' && document.activeElement === document.getElementById('manualCode')) {
+                manualCheck();
+            }
+            if (e.key === 'Enter' && document.activeElement === document.getElementById('verifyCode')) {
+                verifyTicket();
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            renderScanHistory();
+            updateScanStats();
+
+            // Scanner buttons
+            document.getElementById('scanBtn').addEventListener('click', startScan);
+            document.getElementById('simulateBtn').addEventListener('click', startScan);
+            document.getElementById('manualBtn').addEventListener('click', manualCheck);
+            document.getElementById('manualCode').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') manualCheck();
+            });
+
+            console.log('🎟️ AutheTicket Core loaded');
+            console.log('📦 Modules: Dashboard, Tickets, Create, Scanner, Verify, Sales, Customers, Reports, KaTSo AI, Compliance, Audit');
+            console.log('🔗 Integrations: AuthePay Gateway, KaTSo AI Core, AutheBook');
+            console.log('🛡️ Security: KaTSo AI fraud detection, QR manipulation detection, duplicate prevention');
+            console.log('📋 Compliance: Botswana DPA, Bank of Botswana, FIA AML/CFT');
+            console.log('📱 Mobile-first · API-ready · Supabase-ready');
+            console.log('🔌 Future: AuthePay Wallet, SoftPOS, API Marketplace, Offline mode');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.createTicket = createTicket;
+        window.startScan = startScan;
+        window.manualCheck = manualCheck;
+        window.verifyTicket = verifyTicket;
+        window.checkInTicket = checkInTicket;
+        window.generateReport = generateReport;
+        window.downloadReport = downloadReport;
+        window.filterAudit = filterAudit;
+        window.refreshData = refreshData;
+    </script>
+</body>
+</html>

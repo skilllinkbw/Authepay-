@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuthePay API Core – Developer Platform</title>
+    <style>
+        /* ── RESET & VARIABLES ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #f97316;
+            --brand-dark: #ea580c;
+            --brand-light: #fb923c;
+            --brand-glow: rgba(249, 115, 22, 0.25);
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.2);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #181825;
+            --bg-card-hover: #1f1f32;
+            --bg-input: #0f0f18;
+            --border: #2a2a3e;
+            --border-light: #3a3a55;
+            --text-primary: #f1f1f9;
+            --text-secondary: #b8b8d0;
+            --text-muted: #7878a0;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 48px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+        }
+        a {
+            color: var(--brand-light);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--brand-light);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ── MAIN ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), #6d28d9);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            box-shadow: 0 4px 16px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand-light);
+            color: var(--text-primary);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── PAGES ── */
+        .page {
+            display: none;
+            animation: fadeUp 0.35s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: 0 0 24px var(--brand-glow);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--brand-light);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--brand-light);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+        .tr-clickable {
+            cursor: pointer;
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.blue {
+            background: var(--brand);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── API ENDPOINT CARD ── */
+        .endpoint-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+            cursor: default;
+        }
+        .endpoint-card:hover {
+            border-color: var(--brand);
+        }
+        .endpoint-card .method {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            margin-right: 8px;
+        }
+        .endpoint-card .method.post {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+        .endpoint-card .method.get {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--info);
+        }
+        .endpoint-card .method.put {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        .endpoint-card .method.delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        .endpoint-card .path {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .endpoint-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .endpoint-card .action {
+            margin-top: 8px;
+        }
+
+        /* ── API STATUS ── */
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .api-status .label {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .api-status .status-badge {
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+        .api-status .status-badge.live {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+        .api-status .status-badge.degraded {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        .api-status .status-badge.down {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        /* ── KEY DISPLAY ── */
+        .key-display {
+            background: var(--bg-input);
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .key-display .key {
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+        .key-display .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* ── SANDBOX BANNER ── */
+        .sandbox-banner {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .sandbox-banner .label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .sandbox-banner .label .badge {
+            margin-left: 8px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .endpoint-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .key-display {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .key-display .actions {
+                justify-content: flex-end;
+            }
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── CODE BLOCK ── */
+        .code-block {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+        .code-block .keyword {
+            color: var(--brand-light);
+        }
+        .code-block .string {
+            color: var(--success);
+        }
+        .code-block .comment {
+            color: var(--text-muted);
+        }
+        .code-block .function {
+            color: var(--accent);
+        }
+
+        /* ── PULSE DOT ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="icon">🔌</span>
+            <span>AuthePay API</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Developer</div>
+            <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+            <a href="#" data-page="keys">🔑 API Keys</a>
+            <a href="#" data-page="endpoints">📡 API Endpoints</a>
+            <a href="#" data-page="webhooks">📨 Webhooks</a>
+
+            <div class="sidebar-section-label">Documentation</div>
+            <a href="#" data-page="docs">📖 Docs</a>
+            <a href="#" data-page="explorer">🧪 API Explorer</a>
+            <a href="#" data-page="sandbox">🏖️ Sandbox</a>
+
+            <div class="sidebar-section-label">Security</div>
+            <a href="#" data-page="security">🛡️ Security</a>
+            <a href="#" data-page="logs">📋 Audit Logs</a>
+        </nav>
+        <div class="sidebar-footer">
+            <span>v2.1 · <span class="pulse-dot green"></span> API live</span>
+        </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div>
+                <h1 id="pageTitle">API Dashboard <small>Developer &amp; Integration Platform</small></h1>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                <button class="btn btn-primary btn-sm" onclick="openModal('keyModal')">🔑 New API Key</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: DASHBOARD -->
+        <!-- ============================================================ -->
+        <div class="page active" id="page-dashboard">
+            <div class="api-status" style="margin-bottom:1.5rem;">
+                <span class="label">🚦 API Status:</span>
+                <span class="status-badge live">🟢 Operational – 99.98% uptime</span>
+                <span style="color:var(--text-muted);font-size:0.85rem;margin-left:auto;" id="lastPing">v2.1 · Last request: 2s ago</span>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="value blue">12.4K</div>
+                    <div class="label">Requests Today</div>
+                    <div class="trend up">▲ 18%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value green">12.3K</div>
+                    <div class="label">Successful</div>
+                    <div class="trend up">▲ 17%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value red">124</div>
+                    <div class="label">Failed</div>
+                    <div class="trend down">▼ 4%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value purple">142ms</div>
+                    <div class="label">Avg Response</div>
+                    <div class="trend down">▼ 6ms</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value brand">v2.1</div>
+                    <div class="label">API Version</div>
+                    <div class="trend">Latest</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value green">342</div>
+                    <div class="label">Active API Keys</div>
+                    <div class="trend up">▲ 12</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📊 API Usage (Last 7 Days)</span>
+                    </div>
+                    <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                        <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                        <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                        <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                        <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                        <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                        <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                        <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Recent API Activity</span>
+                        <a href="#" onclick="navigateTo('logs');return false;" style="font-size:0.8rem;">View all</a>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-success">POST</span> /payments</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-info">GET</span> /payments/status</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-brand">POST</span> /webhooks</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                            <span><span class="badge badge-danger">DELETE</span> /customers/123</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔑 API Keys Summary</span></div>
+                    <div><span style="color:var(--text-muted);">Production</span> <span style="float:right;">124</span></div>
+                    <div><span style="color:var(--text-muted);">Sandbox</span> <span style="float:right;">218</span></div>
+                    <div><span style="color:var(--text-muted);">Active Today</span> <span style="float:right;">342</span></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📡 Webhook Status</span></div>
+                    <div><span style="color:var(--text-muted);">Active Endpoints</span> <span style="float:right;">12</span></div>
+                    <div><span style="color:var(--text-muted);">Delivered Today</span> <span style="float:right;">1,234</span></div>
+                    <div><span style="color:var(--text-muted);">Failed</span> <span style="float:right;">3</span></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🛡️ Security</span></div>
+                    <div><span style="color:var(--text-muted);">Rate Limit</span> <span style="float:right;">1,000/min</span></div>
+                    <div><span style="color:var(--text-muted);">Auth Method</span> <span style="float:right;">OAuth 2.0</span></div>
+                    <div><span style="color:var(--text-muted);">Encryption</span> <span style="float:right;">TLS 1.3</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: API KEYS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-keys">
+            <h2 style="margin-bottom:1rem;">🔑 API Keys</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Manage production and sandbox API keys with granular permissions.</p>
+
+            <div class="sandbox-banner">
+                <span class="label">🏖️ Sandbox Mode <span class="badge badge-info">Test environment</span></span>
+                <span style="color:var(--text-muted);font-size:0.85rem;">Use test keys for development – no real money processed</span>
+                <button class="btn btn-outline btn-sm" onclick="showToast('🔀 Switched to Sandbox mode','info')">Switch</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📋 Production Keys</span>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('keyModal')">+ New Key</button>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div class="key-display">
+                        <span class="key">pk_live_••••••••••••</span>
+                        <span><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.75rem;">Created: Jul 15</span></span>
+                        <div class="actions">
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔑 Key copied!','success')">📋</button>
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔄 Key regenerated','success')">🔄</button>
+                            <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Key revoked','warning')">✕</button>
+                        </div>
+                    </div>
+                    <div class="key-display">
+                        <span class="key">pk_live_••••••••••••</span>
+                        <span><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.75rem;">Created: Jul 10</span></span>
+                        <div class="actions">
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔑 Key copied!','success')">📋</button>
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔄 Key regenerated','success')">🔄</button>
+                            <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Key revoked','warning')">✕</button>
+                        </div>
+                    </div>
+                    <div class="key-display">
+                        <span class="key">pk_live_••••••••••••</span>
+                        <span><span class="badge badge-warning">Expiring</span> <span style="color:var(--text-muted);font-size:0.75rem;">Expires: Aug 1</span></span>
+                        <div class="actions">
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔑 Key copied!','success')">📋</button>
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔄 Key regenerated','success')">🔄</button>
+                            <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Key revoked','warning')">✕</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">🧪 Sandbox Keys</span>
+                    <button class="btn btn-outline btn-sm" onclick="openModal('keyModal')">+ New Test Key</button>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div class="key-display">
+                        <span class="key">pk_test_••••••••••••</span>
+                        <span><span class="badge badge-info">Test</span> <span style="color:var(--text-muted);font-size:0.75rem;">Created: Jul 20</span></span>
+                        <div class="actions">
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔑 Key copied!','success')">📋</button>
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔄 Key regenerated','success')">🔄</button>
+                            <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Key revoked','warning')">✕</button>
+                        </div>
+                    </div>
+                    <div class="key-display">
+                        <span class="key">pk_test_••••••••••••</span>
+                        <span><span class="badge badge-info">Test</span> <span style="color:var(--text-muted);font-size:0.75rem;">Created: Jul 18</span></span>
+                        <div class="actions">
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔑 Key copied!','success')">📋</button>
+                            <button class="btn btn-outline btn-xs" onclick="showToast('🔄 Key regenerated','success')">🔄</button>
+                            <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Key revoked','warning')">✕</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">🔑 API Key Permissions</span></div>
+                <div class="grid-4">
+                    <div><span style="color:var(--text-muted);">Payments</span> <span class="badge badge-success">✅</span></div>
+                    <div><span style="color:var(--text-muted);">Customers</span> <span class="badge badge-success">✅</span></div>
+                    <div><span style="color:var(--text-muted);">Merchants</span> <span class="badge badge-success">✅</span></div>
+                    <div><span style="color:var(--text-muted);">Wallet</span> <span class="badge badge-success">✅</span></div>
+                    <div><span style="color:var(--text-muted);">Webhooks</span> <span class="badge badge-success">✅</span></div>
+                    <div><span style="color:var(--text-muted);">Reports</span> <span class="badge badge-warning">Read-only</span></div>
+                    <div><span style="color:var(--text-muted);">Settlements</span> <span class="badge badge-warning">Read-only</span></div>
+                    <div><span style="color:var(--text-muted);">Refunds</span> <span class="badge badge-success">✅</span></div>
+                </div>
+                <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="showToast('⚙️ Permission settings opened','info')">⚙️ Configure Permissions</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: API ENDPOINTS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-endpoints">
+            <h2 style="margin-bottom:1rem;">📡 API Endpoints</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Complete REST API reference with examples and testing capabilities.</p>
+
+            <div class="grid-2 endpoint-grid">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">💳 Payment API</span></div>
+                    <div class="endpoint-card">
+                        <span class="method post">POST</span><span class="path">/api/v2/payments</span>
+                        <div class="desc">Create a new payment</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Payment API docs opened','info')">📖 View</button>
+                        <button class="btn btn-primary btn-xs action" onclick="openModal('testModal')">▶ Test</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method get">GET</span><span class="path">/api/v2/payments/{id}</span>
+                        <div class="desc">Get payment status</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Payment API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method post">POST</span><span class="path">/api/v2/payments/{id}/refund</span>
+                        <div class="desc">Refund a payment</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Payment API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method get">GET</span><span class="path">/api/v2/payments/{id}/verify</span>
+                        <div class="desc">Verify payment confirmation</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Payment API docs opened','info')">📖 View</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">👤 Customer &amp; Merchant API</span></div>
+                    <div class="endpoint-card">
+                        <span class="method post">POST</span><span class="path">/api/v2/customers</span>
+                        <div class="desc">Create a customer</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Customer API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method get">GET</span><span class="path">/api/v2/customers/{id}</span>
+                        <div class="desc">Get customer details</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Customer API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method post">POST</span><span class="path">/api/v2/merchants</span>
+                        <div class="desc">Register a merchant</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Merchant API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method get">GET</span><span class="path">/api/v2/merchants/{id}/transactions</span>
+                        <div class="desc">Get merchant transactions</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Merchant API docs opened','info')">📖 View</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">👛 Wallet API</span></div>
+                    <div class="endpoint-card">
+                        <span class="method post">POST</span><span class="path">/api/v2/wallets</span>
+                        <div class="desc">Create a wallet</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Wallet API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method get">GET</span><span class="path">/api/v2/wallets/{id}/balance</span>
+                        <div class="desc">Check wallet balance</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Wallet API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method get">GET</span><span class="path">/api/v2/wallets/{id}/transactions</span>
+                        <div class="desc">Get wallet transactions</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Wallet API docs opened','info')">📖 View</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📡 Webhook API</span></div>
+                    <div class="endpoint-card">
+                        <span class="method post">POST</span><span class="path">/api/v2/webhooks</span>
+                        <div class="desc">Create a webhook endpoint</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Webhook API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method get">GET</span><span class="path">/api/v2/webhooks</span>
+                        <div class="desc">List webhook endpoints</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Webhook API docs opened','info')">📖 View</button>
+                    </div>
+                    <div class="endpoint-card">
+                        <span class="method delete">DELETE</span><span class="path">/api/v2/webhooks/{id}</span>
+                        <div class="desc">Delete a webhook</div>
+                        <button class="btn btn-outline btn-xs action" onclick="showToast('📋 Webhook API docs opened','info')">📖 View</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: WEBHOOKS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-webhooks">
+            <h2 style="margin-bottom:1rem;">📨 Webhooks</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Real-time event notifications for payment status changes.</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📋 Webhook Endpoints</span>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('webhookModal')">+ Add Endpoint</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>URL</th><th>Events</th><th>Status</th><th>Last Delivery</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;font-size:0.75rem;">https://api.authepay.co/webhook</code></td>
+                                <td>payment.*</td>
+                                <td><span class="badge badge-success">✅ Live</span></td>
+                                <td>14:23</td>
+                                <td><button class="btn btn-outline btn-xs" onclick="showToast('📡 Webhook details','info')">📋</button> <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Webhook deleted','warning')">✕</button></td>
+                            </tr>
+                            <tr>
+                                <td><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;font-size:0.75rem;">https://api.authetec.co/webhook</code></td>
+                                <td>payment.settled</td>
+                                <td><span class="badge badge-success">✅ Live</span></td>
+                                <td>13:45</td>
+                                <td><button class="btn btn-outline btn-xs" onclick="showToast('📡 Webhook details','info')">📋</button> <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Webhook deleted','warning')">✕</button></td>
+                            </tr>
+                            <tr>
+                                <td><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;font-size:0.75rem;">https://api.authebook.co/webhook</code></td>
+                                <td>payment.failed, refund.*</td>
+                                <td><span class="badge badge-warning">⚠️ Retrying</span></td>
+                                <td>12:18</td>
+                                <td><button class="btn btn-outline btn-xs" onclick="showToast('📡 Webhook details','info')">📋</button> <button class="btn btn-danger btn-xs" onclick="showToast('🗑️ Webhook deleted','warning')">✕</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Webhook Analytics</span></div>
+                    <div><span style="color:var(--text-muted);">Delivered</span> <span style="float:right;">1,234</span></div>
+                    <div><span style="color:var(--text-muted);">Failed</span> <span style="float:right;">3</span></div>
+                    <div><span style="color:var(--text-muted);">Retrying</span> <span style="float:right;">2</span></div>
+                    <div><span style="color:var(--text-muted);">Success Rate</span> <span style="float:right;">99.8%</span></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Event Types</span></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>payment.successful</span><span class="badge badge-success">1,024</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>payment.failed</span><span class="badge badge-danger">124</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>refund.completed</span><span class="badge badge-info">45</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>settlement.completed</span><span class="badge badge-success">89</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: DOCS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-docs">
+            <h2 style="margin-bottom:1rem;">📖 API Documentation</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Complete guides, code examples, and SDK information.</p>
+
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📘 Getting Started</span></div>
+                    <p style="color:var(--text-muted);font-size:0.9rem;">Step-by-step guide to integrate AuthePay API.</p>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📘 Getting started guide opened','info')">📖 Read</button>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">💻 Code Examples</span></div>
+                    <p style="color:var(--text-muted);font-size:0.9rem;">JavaScript, Python, PHP, and mobile SDKs.</p>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('💻 Code examples loaded','info')">📂 View</button>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📦 SDKs</span></div>
+                    <p style="color:var(--text-muted);font-size:0.9rem;">Official SDKs for all major languages.</p>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📦 SDKs downloaded','success')">⬇ Download</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">💻 Code Example – Create Payment</span></div>
+                <div class="code-block">
+                    <span class="comment">// JavaScript SDK – Create Payment</span>
+                    <span class="keyword">const</span> { AuthePay } = <span class="function">require</span>(<span class="string">'@authepay/sdk'</span>);
+
+                    <span class="keyword">const</span> client = <span class="keyword">new</span> AuthePay({
+                        apiKey: <span class="string">'pk_live_••••••••••••'</span>,
+                        environment: <span class="string">'production'</span>
+                    });
+
+                    <span class="keyword">const</span> payment = <span class="keyword">await</span> client.<span class="function">payments</span>.<span class="function">create</span>({
+                        amount: <span class="number">1000</span>,
+                        currency: <span class="string">'BWP'</span>,
+                        method: <span class="string">'orange_money'</span>,
+                        merchantId: <span class="string">'M-842'</span>,
+                        reference: <span class="string">'INV-2026-001'</span>,
+                        customer: {
+                            name: <span class="string">'John Doe'</span>,
+                            phone: <span class="string">'+267 71 234 567'</span>
+                        }
+                    });
+
+                    <span class="function">console</span>.<span class="function">log</span>(payment.id); <span class="comment">// #TX-8921</span>
+                    <span class="function">console</span>.<span class="function">log</span>(payment.status); <span class="comment">// 'completed'</span>
+                </div>
+                <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="showToast('📋 Code copied!','success')">📋 Copy Code</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">🔗 Related Resources</span></div>
+                <div class="grid-4">
+                    <a href="#" onclick="showToast('📖 API Reference opened','info');return false;">📖 API Reference</a>
+                    <a href="#" onclick="showToast('📘 Integration Guide opened','info');return false;">📘 Integration Guide</a>
+                    <a href="#" onclick="showToast('📦 SDK Docs opened','info');return false;">📦 SDK Documentation</a>
+                    <a href="#" onclick="showToast('📝 Changelog opened','info');return false;">📝 Changelog</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: API EXPLORER -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-explorer">
+            <h2 style="margin-bottom:1rem;">🧪 API Explorer</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Interactive API testing console – try endpoints with real-time responses.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔍 Endpoint Tester</span></div>
+                    <div class="form-group">
+                        <label class="form-label">Method</label>
+                        <select class="form-select" id="explorerMethod">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Endpoint</label>
+                        <input type="text" class="form-input" id="explorerEndpoint" value="/api/v2/payments" placeholder="/api/v2/..." />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Request Body (JSON)</label>
+                        <textarea class="form-textarea" id="explorerBody" rows="4">{&#10;  "amount": 1000,&#10;  "method": "orange_money"&#10;}</textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="runExplorer()">▶ Send Request</button>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Response</span></div>
+                    <div id="explorerResponse">
+                        <div style="text-align:center;padding:2rem 0;color:var(--text-muted);">
+                            <div style="font-size:3rem;margin-bottom:0.5rem;">🔌</div>
+                            <p>Send a request to see the response</p>
+                            <p style="font-size:0.85rem;">Status, headers, and body will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📋 Recent Tests</span></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Endpoint</th><th>Method</th><th>Status</th><th>Time</th></tr></thead>
+                        <tbody>
+                            <tr><td>/api/v2/payments</td><td><span class="badge badge-brand">POST</span></td><td><span class="badge badge-success">200 OK</span></td><td>14:23</td></tr>
+                            <tr><td>/api/v2/payments/status</td><td><span class="badge badge-info">GET</span></td><td><span class="badge badge-success">200 OK</span></td><td>13:45</td></tr>
+                            <tr><td>/api/v2/merchants</td><td><span class="badge badge-brand">POST</span></td><td><span class="badge badge-danger">400 Bad</span></td><td>12:18</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: SANDBOX -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-sandbox">
+            <h2 style="margin-bottom:1rem;">🏖️ Sandbox Environment</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Test your integration with mock data and simulated transactions.</p>
+
+            <div class="sandbox-banner">
+                <span class="label">🧪 Sandbox Active <span class="badge badge-info">Test mode</span></span>
+                <span style="color:var(--text-muted);font-size:0.85rem;">No real money processed – all transactions are simulated</span>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card"><div class="value blue">12.4K</div><div class="label">Test Requests</div></div>
+                <div class="stat-card"><div class="value green">11.8K</div><div class="label">Successful</div></div>
+                <div class="stat-card"><div class="value purple">342</div><div class="label">Test API Keys</div></div>
+                <div class="stat-card"><div class="value yellow">87</div><div class="label">Active Testers</div></div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🧪 Test Accounts</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>dev@braincade.co.bw</span><span class="badge badge-success">Active</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>test@authecorp.com</span><span class="badge badge-success">Active</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>sandbox@authepay.co</span><span class="badge badge-warning">Pending</span></div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="showToast('🧪 Test account created','success')">+ Create Test Account</button>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Test Transactions</span></div>
+                    <div><span style="color:var(--text-muted);">Test Payments</span> <span style="float:right;">1,234</span></div>
+                    <div><span style="color:var(--text-muted);">Test Refunds</span> <span style="float:right;">45</span></div>
+                    <div><span style="color:var(--text-muted);">Test Webhooks</span> <span style="float:right;">234</span></div>
+                    <button class="btn btn-outline btn-sm" style="margin-top:10px;" onclick="showToast('📊 Test data reset','warning')">🔄 Reset Test Data</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">🧪 Sandbox Tools</span></div>
+                <div class="grid-4">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('🧪 Test suite running...','info')">▶ Run Test Suite</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📋 Test logs loaded','info')">📋 Test Logs</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Test metrics loaded','info')">📊 Test Metrics</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('🧪 Simulate payment','success')">💳 Simulate Payment</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: SECURITY -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-security">
+            <h2 style="margin-bottom:1rem;">🛡️ API Security</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">OAuth 2.0, JWT, rate limiting, and security policies.</p>
+
+            <div class="stat-grid">
+                <div class="stat-card"><div class="value green">100%</div><div class="label">Encryption Coverage</div></div>
+                <div class="stat-card"><div class="value blue">0</div><div class="label">Active Threats</div></div>
+                <div class="stat-card"><div class="value purple">1,000</div><div class="label">Rate Limit (req/min)</div></div>
+                <div class="stat-card"><div class="value green">124</div><div class="label">Active API Keys</div></div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔒 Security Controls</span></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>OAuth 2.0</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>JWT Authentication</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>API Key Security</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Rate Limiting</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Request Signing</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>IP Restrictions</span><span class="badge badge-success">✅</span></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Audit Logs</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>API Key Created</span><span style="color:var(--text-muted);font-size:0.75rem;">14:23</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>Rate Limit Exceeded</span><span style="color:var(--text-muted);font-size:0.75rem;">13:45</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>API Key Revoked</span><span style="color:var(--text-muted);font-size:0.75rem;">12:18</span></div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" style="margin-top:10px;" onclick="navigateTo('logs')">📋 View All Logs</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: AUDIT LOGS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-logs">
+            <h2 style="margin-bottom:1rem;">📋 Audit Logs</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Complete audit trail of all API activity and security events.</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📜 Event Log</span>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn btn-outline btn-sm" onclick="filterLogs('all')">All</button>
+                        <button class="btn btn-outline btn-sm" onclick="filterLogs('auth')">Auth</button>
+                        <button class="btn btn-outline btn-sm" onclick="filterLogs('api')">API</button>
+                        <button class="btn btn-outline btn-sm" onclick="filterLogs('security')">Security</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>IP</th></tr></thead>
+                        <tbody id="logTable">
+                            <tr>
+                                <td>2026-07-21 14:23</td><td>dev@braincade.co.bw</td><td>API Key Created</td>
+                                <td><span class="badge badge-info">Auth</span></td>
+                                <td>192.168.1.10</td>
+                            </tr>
+                            <tr>
+                                <td>2026-07-21 13:45</td><td>system</td><td>Rate Limit Exceeded</td>
+                                <td><span class="badge badge-warning">Security</span></td>
+                                <td>10.0.0.5</td>
+                            </tr>
+                            <tr>
+                                <td>2026-07-21 12:18</td><td>admin@authepay</td><td>Webhook Created</td>
+                                <td><span class="badge badge-brand">API</span></td>
+                                <td>192.168.1.25</td>
+                            </tr>
+                            <tr>
+                                <td>2026-07-21 11:02</td><td>dev@authecorp.com</td><td>API Key Revoked</td>
+                                <td><span class="badge badge-danger">Security</span></td>
+                                <td>10.0.0.8</td>
+                            </tr>
+                            <tr>
+                                <td>2026-07-21 09:30</td><td>system</td><td>Payment API Called</td>
+                                <td><span class="badge badge-success">API</span></td>
+                                <td>192.168.1.1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /main-content -->
+
+    <!-- ============================================================ -->
+    <!-- MODALS -->
+    <!-- ============================================================ -->
+
+    <!-- Key Modal -->
+    <div class="modal-overlay" id="keyModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🔑 New API Key</h2><button class="modal-close" onclick="closeModal('keyModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Key Name</label><input type="text" class="form-input" placeholder="My Integration" /></div>
+                <div class="form-group"><label class="form-label">Environment</label><select class="form-select"><option>Production</option><option selected>Sandbox</option></select></div>
+                <div class="form-group"><label class="form-label">Permissions</label>
+                    <div class="form-check"><input type="checkbox" checked /> Payments</div>
+                    <div class="form-check"><input type="checkbox" checked /> Customers</div>
+                    <div class="form-check"><input type="checkbox" /> Merchants</div>
+                    <div class="form-check"><input type="checkbox" /> Webhooks</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('keyModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="closeModal('keyModal');showToast('🔑 API key generated!','success')">Generate Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Webhook Modal -->
+    <div class="modal-overlay" id="webhookModal">
+        <div class="modal">
+            <div class="modal-header"><h2>📡 New Webhook</h2><button class="modal-close" onclick="closeModal('webhookModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Endpoint URL</label><input type="url" class="form-input" placeholder="https://your-app.com/webhook" /></div>
+                <div class="form-group"><label class="form-label">Events</label>
+                    <div class="form-check"><input type="checkbox" checked /> payment.successful</div>
+                    <div class="form-check"><input type="checkbox" checked /> payment.failed</div>
+                    <div class="form-check"><input type="checkbox" /> refund.completed</div>
+                    <div class="form-check"><input type="checkbox" /> settlement.completed</div>
+                </div>
+                <div class="form-group"><label class="form-label">Secret (for signing)</label><input type="text" class="form-input" placeholder="••••••••" value="whsec_" /></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('webhookModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="closeModal('webhookModal');showToast('📡 Webhook created!','success')">Create Webhook</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Modal -->
+    <div class="modal-overlay" id="testModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🧪 Test Endpoint</h2><button class="modal-close" onclick="closeModal('testModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Endpoint</label><input type="text" class="form-input" value="/api/v2/payments" /></div>
+                <div class="form-group"><label class="form-label">Method</label><select class="form-select"><option>POST</option><option>GET</option><option>PUT</option><option>DELETE</option></select></div>
+                <div class="form-group"><label class="form-label">Request Body (JSON)</label><textarea class="form-textarea" rows="4">{"amount": 1000, "method": "orange_money", "merchantId": "M-842"}</textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('testModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="closeModal('testModal');showToast('🧪 Test response received!','success')">▶ Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY API CORE – Full JavaScript Engine
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard',
+            logs: [
+                { time: '2026-07-21 14:23', user: 'dev@braincade.co.bw', action: 'API Key Created', category: 'Auth',
+                    ip: '192.168.1.10' },
+                { time: '2026-07-21 13:45', user: 'system', action: 'Rate Limit Exceeded', category: 'Security',
+                    ip: '10.0.0.5' },
+                { time: '2026-07-21 12:18', user: 'admin@authepay', action: 'Webhook Created', category: 'API',
+                    ip: '192.168.1.25' },
+                { time: '2026-07-21 11:02', user: 'dev@authecorp.com', action: 'API Key Revoked', category: 'Security',
+                    ip: '10.0.0.8' },
+                { time: '2026-07-21 09:30', user: 'system', action: 'Payment API Called', category: 'API',
+                    ip: '192.168.1.1' }
+            ]
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'API Dashboard',
+                keys: 'API Keys',
+                endpoints: 'API Endpoints',
+                webhooks: 'Webhooks',
+                docs: 'Documentation',
+                explorer: 'API Explorer',
+                sandbox: 'Sandbox',
+                security: 'API Security',
+                logs: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'AuthePay API';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── API EXPLORER ──
+        function runExplorer() {
+            const method = document.getElementById('explorerMethod').value;
+            const endpoint = document.getElementById('explorerEndpoint').value || '/api/v2/payments';
+            const body = document.getElementById('explorerBody').value || '{}';
+
+            const responseDiv = document.getElementById('explorerResponse');
+            responseDiv.innerHTML = `
+                        <div style="background:var(--bg-input);padding:1rem;border-radius:var(--radius);">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                                <span><span class="badge ${method === 'GET' ? 'badge-info' : 'badge-brand'}">${method}</span> ${endpoint}</span>
+                                <span class="badge badge-success">200 OK</span>
+                            </div>
+                            <div style="font-size:0.85rem;color:var(--text-muted);">Response Time: 142ms</div>
+                            <div class="code-block" style="margin-top:8px;font-size:0.75rem;">
+                                {<br>
+                                &nbsp;&nbsp;"id": "#TX-${Math.floor(8000 + Math.random() * 2000)}",<br>
+                                &nbsp;&nbsp;"status": "completed",<br>
+                                &nbsp;&nbsp;"amount": 1000,<br>
+                                &nbsp;&nbsp;"currency": "BWP",<br>
+                                &nbsp;&nbsp;"method": "orange_money",<br>
+                                &nbsp;&nbsp;"created_at": "${new Date().toISOString().replace('T', ' ').slice(0, 19)}"<br>
+                                }
+                            </div>
+                        </div>
+                    `;
+            showToast('🧪 API request sent successfully!', 'success');
+        }
+
+        // ── AUDIT LOGS ──
+        function filterLogs(category) {
+            const rows = document.querySelectorAll('#logTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        function refreshData() {
+            showToast('🔄 Refreshing API data...', 'info');
+            setTimeout(() => {
+                showToast('✅ Data refreshed', 'success');
+            }, 1000);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate live ping
+            setInterval(() => {
+                const ping = document.getElementById('lastPing');
+                if (ping) ping.textContent = 'v2.1 · Last request: ' + Math.floor(Math.random() * 3 + 1) + 's ago';
+            }, 3000);
+
+            console.log('🔌 AuthePay API Core loaded');
+            console.log('📦 Modules: Dashboard, Keys, Endpoints, Webhooks, Docs, Explorer, Sandbox, Security, Logs');
+            console.log('🔗 Connected to: AuthePay Gateway, KaTSo System Core, KaTSo AI Core');
+            console.log('🛡️ Security: OAuth 2.0, JWT, Rate Limiting, TLS 1.3');
+            console.log('🏦 Compliant: Botswana DPA, Bank of Botswana, FIA');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.runExplorer = runExplorer;
+        window.filterLogs = filterLogs;
+        window.refreshData = refreshData;
+    </script>
+
+</body>
+</html>

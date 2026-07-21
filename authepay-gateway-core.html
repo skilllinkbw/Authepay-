@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuthePay Gateway Core – Payment Engine</title>
+    <style>
+        /* ── RESET & VARIABLES ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #f97316;
+            --brand-dark: #ea580c;
+            --brand-light: #fb923c;
+            --brand-glow: rgba(249, 115, 22, 0.25);
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.2);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #181825;
+            --bg-card-hover: #1f1f32;
+            --bg-input: #0f0f18;
+            --border: #2a2a3e;
+            --border-light: #3a3a55;
+            --text-primary: #f1f1f9;
+            --text-secondary: #b8b8d0;
+            --text-muted: #7878a0;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 48px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+        }
+        a {
+            color: var(--brand-light);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--brand-light);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ── MAIN ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), #6d28d9);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            box-shadow: 0 4px 16px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand-light);
+            color: var(--text-primary);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── PAGES ── */
+        .page {
+            display: none;
+            animation: fadeUp 0.35s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: 0 0 24px var(--brand-glow);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--brand-light);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--brand-light);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+        .tr-clickable {
+            cursor: pointer;
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.blue {
+            background: var(--brand);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── PAYMENT METHOD CARDS ── */
+        .pm-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: default;
+        }
+        .pm-card:hover {
+            border-color: var(--brand);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+        .pm-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .pm-card .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .pm-card .status {
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        /* ── GATEWAY STATUS ── */
+        .gateway-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .gateway-status .label {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .gateway-status .status-badge {
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+        .gateway-status .status-badge.live {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+        .gateway-status .status-badge.degraded {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        .gateway-status .status-badge.down {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .pm-card-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── STATUS INDICATORS ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="icon">💳</span>
+            <span>AuthePay Gateway</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Core</div>
+            <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+            <a href="#" data-page="transactions">💳 Transactions</a>
+            <a href="#" data-page="payments">⚡ Process Payment</a>
+            <a href="#" data-page="methods">🔌 Payment Methods</a>
+
+            <div class="sidebar-section-label">Merchant</div>
+            <a href="#" data-page="merchants">🏪 Merchants</a>
+            <a href="#" data-page="settlements">💰 Settlements</a>
+
+            <div class="sidebar-section-label">Risk &amp; Compliance</div>
+            <a href="#" data-page="fraud">🛡️ Fraud &amp; Risk</a>
+            <a href="#" data-page="compliance">📋 Compliance</a>
+
+            <div class="sidebar-section-label">Developer</div>
+            <a href="#" data-page="api">🔌 API</a>
+            <a href="#" data-page="webhooks">📡 Webhooks</a>
+        </nav>
+        <div class="sidebar-footer">
+            <span>v2.1 · <span class="pulse-dot green"></span> Gateway live</span>
+        </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="main-content">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div>
+                <h1 id="pageTitle">Gateway Dashboard <small>Payment Processing Engine</small></h1>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                <button class="btn btn-primary btn-sm" onclick="openModal('paymentModal')">💳 New Payment</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: DASHBOARD -->
+        <!-- ============================================================ -->
+        <div class="page active" id="page-dashboard">
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="value brand">P 1.24M</div>
+                    <div class="label">Total Volume (MTD)</div>
+                    <div class="trend up">▲ 22%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value blue">8,452</div>
+                    <div class="label">Transactions</div>
+                    <div class="trend up">▲ 15%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value green">99.8%</div>
+                    <div class="label">Success Rate</div>
+                    <div class="trend up">▲ 0.3%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value yellow">P 34,200</div>
+                    <div class="label">Pending Settlements</div>
+                    <div class="trend">12 payouts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value purple">1,247</div>
+                    <div class="label">Active Merchants</div>
+                    <div class="trend up">▲ 8%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value green">99.98%</div>
+                    <div class="label">Gateway Uptime</div>
+                    <div class="trend up">▲ 0.02%</div>
+                </div>
+            </div>
+
+            <div class="gateway-status" style="margin-bottom:1.5rem;">
+                <span class="label">🚦 Gateway Status:</span>
+                <span class="status-badge live">🟢 Live – All systems operational</span>
+                <span style="color:var(--text-muted);font-size:0.85rem;margin-left:auto;" id="lastPing">Last ping: 2s ago</span>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📊 Transaction Volume</span>
+                        <span style="font-size:0.8rem;color:var(--text-muted);">Last 7 days</span>
+                    </div>
+                    <div style="height:150px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                        <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:20px;" title="Mon"></div>
+                        <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:20px;" title="Tue"></div>
+                        <div style="flex:1;background:var(--brand);height:45%;border-radius:4px 4px 0 0;min-height:20px;" title="Wed"></div>
+                        <div style="flex:1;background:var(--brand);height:70%;border-radius:4px 4px 0 0;min-height:20px;" title="Thu"></div>
+                        <div style="flex:1;background:var(--brand);height:60%;border-radius:4px 4px 0 0;min-height:20px;" title="Fri"></div>
+                        <div style="flex:1;background:var(--brand);height:80%;border-radius:4px 4px 0 0;min-height:20px;" title="Sat"></div>
+                        <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:20px;" title="Sun"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🕐 Recent Transactions</span>
+                        <a href="#" onclick="navigateTo('transactions');return false;" style="font-size:0.8rem;">View all</a>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>ID</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
+                            <tbody id="dashTxs">
+                                <tr class="tr-clickable" onclick="showToast('📋 Transaction #TX-8921 details','info')">
+                                    <td>#TX-8921</td><td>P 12,450</td><td>Orange Money</td><td><span class="badge badge-success">Done</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 Transaction #TX-8920 details','info')">
+                                    <td>#TX-8920</td><td>P 8,900</td><td>MyZaka</td><td><span class="badge badge-success">Done</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 Transaction #TX-8919 details','info')">
+                                    <td>#TX-8919</td><td>P 45,000</td><td>Bank</td><td><span class="badge badge-warning">Pending</span></td>
+                                </tr>
+                                <tr class="tr-clickable" onclick="showToast('📋 Transaction #TX-8918 details','info')">
+                                    <td>#TX-8918</td><td>P 2,300</td><td>QR</td><td><span class="badge badge-danger">Failed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🏪 Merchant Activity</span></div>
+                    <div><span style="color:var(--text-muted);">Active Merchants</span> <span style="float:right;">1,247</span></div>
+                    <div><span style="color:var(--text-muted);">Pending Verification</span> <span style="float:right;">12</span></div>
+                    <div><span style="color:var(--text-muted);">New Today</span> <span style="float:right;">8</span></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🛡️ Risk &amp; Fraud</span></div>
+                    <div><span style="color:var(--text-muted);">Risk Alerts</span> <span style="float:right;"><span class="badge badge-danger">3</span></span></div>
+                    <div><span style="color:var(--text-muted);">Flagged Transactions</span> <span style="float:right;">12</span></div>
+                    <div><span style="color:var(--text-muted);">Avg Risk Score</span> <span style="float:right;">12/100</span></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Compliance</span></div>
+                    <div><span style="color:var(--text-muted);">KYC Verified</span> <span style="float:right;">1,102</span></div>
+                    <div><span style="color:var(--text-muted);">KYB Verified</span> <span style="float:right;">342</span></div>
+                    <div><span style="color:var(--text-muted);">Audit Logs</span> <span style="float:right;">12.4K</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: TRANSACTIONS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-transactions">
+            <h2 style="margin-bottom:1rem;">💳 Transaction Engine</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Full transaction history with search, filters, and export.</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📋 All Transactions</span>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting transactions...','info')">📥 Export</button>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('transactionSearchModal')">🔍 Search</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Transaction ID</th><th>Date</th><th>Merchant</th><th>Amount</th><th>Method</th><th>Status</th><th>Risk</th></tr></thead>
+                        <tbody id="txTable">
+                            <tr class="tr-clickable" onclick="showToast('📋 TX-8921 details','info')">
+                                <td>#TX-8921</td><td>2026-07-21 14:23</td><td>ABC Shop</td><td>P 12,450</td><td>Orange Money</td>
+                                <td><span class="badge badge-success">Completed</span></td><td><span class="badge badge-success">Low</span></td>
+                            </tr>
+                            <tr class="tr-clickable" onclick="showToast('📋 TX-8920 details','info')">
+                                <td>#TX-8920</td><td>2026-07-21 13:45</td><td>QuickBet</td><td>P 8,900</td><td>MyZaka</td>
+                                <td><span class="badge badge-success">Completed</span></td><td><span class="badge badge-success">Low</span></td>
+                            </tr>
+                            <tr class="tr-clickable" onclick="showToast('📋 TX-8919 details','info')">
+                                <td>#TX-8919</td><td>2026-07-21 12:18</td><td>PayrollCo</td><td>P 45,000</td><td>Bank</td>
+                                <td><span class="badge badge-warning">Processing</span></td><td><span class="badge badge-warning">Medium</span></td>
+                            </tr>
+                            <tr class="tr-clickable" onclick="showToast('📋 TX-8918 details','info')">
+                                <td>#TX-8918</td><td>2026-07-21 11:02</td><td>TechHub</td><td>P 2,300</td><td>QR</td>
+                                <td><span class="badge badge-danger">Failed</span></td><td><span class="badge badge-neutral">—</span></td>
+                            </tr>
+                            <tr class="tr-clickable" onclick="showToast('📋 TX-8917 details','info')">
+                                <td>#TX-8917</td><td>2026-07-21 09:30</td><td>GreenEnergy</td><td>P 67,800</td><td>Orange Money</td>
+                                <td><span class="badge badge-success">Completed</span></td><td><span class="badge badge-success">Low</span></td>
+                            </tr>
+                            <tr class="tr-clickable" onclick="showToast('📋 TX-8916 details','info')">
+                                <td>#TX-8916</td><td>2026-07-21 08:15</td><td>InsureTech</td><td>P 3,450</td><td>MyZaka</td>
+                                <td><span class="badge badge-danger">Failed</span></td><td><span class="badge badge-danger">High</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display:flex;justify-content:center;gap:8px;margin-top:1rem;">
+                    <button class="btn btn-sm btn-outline">← Prev</button>
+                    <button class="btn btn-sm btn-primary">1</button>
+                    <button class="btn btn-sm btn-outline">2</button>
+                    <button class="btn btn-sm btn-outline">3</button>
+                    <button class="btn btn-sm btn-outline">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: PROCESS PAYMENT -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-payments">
+            <h2 style="margin-bottom:1rem;">⚡ Process Payment</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Create, authorize, and complete payments through the gateway.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📝 Payment Form</span></div>
+                    <div class="form-group">
+                        <label class="form-label">Amount (BWP)</label>
+                        <input type="number" class="form-input" id="payAmount" value="1000" placeholder="0.00" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" id="payMethod">
+                            <option value="orange">Orange Money</option>
+                            <option value="myzaka">MyZaka</option>
+                            <option value="smega">Smega</option>
+                            <option value="bank">Bank Transfer</option>
+                            <option value="qr">QR Payment</option>
+                            <option value="wallet">Wallet</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Merchant ID</label>
+                        <input type="text" class="form-input" id="payMerchant" value="M-842" placeholder="Merchant ID" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reference</label>
+                        <input type="text" class="form-input" id="payRef" value="INV-2026-001" placeholder="Invoice/Order ref" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Customer Name</label>
+                            <input type="text" class="form-input" id="payCustomer" value="John Doe" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Customer Phone</label>
+                            <input type="text" class="form-input" id="payPhone" value="+267 71 234 567" />
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width:100%;padding:0.85rem;margin-top:0.5rem;" onclick="processPayment()">
+                        💳 Process Payment
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Payment Status</span></div>
+                    <div id="paymentStatus">
+                        <div style="text-align:center;padding:2rem 0;color:var(--text-muted);">
+                            <div style="font-size:3rem;margin-bottom:0.5rem;">💳</div>
+                            <p>Enter payment details and process</p>
+                            <p style="font-size:0.85rem;">Status will appear here</p>
+                        </div>
+                    </div>
+                    <div id="paymentResult" style="display:none;background:var(--bg-input);padding:1rem;border-radius:var(--radius);margin-top:1rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div style="font-weight:700;" id="resultStatus">✅ Completed</div>
+                                <div style="font-size:0.85rem;color:var(--text-muted);" id="resultTxId">#TX-8922</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-weight:800;font-size:1.2rem;" id="resultAmount">P 1,000.00</div>
+                                <div style="font-size:0.75rem;color:var(--text-muted);" id="resultTime">2026-07-21 14:23</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);" id="resultMethod">Orange Money</div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:10px;" onclick="showToast('📄 Receipt generated','success')">📄 Receipt</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📋 Payment Statuses</span></div>
+                <div class="grid-5">
+                    <div><span class="badge badge-neutral">⏳ Pending</span> <span style="color:var(--text-muted);font-size:0.8rem;">12</span></div>
+                    <div><span class="badge badge-info">🔄 Processing</span> <span style="color:var(--text-muted);font-size:0.8rem;">8</span></div>
+                    <div><span class="badge badge-success">✅ Completed</span> <span style="color:var(--text-muted);font-size:0.8rem;">8,234</span></div>
+                    <div><span class="badge badge-danger">❌ Failed</span> <span style="color:var(--text-muted);font-size:0.8rem;">18</span></div>
+                    <div><span class="badge badge-warning">↩️ Refunded</span> <span style="color:var(--text-muted);font-size:0.8rem;">6</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: PAYMENT METHODS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-methods">
+            <h2 style="margin-bottom:1rem;">🔌 Payment Methods</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Modular payment method architecture – add new providers without rebuilding.</p>
+
+            <div class="grid-3">
+                <div class="pm-card"><div class="icon">📱</div><div class="name">Orange Money</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                <div class="pm-card"><div class="icon">📱</div><div class="name">MyZaka</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                <div class="pm-card"><div class="icon">📱</div><div class="name">Smega</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                <div class="pm-card"><div class="icon">🏦</div><div class="name">Bank Transfers</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                <div class="pm-card"><div class="icon">📱</div><div class="name">QR Payments</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                <div class="pm-card"><div class="icon">💳</div><div class="name">Wallet Payments</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                <div class="pm-card" style="border-color:var(--brand);"><div class="icon">➕</div><div class="name">Add Provider</div><div class="status"><span class="badge badge-brand">Modular</span></div></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">⚙️ Provider Configuration</span></div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                        <span>Orange Money</span>
+                        <span><span class="badge badge-success">Live</span> <span style="color:var(--text-muted);font-size:0.8rem;">| Fees: 1.5%</span></span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                        <span>MyZaka</span>
+                        <span><span class="badge badge-success">Live</span> <span style="color:var(--text-muted);font-size:0.8rem;">| Fees: 1.2%</span></span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                        <span>Smega</span>
+                        <span><span class="badge badge-success">Live</span> <span style="color:var(--text-muted);font-size:0.8rem;">| Fees: 1.8%</span></span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;">
+                        <span>Bank Transfers</span>
+                        <span><span class="badge badge-success">Live</span> <span style="color:var(--text-muted);font-size:0.8rem;">| Fees: 0.5%</span></span>
+                    </div>
+                </div>
+                <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="showToast('⚙️ Provider settings opened','info')">⚙️ Configure Providers</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: MERCHANTS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-merchants">
+            <h2 style="margin-bottom:1rem;">🏪 Merchant Management</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Merchant registration, verification, wallets, and analytics.</p>
+
+            <div class="stat-grid">
+                <div class="stat-card"><div class="value blue">1,247</div><div class="label">Total Merchants</div></div>
+                <div class="stat-card"><div class="value green">1,235</div><div class="label">Verified</div></div>
+                <div class="stat-card"><div class="value yellow">12</div><div class="label">Pending Verification</div></div>
+                <div class="stat-card"><div class="value purple">342</div><div class="label">Active Today</div></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📋 Merchant List</span>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('merchantModal')">+ Register Merchant</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Business</th><th>ID</th><th>Status</th><th>Wallet Balance</th><th>Volume</th></tr></thead>
+                        <tbody>
+                            <tr><td>ABC Shop</td><td>M-842</td><td><span class="badge badge-success">Verified</span></td><td>P 45,200</td><td>P 234K</td></tr>
+                            <tr><td>QuickBet</td><td>M-119</td><td><span class="badge badge-success">Verified</span></td><td>P 12,800</td><td>P 89K</td></tr>
+                            <tr><td>PayrollCo</td><td>M-556</td><td><span class="badge badge-success">Verified</span></td><td>P 234,000</td><td>P 1.2M</td></tr>
+                            <tr><td>TechHub</td><td>M-901</td><td><span class="badge badge-warning">Pending</span></td><td>—</td><td>—</td></tr>
+                            <tr><td>GreenEnergy</td><td>M-712</td><td><span class="badge badge-success">Verified</span></td><td>P 67,400</td><td>P 456K</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Merchant Analytics</span></div>
+                    <div><span style="color:var(--text-muted);">Top Merchant</span> <span style="float:right;">PayrollCo</span></div>
+                    <div><span style="color:var(--text-muted);">Avg Transaction</span> <span style="float:right;">P 1,240</span></div>
+                    <div><span style="color:var(--text-muted);">Growth Rate</span> <span style="float:right;" class="trend up">▲ 8.2%</span></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔑 API Access</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>Active API Keys</span><span>342</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>API Calls Today</span><span>12.4K</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: SETTLEMENTS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-settlements">
+            <h2 style="margin-bottom:1rem;">💰 Settlement Engine</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Merchant settlements, fees, commissions, and refunds.</p>
+
+            <div class="stat-grid">
+                <div class="stat-card"><div class="value green">P 1.10M</div><div class="label">Settled (MTD)</div></div>
+                <div class="stat-card"><div class="value yellow">P 34,200</div><div class="label">Pending</div></div>
+                <div class="stat-card"><div class="value blue">12</div><div class="label">Queued Batches</div></div>
+                <div class="stat-card"><div class="value purple">T+1</div><div class="label">Avg Settlement</div></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📋 Settlement Schedule</span><button class="btn btn-outline btn-sm" onclick="showToast('📤 Exporting settlements...','info')">📥 Export</button></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Batch</th><th>Period</th><th>Amount</th><th>Merchants</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>#BAT-202</td><td>Jul 18-19</td><td>P 245,000</td><td>124</td><td><span class="badge badge-success">Settled</span></td></tr>
+                            <tr><td>#BAT-203</td><td>Jul 19-20</td><td>P 180,000</td><td>98</td><td><span class="badge badge-info">Processing</span></td></tr>
+                            <tr><td>#BAT-204</td><td>Jul 20-21</td><td>P 34,200</td><td>12</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">⚙️ Fee Configuration</span></div>
+                    <div class="form-group"><label class="form-label">Transaction Fee (%)</label><input type="number" class="form-input" value="2.5" step="0.1" /></div>
+                    <div class="form-group"><label class="form-label">Flat Fee (BWP)</label><input type="number" class="form-input" value="3.00" step="0.5" /></div>
+                    <div class="form-group"><label class="form-label">Settlement Fee</label><input type="number" class="form-input" value="5.00" step="0.5" /></div>
+                    <button class="btn btn-primary" onclick="showToast('💾 Fee configuration saved','success')">💾 Save</button>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">💰 Commission Tracking</span></div>
+                    <div><span style="color:var(--text-muted);">Total Commission</span> <span style="float:right;">P 12,450</span></div>
+                    <div><span style="color:var(--text-muted);">Avg Commission/Transaction</span> <span style="float:right;">P 2.45</span></div>
+                    <div><span style="color:var(--text-muted);">Refunds Processed</span> <span style="float:right;">P 8,200</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: FRAUD & RISK -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-fraud">
+            <h2 style="margin-bottom:1rem;">🛡️ Fraud &amp; Risk Management</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">AI-powered fraud detection, risk scoring, and transaction monitoring.</p>
+
+            <div class="stat-grid">
+                <div class="stat-card"><div class="value green">12</div><div class="label">Risk Score (Avg)</div></div>
+                <div class="stat-card"><div class="value yellow">3</div><div class="label">Active Alerts</div></div>
+                <div class="stat-card"><div class="value purple">12</div><div class="label">Flagged Transactions</div></div>
+                <div class="stat-card"><div class="value blue">0</div><div class="label">Fraud Confirmed</div></div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🚨 Risk Alerts</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-danger">High</span> Unusual transaction pattern</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">TX-8916</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                            <span><span class="badge badge-warning">Medium</span> Multiple failed attempts</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">M-119</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;">
+                            <span><span class="badge badge-warning">Medium</span> Suspicious merchant activity</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">M-901</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🤖 AI Risk Recommendations</span></div>
+                    <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--brand);margin-bottom:8px;">
+                        💡 Review merchant M-901 – unusual activity detected
+                    </div>
+                    <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--success);">
+                        ✅ No immediate action required – all systems normal
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📋 Velocity Checks</span></div>
+                <div class="grid-4">
+                    <div><span style="color:var(--text-muted);">Max Transactions/min</span><br><strong>5</strong></div>
+                    <div><span style="color:var(--text-muted);">Current Rate</span><br><strong>3.2</strong></div>
+                    <div><span style="color:var(--text-muted);">Violations</span><br><strong>0</strong></div>
+                    <div><span style="color:var(--text-muted);">Status</span><br><span class="badge badge-success">Normal</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: COMPLIANCE -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-compliance">
+            <h2 style="margin-bottom:1rem;">📋 Compliance Framework</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">KYC, KYB, AML, audit trails, and regulatory alignment.</p>
+
+            <div class="stat-grid">
+                <div class="stat-card"><div class="value green">98%</div><div class="label">Compliance Score</div></div>
+                <div class="stat-card"><div class="value blue">1,102</div><div class="label">KYC Verified</div></div>
+                <div class="stat-card"><div class="value purple">342</div><div class="label">KYB Verified</div></div>
+                <div class="stat-card"><div class="value yellow">3</div><div class="label">AML Alerts</div></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📋 KYC/KYB Status</span></div>
+                <div class="grid-3">
+                    <div><span style="color:var(--text-muted);">KYC Verified</span><br><span class="badge badge-success">1,102</span></div>
+                    <div><span style="color:var(--text-muted);">KYC Pending</span><br><span class="badge badge-warning">12</span></div>
+                    <div><span style="color:var(--text-muted);">KYB Verified</span><br><span class="badge badge-success">342</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                <div class="grid-3">
+                    <div><span style="color:var(--text-muted);">Botswana Data Protection Act</span><br><span class="badge badge-success">✅</span></div>
+                    <div><span style="color:var(--text-muted);">Bank of Botswana</span><br><span class="badge badge-success">✅</span></div>
+                    <div><span style="color:var(--text-muted);">Financial Intelligence Agency</span><br><span class="badge badge-success">✅</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📋 Audit Trail</span></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Time</th><th>Action</th><th>User</th><th>Category</th></tr></thead>
+                        <tbody>
+                            <tr><td>2026-07-21 14:23</td><td>KYC Review</td><td>compliance@authepay</td><td><span class="badge badge-info">KYC</span></td></tr>
+                            <tr><td>2026-07-21 13:45</td><td>AML Alert Escalated</td><td>system</td><td><span class="badge badge-danger">AML</span></td></tr>
+                            <tr><td>2026-07-21 12:18</td><td>Merchant Verified</td><td>admin@authepay</td><td><span class="badge badge-success">KYB</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: API -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-api">
+            <h2 style="margin-bottom:1rem;">🔌 API Foundation</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">REST API, API keys, authentication, and documentation.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔑 API Keys</span><button class="btn btn-primary btn-sm" onclick="showToast('🔑 New API key generated','success')">+ Generate</button></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;">pk_live_••••••••••••</code></span>
+                            <span class="badge badge-success">Live</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;">pk_test_••••••••••••</code></span>
+                            <span class="badge badge-info">Test</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                            <span><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;">pk_live_••••••••••••</code></span>
+                            <span class="badge badge-success">Live</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📖 API Documentation</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📖 API docs opened','info')">📖 View Documentation</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('🧪 API Explorer opened','info')">🧪 API Explorer</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('🏖️ Sandbox environment ready','success')">🏖️ Sandbox</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📊 API Metrics</span></div>
+                <div class="grid-4">
+                    <div><span style="color:var(--text-muted);">Requests Today</span><br><strong>12.4K</strong></div>
+                    <div><span style="color:var(--text-muted);">Success Rate</span><br><strong>99.7%</strong></div>
+                    <div><span style="color:var(--text-muted);">Avg Latency</span><br><strong>142ms</strong></div>
+                    <div><span style="color:var(--text-muted);">Rate Limit</span><br><strong>1,000/min</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE: WEBHOOKS -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-webhooks">
+            <h2 style="margin-bottom:1rem;">📡 Webhooks</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">Real-time event notifications for payment status changes.</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📋 Webhook Endpoints</span>
+                    <button class="btn btn-primary btn-sm" onclick="showToast('📡 Webhook endpoint added','success')">+ Add Endpoint</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>URL</th><th>Events</th><th>Status</th><th>Last Delivery</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;font-size:0.75rem;">https://api.authepay.co/webhook</code></td>
+                                <td>payment.*</td>
+                                <td><span class="badge badge-success">✅</span></td>
+                                <td>14:23</td>
+                            </tr>
+                            <tr>
+                                <td><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;font-size:0.75rem;">https://api.authetec.co/webhook</code></td>
+                                <td>payment.settled</td>
+                                <td><span class="badge badge-success">✅</span></td>
+                                <td>13:45</td>
+                            </tr>
+                            <tr>
+                                <td><code style="background:var(--bg-input);padding:2px 8px;border-radius:4px;font-size:0.75rem;">https://api.authebook.co/webhook</code></td>
+                                <td>payment.failed</td>
+                                <td><span class="badge badge-danger">❌</span></td>
+                                <td>12:18</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /main-content -->
+
+    <!-- ============================================================ -->
+    <!-- MODALS -->
+    <!-- ============================================================ -->
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal">
+            <div class="modal-header"><h2>💳 New Payment</h2><button class="modal-close" onclick="closeModal('paymentModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Amount (BWP)</label><input type="number" class="form-input" placeholder="1000" id="modalAmount" /></div>
+                <div class="form-group"><label class="form-label">Payment Method</label><select class="form-select" id="modalMethod"><option>Orange Money</option><option>MyZaka</option><option>Smega</option><option>Bank Transfer</option></select></div>
+                <div class="form-group"><label class="form-label">Merchant ID</label><input type="text" class="form-input" placeholder="M-842" id="modalMerchant" /></div>
+                <div class="form-group"><label class="form-label">Reference</label><input type="text" class="form-input" placeholder="INV-123" id="modalRef" /></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('paymentModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="closeModal('paymentModal');showToast('💳 Payment processed successfully!','success')">💳 Process Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Merchant Modal -->
+    <div class="modal-overlay" id="merchantModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🏪 Register Merchant</h2><button class="modal-close" onclick="closeModal('merchantModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Business Name</label><input type="text" class="form-input" placeholder="ABC Shop" /></div>
+                <div class="form-group"><label class="form-label">Registration Number</label><input type="text" class="form-input" placeholder="BW00001951757" /></div>
+                <div class="form-group"><label class="form-label">Contact Email</label><input type="email" class="form-input" placeholder="merchant@abcshop.com" /></div>
+                <div class="form-group"><label class="form-label">Phone Number</label><input type="tel" class="form-input" placeholder="+267 71 234 567" /></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('merchantModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="closeModal('merchantModal');showToast('🏪 Merchant registered successfully!','success')">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Search Modal -->
+    <div class="modal-overlay" id="transactionSearchModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🔍 Search Transactions</h2><button class="modal-close" onclick="closeModal('transactionSearchModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Transaction ID</label><input type="text" class="form-input" placeholder="#TX-8921" /></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">From</label><input type="date" class="form-input" /></div>
+                    <div class="form-group"><label class="form-label">To</label><input type="date" class="form-input" /></div>
+                </div>
+                <div class="form-group"><label class="form-label">Status</label><select class="form-select"><option>All</option><option>Completed</option><option>Pending</option><option>Failed</option></select></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('transactionSearchModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="closeModal('transactionSearchModal');showToast('🔍 Search results loaded','info')">🔍 Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY GATEWAY CORE – Full JavaScript Engine
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard',
+            transactions: [
+                { id: '#TX-8921', date: '2026-07-21 14:23', merchant: 'ABC Shop', amount: 12450, method: 'Orange Money',
+                    status: 'Completed', risk: 'Low' },
+                { id: '#TX-8920', date: '2026-07-21 13:45', merchant: 'QuickBet', amount: 8900, method: 'MyZaka',
+                    status: 'Completed', risk: 'Low' },
+                { id: '#TX-8919', date: '2026-07-21 12:18', merchant: 'PayrollCo', amount: 45000, method: 'Bank',
+                    status: 'Processing', risk: 'Medium' },
+                { id: '#TX-8918', date: '2026-07-21 11:02', merchant: 'TechHub', amount: 2300, method: 'QR', status: 'Failed',
+                    risk: '—' },
+                { id: '#TX-8917', date: '2026-07-21 09:30', merchant: 'GreenEnergy', amount: 67800, method: 'Orange Money',
+                    status: 'Completed', risk: 'Low' },
+                { id: '#TX-8916', date: '2026-07-21 08:15', merchant: 'InsureTech', amount: 3450, method: 'MyZaka',
+                    status: 'Failed', risk: 'High' }
+            ],
+            merchants: [
+                { name: 'ABC Shop', id: 'M-842', status: 'Verified', balance: 45200, volume: 234000 },
+                { name: 'QuickBet', id: 'M-119', status: 'Verified', balance: 12800, volume: 89000 },
+                { name: 'PayrollCo', id: 'M-556', status: 'Verified', balance: 234000, volume: 1200000 },
+                { name: 'TechHub', id: 'M-901', status: 'Pending', balance: 0, volume: 0 },
+                { name: 'GreenEnergy', id: 'M-712', status: 'Verified', balance: 67400, volume: 456000 }
+            ]
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Gateway Dashboard',
+                transactions: 'Transaction Engine',
+                payments: 'Process Payment',
+                methods: 'Payment Methods',
+                merchants: 'Merchant Management',
+                settlements: 'Settlement Engine',
+                fraud: 'Fraud & Risk Management',
+                compliance: 'Compliance Framework',
+                api: 'API Foundation',
+                webhooks: 'Webhooks'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'AuthePay Gateway';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── PAYMENT PROCESSING ──
+        function processPayment() {
+            const amount = document.getElementById('payAmount').value || '1000';
+            const method = document.getElementById('payMethod').value;
+            const merchant = document.getElementById('payMerchant').value || 'M-842';
+            const ref = document.getElementById('payRef').value || 'INV-2026-001';
+            const customer = document.getElementById('payCustomer').value || 'John Doe';
+
+            const methodLabels = {
+                orange: 'Orange Money',
+                myzaka: 'MyZaka',
+                smega: 'Smega',
+                bank: 'Bank Transfer',
+                qr: 'QR Payment',
+                wallet: 'Wallet'
+            };
+
+            const resultDiv = document.getElementById('paymentResult');
+            resultDiv.style.display = 'block';
+
+            document.getElementById('resultStatus').textContent = '🔄 Processing...';
+            document.getElementById('resultStatus').style.color = 'var(--warning)';
+            document.getElementById('resultTxId').textContent = 'Generating...';
+            document.getElementById('resultAmount').textContent = `P ${parseFloat(amount).toFixed(2)}`;
+            document.getElementById('resultMethod').textContent = methodLabels[method] || method;
+
+            // Simulate payment processing
+            const txId = '#TX-' + Math.floor(8000 + Math.random() * 2000);
+            const statuses = ['✅ Completed', '❌ Failed', '⏳ Pending'];
+            const weights = [0.8, 0.1, 0.1];
+            let r = Math.random();
+            let status = statuses[0];
+            let cum = 0;
+            for (let i = 0; i < weights.length; i++) {
+                cum += weights[i];
+                if (r < cum) { status = statuses[i]; break; }
+            }
+
+            const isSuccess = status === '✅ Completed';
+            const isPending = status === '⏳ Pending';
+
+            setTimeout(() => {
+                document.getElementById('resultStatus').textContent = status;
+                document.getElementById('resultStatus').style.color = isSuccess ? 'var(--success)' : isPending ?
+                    'var(--warning)' : 'var(--danger)';
+                document.getElementById('resultTxId').textContent = txId;
+
+                // Add to transaction list
+                if (isSuccess || isPending) {
+                    state.transactions.unshift({
+                        id: txId,
+                        date: new Date().toLocaleString(),
+                        merchant: merchant,
+                        amount: parseFloat(amount),
+                        method: methodLabels[method] || method,
+                        status: isSuccess ? 'Completed' : 'Processing',
+                        risk: 'Low'
+                    });
+                    renderTransactions();
+                    renderDashTxs();
+                }
+
+                if (isSuccess) {
+                    showToast(`💳 Payment ${status} – ${txId}`, 'success');
+                } else if (isPending) {
+                    showToast(`⏳ Payment ${status} – ${txId}`, 'warning');
+                } else {
+                    showToast(`❌ Payment ${status} – ${txId}`, 'error');
+                }
+            }, 1500);
+        }
+
+        // ── RENDER FUNCTIONS ──
+        function renderTransactions() {
+            const table = document.getElementById('txTable');
+            if (!table) return;
+            const statusMap = {
+                'Completed': 'badge-success',
+                'Processing': 'badge-warning',
+                'Failed': 'badge-danger',
+                'Pending': 'badge-warning'
+            };
+            const riskMap = {
+                'Low': 'badge-success',
+                'Medium': 'badge-warning',
+                'High': 'badge-danger'
+            };
+            table.innerHTML = state.transactions.map(t => `
+                        <tr class="tr-clickable" onclick="showToast('📋 ${t.id} details','info')">
+                            <td>${t.id}</td>
+                            <td>${t.date}</td>
+                            <td>${t.merchant}</td>
+                            <td>P ${t.amount.toLocaleString()}</td>
+                            <td>${t.method}</td>
+                            <td><span class="badge ${statusMap[t.status] || 'badge-neutral'}">${t.status}</span></td>
+                            <td><span class="badge ${riskMap[t.risk] || 'badge-neutral'}">${t.risk}</span></td>
+                        </tr>
+                    `).join('');
+        }
+
+        function renderDashTxs() {
+            const table = document.getElementById('dashTxs');
+            if (!table) return;
+            const statusMap = {
+                'Completed': 'badge-success',
+                'Processing': 'badge-warning',
+                'Failed': 'badge-danger',
+                'Pending': 'badge-warning'
+            };
+            table.innerHTML = state.transactions.slice(0, 4).map(t => `
+                        <tr class="tr-clickable" onclick="showToast('📋 ${t.id} details','info')">
+                            <td>${t.id}</td>
+                            <td>P ${t.amount.toLocaleString()}</td>
+                            <td>${t.method}</td>
+                            <td><span class="badge ${statusMap[t.status] || 'badge-neutral'}">${t.status}</span></td>
+                        </tr>
+                    `).join('');
+        }
+
+        function refreshData() {
+            showToast('🔄 Refreshing gateway data...', 'info');
+            setTimeout(() => {
+                showToast('✅ Data refreshed', 'success');
+            }, 1000);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTransactions();
+            renderDashTxs();
+
+            // Simulate live ping
+            setInterval(() => {
+                const ping = document.getElementById('lastPing');
+                if (ping) ping.textContent = 'Last ping: ' + Math.floor(Math.random() * 3 + 1) + 's ago';
+            }, 3000);
+
+            console.log('💳 AuthePay Gateway Core loaded');
+            console.log('📦 Modules: Dashboard, Transactions, Payments, Methods, Merchants, Settlements, Fraud, Compliance, API, Webhooks');
+            console.log('🔗 Integrated with KaTSo AI Core, System Core, Growth Core');
+            console.log('🏦 Compliant: Botswana DPA, Bank of Botswana, FIA');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.processPayment = processPayment;
+        window.refreshData = refreshData;
+        window.renderTransactions = renderTransactions;
+        window.renderDashTxs = renderDashTxs;
+    </script>
+
+</body>
+</html>

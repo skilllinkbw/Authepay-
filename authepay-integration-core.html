@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Integration Core – Enterprise Payment Engine</title>
+    <meta name="description" content="AuthePay Integration Core – Central payment and financial integration engine for the AutheCorp ecosystem." />
+    <style>
+        /* ============================================================
+           AUTHEPAY INTEGRATION CORE – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           Enterprise fintech integration dashboard
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --brand-glow-strong: rgba(255, 107, 0, 0.4);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --shadow-glow: 0 0 40px rgba(255, 107, 0, 0.08);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .topbar-actions .status-badge {
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── ARCHITECTURE DIAGRAM ── */
+        .arch-diagram {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .arch-diagram::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 0, 0.03), transparent 70%);
+            pointer-events: none;
+        }
+        .arch-layer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.8rem 0;
+            position: relative;
+        }
+        .arch-layer .layer-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .arch-layer .layer-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .arch-layer .layer-items .item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .arch-layer .layer-items .item:hover {
+            border-color: var(--brand);
+            color: var(--text-primary);
+        }
+        .arch-layer .layer-items .item.brand {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .arch-layer .layer-items .item.accent {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .arch-layer .layer-items .item.green {
+            border-color: var(--success);
+            color: var(--success);
+        }
+        .arch-layer .layer-items .item.info {
+            border-color: var(--info);
+            color: var(--info);
+        }
+        .arch-layer .layer-items .item.warning {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+        .arch-arrow {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            opacity: 0.3;
+            padding: 2px 0;
+        }
+        .arch-arrow .line {
+            display: block;
+            width: 2px;
+            height: 12px;
+            background: var(--border);
+            margin: 0 auto;
+        }
+
+        /* ── INTEGRATION CARD ── */
+        .integration-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .integration-card:hover {
+            border-color: var(--brand);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .integration-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .integration-card .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .integration-card .status {
+            font-size: 0.75rem;
+            margin-top: 4px;
+            color: var(--text-muted);
+        }
+
+        /* ── CONNECTION LINE ── */
+        .connection-line {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .connection-line:last-child {
+            border-bottom: none;
+        }
+        .connection-line .from {
+            font-weight: 600;
+            font-size: 0.85rem;
+            min-width: 120px;
+        }
+        .connection-line .arrow {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+        .connection-line .to {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .connection-line .status {
+            margin-left: auto;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .arch-layer .layer-items .item {
+                font-size: 0.65rem;
+                padding: 2px 10px;
+            }
+            .connection-line {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .connection-line .from {
+                min-width: 80px;
+                font-size: 0.75rem;
+            }
+            .connection-line .to {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── AI INTELLIGENCE BANNER ── */
+        .ai-banner {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-banner .icon {
+            font-size: 1.5rem;
+        }
+        .ai-banner .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-banner .text strong {
+            color: var(--text-primary);
+        }
+
+        /* ── SECURITY BADGE ── */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        .security-badge .check {
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">⚡</span>
+                <div>
+                    <span>Integration Core</span>
+                    <span class="sub">Enterprise Engine</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Core</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="architecture">🏗️ Architecture</a>
+                <a href="#" data-page="gateways">🚪 Gateways</a>
+
+                <div class="sidebar-section-label">Payments</div>
+                <a href="#" data-page="payment-gateway">💳 Payment Gateway</a>
+                <a href="#" data-page="wallet">👛 Wallet</a>
+                <a href="#" data-page="softpos">📱 SoftPOS</a>
+
+                <div class="sidebar-section-label">Integrations</div>
+                <a href="#" data-page="banking">🏦 Banking</a>
+                <a href="#" data-page="mobile-money">📱 Mobile Money</a>
+                <a href="#" data-page="international">🌍 International</a>
+
+                <div class="sidebar-section-label">Platform</div>
+                <a href="#" data-page="developer">💻 Developer Platform</a>
+                <a href="#" data-page="business">🏢 Business Apps</a>
+                <a href="#" data-page="communication">💬 Communication</a>
+
+                <div class="sidebar-section-label">Security &amp; AI</div>
+                <a href="#" data-page="security-layer">🛡️ Security Layer</a>
+                <a href="#" data-page="ai-intelligence">🧠 AI Intelligence</a>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="analytics">📈 Analytics</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> All systems operational</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v3.0 · Enterprise</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Integration Dashboard <small>Enterprise Payment Engine</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI OS</span>
+                    <span class="security-badge"><span class="check">✅</span> PCI DSS</span>
+                    <span class="status-badge">🟢 All services online</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="statVolume">—</div>
+                        <div class="label">Total Volume (MTD)</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="statTx">—</div>
+                        <div class="label">Transactions</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statSuccess">—</div>
+                        <div class="label">Success Rate</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="statConnected">—</div>
+                        <div class="label">Connected Services</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="statMerchants">—</div>
+                        <div class="label">Active Merchants</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statUptime">—</div>
+                        <div class="label">System Uptime</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Payment Volume (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">🔌 Service Health</span>
+                            <span class="badge badge-success">All operational</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>⚡ API Gateway</span>
+                                <span class="badge badge-success">🟢 Online</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>💳 Payment Gateway</span>
+                                <span class="badge badge-success">🟢 Online</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>👛 Digital Wallet</span>
+                                <span class="badge badge-success">🟢 Online</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>📱 SoftPOS</span>
+                                <span class="badge badge-success">🟢 Online</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span>🏦 Banking Integration</span>
+                                <span class="badge badge-success">🟢 Online</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span>🧠 KaTSo AI OS</span>
+                                <span class="badge badge-success">🟢 Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">💰 Payment Methods</span></div>
+                        <div><span style="color:var(--text-muted);">Cards</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Bank Transfers</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Mobile Money</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">QR Payments</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">International</span> <span style="float:right;color:var(--success);">✅</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🤖 KaTSo AI Services</span></div>
+                        <div><span style="color:var(--text-muted);">Fraud Detection</span> <span style="float:right;color:var(--success);">Active</span></div>
+                        <div><span style="color:var(--text-muted);">Risk Scoring</span> <span style="float:right;color:var(--success);">Active</span></div>
+                        <div><span style="color:var(--text-muted);">AML Monitoring</span> <span style="float:right;color:var(--success);">Active</span></div>
+                        <div><span style="color:var(--text-muted);">KYC/KYB</span> <span style="float:right;color:var(--success);">Active</span></div>
+                        <div><span style="color:var(--text-muted);">Business Intelligence</span> <span style="float:right;color:var(--success);">Active</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Compliance Status</span></div>
+                        <div><span style="color:var(--text-muted);">PCI DSS</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">ISO 27001</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Data Protection</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Bank of Botswana</span> <span style="float:right;color:var(--success);">✅</span></div>
+                        <div><span style="color:var(--text-muted);">AML/CFT</span> <span style="float:right;color:var(--success);">✅</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: ARCHITECTURE
+            ============================================================ -->
+            <div class="page" id="page-architecture">
+                <div class="section-header">
+                    <h2>🏗️ System Architecture</h2>
+                    <p>Enterprise payment and financial integration engine – all services connected through KaTSo AI OS.</p>
+                </div>
+
+                <div class="arch-diagram">
+                    <!-- KaTSo AI OS Top -->
+                    <div class="arch-layer">
+                        <div class="layer-label">🧠 KaTSo AI OS — AI Orchestration • Fraud • Security • Monitoring</div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- AuthePay Integration Core -->
+                    <div class="arch-layer">
+                        <div class="layer-label" style="color:var(--brand);font-size:0.8rem;">⚡ AUTHEPAY INTEGRATION CORE</div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- Layer 1: API Gateway -->
+                    <div class="arch-layer">
+                        <div class="layer-label">🚪 API Gateway</div>
+                        <div class="layer-items">
+                            <span class="item">REST API</span>
+                            <span class="item">GraphQL</span>
+                            <span class="item">Webhooks</span>
+                            <span class="item">SDKs</span>
+                            <span class="item">API Keys</span>
+                            <span class="item">OAuth 2.0</span>
+                            <span class="item">Rate Limiting</span>
+                        </div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- Layer 2: Payment Services -->
+                    <div class="arch-layer">
+                        <div class="layer-label">💳 Payment Services</div>
+                        <div class="layer-items">
+                            <span class="item brand">Payment Gateway</span>
+                            <span class="item info">Digital Wallet</span>
+                            <span class="item accent">SoftPOS</span>
+                            <span class="item green">Merchant Platform</span>
+                            <span class="item warning">Checkout Services</span>
+                        </div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- Layer 3: Integrations -->
+                    <div class="arch-layer">
+                        <div class="layer-label">🔌 Integrations</div>
+                        <div class="layer-items">
+                            <span class="item info">Banking Integration</span>
+                            <span class="item green">Mobile Money</span>
+                            <span class="item brand">International Payments</span>
+                            <span class="item accent">Developer Platform</span>
+                        </div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- Layer 4: Business Applications -->
+                    <div class="arch-layer">
+                        <div class="layer-label">🏢 Business Applications</div>
+                        <div class="layer-items">
+                            <span class="item">AutheTicket</span>
+                            <span class="item">AutheFleet</span>
+                            <span class="item">AutheBook</span>
+                            <span class="item">AuthePay Student</span>
+                            <span class="item">TVET Portal</span>
+                            <span class="item">E‑Commerce</span>
+                            <span class="item">ERP Integrations</span>
+                        </div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- Layer 5: Communication -->
+                    <div class="arch-layer">
+                        <div class="layer-label">💬 Communication Services</div>
+                        <div class="layer-items">
+                            <span class="item">AuthePay Chat</span>
+                            <span class="item">SMS</span>
+                            <span class="item">Email</span>
+                            <span class="item">Push Notifications</span>
+                            <span class="item">WhatsApp</span>
+                            <span class="item">Customer Support</span>
+                        </div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- Layer 6: Security & Compliance -->
+                    <div class="arch-layer">
+                        <div class="layer-label">🛡️ Security &amp; Compliance</div>
+                        <div class="layer-items">
+                            <span class="item brand">Security Layer</span>
+                            <span class="item info">Compliance Layer</span>
+                            <span class="item green">Analytics &amp; Reporting</span>
+                        </div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- Layer 7: AI Intelligence -->
+                    <div class="arch-layer">
+                        <div class="layer-label">🧠 AI Intelligence</div>
+                        <div class="layer-items">
+                            <span class="item accent">KaTSo AI Router</span>
+                            <span class="item">Kimi Coding Agent</span>
+                            <span class="item">DeepSeek Fraud Engine</span>
+                            <span class="item">Qwen Vision AI</span>
+                            <span class="item">Customer AI Assistant</span>
+                            <span class="item">Compliance AI</span>
+                            <span class="item">Business Intelligence AI</span>
+                        </div>
+                    </div>
+                    <div class="arch-arrow"><div class="line"></div>▼</div>
+
+                    <!-- Layer 8: Infrastructure -->
+                    <div class="arch-layer">
+                        <div class="layer-label">☁️ Infrastructure</div>
+                        <div class="layer-items">
+                            <span class="item">Cloudflare</span>
+                            <span class="item">GitHub</span>
+                            <span class="item">Supabase</span>
+                            <span class="item">PostgreSQL</span>
+                            <span class="item">Object Storage</span>
+                            <span class="item">Redis</span>
+                            <span class="item">Monitoring</span>
+                            <span class="item">Logging</span>
+                            <span class="item">Backup</span>
+                            <span class="item">Disaster Recovery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: GATEWAYS
+            ============================================================ -->
+            <div class="page" id="page-gateways">
+                <div class="section-header">
+                    <h2>🚪 API Gateway</h2>
+                    <p>Centralized API management for all AuthePay services.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="gwRequests">—</div><div class="label">Requests (24h)</div></div>
+                    <div class="stat-card"><div class="value green" id="gwSuccess">—</div><div class="label">Success Rate</div></div>
+                    <div class="stat-card"><div class="value purple" id="gwLatency">—</div><div class="label">Avg Latency</div></div>
+                    <div class="stat-card"><div class="value yellow" id="gwKeys">—</div><div class="label">Active Keys</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 API Endpoints</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>POST /payments</span><span class="badge badge-success">200</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>GET /payments/{id}</span><span class="badge badge-success">200</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>POST /webhooks</span><span class="badge badge-success">201</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>GET /wallet/balance</span><span class="badge badge-success">200</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>POST /verify</span><span class="badge badge-success">200</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔑 SDKs &amp; Tools</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📦 JavaScript SDK downloaded','success')">📦 JavaScript SDK</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📦 Python SDK downloaded','success')">📦 Python SDK</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📦 PHP SDK downloaded','success')">📦 PHP SDK</button>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📱 Mobile SDKs downloaded','success')">📱 Mobile SDKs</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: PAYMENT GATEWAY
+            ============================================================ -->
+            <div class="page" id="page-payment-gateway">
+                <div class="section-header">
+                    <h2>💳 Payment Gateway</h2>
+                    <p>Card payments, bank transfers, QR, USSD, EFT, wallet, and international payments.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">💳</div><div class="name">Card Payments</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🏦</div><div class="name">Bank Transfers</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📱</div><div class="name">QR Payments</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📡</div><div class="name">USSD Payments</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">💸</div><div class="name">EFT</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">👛</div><div class="name">Wallet Payments</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🌍</div><div class="name">International Payments</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🔗</div><div class="name">Payment Links</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📄</div><div class="name">Invoice Payments</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: WALLET
+            ============================================================ -->
+            <div class="page" id="page-wallet">
+                <div class="section-header">
+                    <h2>👛 Digital Wallet</h2>
+                    <p>Customer wallets, merchant wallets, multi-currency, virtual accounts, and transfers.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="walletCustomers">—</div><div class="label">Customer Wallets</div></div>
+                    <div class="stat-card"><div class="value purple" id="walletMerchants">—</div><div class="label">Merchant Wallets</div></div>
+                    <div class="stat-card"><div class="value green" id="walletBalance">—</div><div class="label">Total Balance</div></div>
+                    <div class="stat-card"><div class="value yellow" id="walletTx">—</div><div class="label">Wallet Transactions</div></div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">👤</div><div class="name">Customer Wallet</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🏪</div><div class="name">Merchant Wallet</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🌐</div><div class="name">Multi-Currency</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🏷️</div><div class="name">Virtual Accounts</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">↔️</div><div class="name">Wallet Transfers</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📊</div><div class="name">Wallet Statements</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SOFTPOS
+            ============================================================ -->
+            <div class="page" id="page-softpos">
+                <div class="section-header">
+                    <h2>📱 SoftPOS</h2>
+                    <p>NFC Tap-to-Pay, Android POS, contactless payments, and merchant terminals.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="softposDevices">—</div><div class="label">Active Terminals</div></div>
+                    <div class="stat-card"><div class="value green" id="softposTx">—</div><div class="label">Tap Transactions</div></div>
+                    <div class="stat-card"><div class="value purple" id="softposVolume">—</div><div class="label">Tap Volume</div></div>
+                    <div class="stat-card"><div class="value yellow" id="softposMerchants">—</div><div class="label">SoftPOS Merchants</div></div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">📱</div><div class="name">NFC Tap-to-Pay</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🤖</div><div class="name">Android POS</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">💳</div><div class="name">Contactless Payments</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🖨️</div><div class="name">Receipt Printing</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">⏳</div><div class="name">Offline Queue</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🏪</div><div class="name">Merchant Terminal</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: BANKING
+            ============================================================ -->
+            <div class="page" id="page-banking">
+                <div class="section-header">
+                    <h2>🏦 Banking Integration</h2>
+                    <p>Commercial banks, open banking APIs, instant transfers, and settlement.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">🏛️</div><div class="name">Commercial Banks</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🔓</div><div class="name">Open Banking APIs</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">⚡</div><div class="name">Instant Transfers</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">✅</div><div class="name">Bank Verification</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">💰</div><div class="name">Settlement Engine</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🔄</div><div class="name">Reconciliation</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: MOBILE MONEY
+            ============================================================ -->
+            <div class="page" id="page-mobile-money">
+                <div class="section-header">
+                    <h2>📱 Mobile Money Integration</h2>
+                    <p>Orange Money, MyZaka, Smega, airtime payments, cash in/out.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">🟠</div><div class="name">Orange Money</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🟣</div><div class="name">MyZaka</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🟢</div><div class="name">Smega</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">📞</div><div class="name">Airtime Payments</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">📥</div><div class="name">Cash In</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">📤</div><div class="name">Cash Out</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: INTERNATIONAL
+            ============================================================ -->
+            <div class="page" id="page-international">
+                <div class="section-header">
+                    <h2>🌍 International Payment Services</h2>
+                    <p>Visa, Mastercard, SWIFT, cross-border payments, forex, and multi-currency processing.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">💳</div><div class="name">Visa</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">💳</div><div class="name">Mastercard</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🌐</div><div class="name">SWIFT</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🌍</div><div class="name">Cross-Border Payments</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">💱</div><div class="name">Forex</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🌐</div><div class="name">Multi-Currency Processing</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DEVELOPER PLATFORM
+            ============================================================ -->
+            <div class="page" id="page-developer">
+                <div class="section-header">
+                    <h2>💻 Developer Platform</h2>
+                    <p>API marketplace, SDKs, documentation, sandbox, and developer dashboard.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="devApps">—</div><div class="label">Registered Apps</div></div>
+                    <div class="stat-card"><div class="value green" id="devKeys">—</div><div class="label">Active API Keys</div></div>
+                    <div class="stat-card"><div class="value purple" id="devRequests">—</div><div class="label">API Requests</div></div>
+                    <div class="stat-card"><div class="value yellow" id="devSandbox">—</div><div class="label">Sandbox Users</div></div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">📦</div><div class="name">API Marketplace</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📥</div><div class="name">SDK Downloads</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📖</div><div class="name">Documentation</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🏖️</div><div class="name">Sandbox</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🧪</div><div class="name">Test Environment</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📊</div><div class="name">Developer Dashboard</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: BUSINESS APPS
+            ============================================================ -->
+            <div class="page" id="page-business">
+                <div class="section-header">
+                    <h2>🏢 Business Applications</h2>
+                    <p>AutheTicket, AutheFleet, AutheBook, AuthePay Student, TVET Portal, E-Commerce, and ERP integrations.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">🎟️</div><div class="name">AutheTicket</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🚛</div><div class="name">AutheFleet</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">📚</div><div class="name">AutheBook</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🎓</div><div class="name">AuthePay Student</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🏫</div><div class="name">TVET Portal</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🛒</div><div class="name">E‑Commerce</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🔗</div><div class="name">ERP Integrations</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">🏪</div><div class="name">Merchant Platform</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                    <div class="integration-card"><div class="icon">📊</div><div class="name">Merchant Analytics</div><div class="status"><span class="badge badge-success">Connected</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMMUNICATION
+            ============================================================ -->
+            <div class="page" id="page-communication">
+                <div class="section-header">
+                    <h2>💬 Communication Services</h2>
+                    <p>AuthePay Chat, SMS, email, push notifications, WhatsApp, and customer support.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="commChat">—</div><div class="label">Chat Messages</div></div>
+                    <div class="stat-card"><div class="value purple" id="commSMS">—</div><div class="label">SMS Sent</div></div>
+                    <div class="stat-card"><div class="value green" id="commEmail">—</div><div class="label">Emails Sent</div></div>
+                    <div class="stat-card"><div class="value yellow" id="commPush">—</div><div class="label">Push Notifications</div></div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">💬</div><div class="name">AuthePay Chat</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📱</div><div class="name">SMS</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📧</div><div class="name">Email</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🔔</div><div class="name">Push Notifications</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">💚</div><div class="name">WhatsApp</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🎧</div><div class="name">Customer Support</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SECURITY LAYER
+            ============================================================ -->
+            <div class="page" id="page-security-layer">
+                <div class="section-header">
+                    <h2>🛡️ Security Layer</h2>
+                    <p>KaTSo AI Security, fraud detection, AML monitoring, KYC, and transaction monitoring.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="secRisk">—</div><div class="label">Risk Score</div></div>
+                    <div class="stat-card"><div class="value green" id="secFraud">0</div><div class="label">Fraud Alerts</div></div>
+                    <div class="stat-card"><div class="value blue" id="secKYC">—</div><div class="label">KYC Verified</div></div>
+                    <div class="stat-card"><div class="value purple" id="secAudit">—</div><div class="label">Audit Events</div></div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">🧠</div><div class="name">KaTSo AI Security</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🛡️</div><div class="name">Fraud Detection</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🔍</div><div class="name">AML Monitoring</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🆔</div><div class="name">KYC Verification</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📱</div><div class="name">Device Intelligence</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📊</div><div class="name">Risk Scoring</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">💳</div><div class="name">Transaction Monitoring</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📋</div><div class="name">Audit Logs</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🔐</div><div class="name">Encryption (AES-256)</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI INTELLIGENCE
+            ============================================================ -->
+            <div class="page" id="page-ai-intelligence">
+                <div class="section-header">
+                    <h2>🧠 AI Intelligence</h2>
+                    <p>KaTSo AI Router, Kimi Coding Agent, DeepSeek Fraud Engine, Qwen Vision, and more.</p>
+                </div>
+
+                <div class="ai-banner">
+                    <span class="icon">🧠</span>
+                    <div class="text">
+                        <strong>KaTSo AI OS is fully operational</strong> – All AI agents are connected and providing real-time intelligence across fraud detection, compliance, customer support, and business analytics.
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">🧠</div><div class="name">KaTSo AI Router</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">💻</div><div class="name">Kimi Coding Agent</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🛡️</div><div class="name">DeepSeek Fraud Engine</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">👁️</div><div class="name">Qwen Vision &amp; Document AI</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">💬</div><div class="name">Customer AI Assistant</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📋</div><div class="name">Compliance AI</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📊</div><div class="name">Business Intelligence AI</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">🤖</div><div class="name">Fraud Detection AI</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                    <div class="integration-card"><div class="icon">📈</div><div class="name">Predictive Analytics AI</div><div class="status"><span class="badge badge-success">Active</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance Layer</h2>
+                    <p>PCI DSS, ISO 27001, POPIA/Data Protection, Bank of Botswana, AML/CFT, and regulatory reporting.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compScore">98%</div><div class="label">Compliance Score</div></div>
+                    <div class="stat-card"><div class="value green" id="compPCI">✅</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value blue" id="compAudit">1.2K</div><div class="label">Audit Events</div></div>
+                    <div class="stat-card"><div class="value green" id="compBreaches">0</div><div class="label">Data Breaches</div></div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="integration-card"><div class="icon">🛡️</div><div class="name">PCI DSS</div><div class="status"><span class="badge badge-success">✅</span></div></div>
+                    <div class="integration-card"><div class="icon">📋</div><div class="name">ISO 27001</div><div class="status"><span class="badge badge-success">✅</span></div></div>
+                    <div class="integration-card"><div class="icon">🔐</div><div class="name">Data Protection</div><div class="status"><span class="badge badge-success">✅</span></div></div>
+                    <div class="integration-card"><div class="icon">🏛️</div><div class="name">Bank of Botswana</div><div class="status"><span class="badge badge-success">✅</span></div></div>
+                    <div class="integration-card"><div class="icon">🔍</div><div class="name">AML/CFT</div><div class="status"><span class="badge badge-success">✅</span></div></div>
+                    <div class="integration-card"><div class="icon">📊</div><div class="name">Regulatory Reporting</div><div class="status"><span class="badge badge-success">✅</span></div></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: ANALYTICS
+            ============================================================ -->
+            <div class="page" id="page-analytics">
+                <div class="section-header">
+                    <h2>📈 Analytics &amp; Reporting</h2>
+                    <p>Live dashboard, revenue reports, merchant insights, customer analytics, and AI predictions.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand" id="anaRevenue">—</div><div class="label">Revenue (MTD)</div></div>
+                    <div class="stat-card"><div class="value blue" id="anaTx">—</div><div class="label">Transactions</div></div>
+                    <div class="stat-card"><div class="value purple" id="anaMerchants">—</div><div class="label">Merchants</div></div>
+                    <div class="stat-card"><div class="value green" id="anaGrowth">—</div><div class="label">Growth Rate</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Revenue by Channel</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>Cards</span>
+                                <span class="dynamic-value">—</span>
+                                <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill brand" style="width:0%;"></div></div></div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>Mobile Money</span>
+                                <span class="dynamic-value">—</span>
+                                <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill blue" style="width:0%;"></div></div></div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>Bank Transfers</span>
+                                <span class="dynamic-value">—</span>
+                                <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill purple" style="width:0%;"></div></div></div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span>International</span>
+                                <span class="dynamic-value">—</span>
+                                <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:0%;"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 AI Predictions</span></div>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--brand);">
+                                📈 Revenue projected to grow 12% next month
+                            </div>
+                            <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--accent);">
+                                🛡️ Fraud risk remains low – 12/100 score
+                            </div>
+                            <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--success);">
+                                👥 Customer acquisition rate increasing by 8%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Integration Core Engine
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY INTEGRATION CORE – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Integration Dashboard',
+                architecture: 'System Architecture',
+                gateways: 'API Gateway',
+                'payment-gateway': 'Payment Gateway',
+                wallet: 'Digital Wallet',
+                softpos: 'SoftPOS',
+                banking: 'Banking Integration',
+                'mobile-money': 'Mobile Money',
+                international: 'International Payments',
+                developer: 'Developer Platform',
+                business: 'Business Applications',
+                communication: 'Communication Services',
+                'security-layer': 'Security Layer',
+                'ai-intelligence': 'AI Intelligence',
+                compliance: 'Compliance Layer',
+                analytics: 'Analytics & Reporting'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Integration Core';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing integration data...', 'info');
+
+            // CONNECTION POINT: API calls to all services
+            // CONNECTION POINT: Supabase queries for metrics
+
+            const dynamicValues = document.querySelectorAll('.dynamic-value');
+            dynamicValues.forEach(el => {
+                el.textContent = 'Loading...';
+            });
+
+            const statIds = [
+                'statVolume', 'statTx', 'statSuccess', 'statConnected', 'statMerchants', 'statUptime',
+                'gwRequests', 'gwSuccess', 'gwLatency', 'gwKeys',
+                'walletCustomers', 'walletMerchants', 'walletBalance', 'walletTx',
+                'softposDevices', 'softposTx', 'softposVolume', 'softposMerchants',
+                'devApps', 'devKeys', 'devRequests', 'devSandbox',
+                'commChat', 'commSMS', 'commEmail', 'commPush',
+                'secRisk', 'secFraud', 'secKYC', 'secAudit',
+                'anaRevenue', 'anaTx', 'anaMerchants', 'anaGrowth'
+            ];
+            statIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '—';
+            });
+
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                bar.style.width = '0%';
+            });
+
+            setTimeout(() => {
+                showToast('✅ Data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+
+            console.log('⚡ AuthePay Integration Core loaded');
+            console.log('📦 All ecosystem modules connected');
+            console.log('🔗 Integrations: API Gateway, Payment Gateway, Wallet, SoftPOS, Banking, Mobile Money, International, Developer, Business Apps, Communication');
+            console.log('🛡️ Security: KaTSo AI, Fraud Detection, AML, KYC, Risk Scoring, Audit');
+            console.log('📋 Compliance: PCI DSS, ISO 27001, Data Protection, Bank of Botswana, AML/CFT');
+            console.log('🧠 AI: KaTSo AI Router, Kimi, DeepSeek, Qwen, Customer AI, Compliance AI, BI AI');
+            console.log('☁️ Infrastructure: Cloudflare, GitHub, Supabase, PostgreSQL, Redis');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.refreshData = refreshData;
+    </script>
+
+</body>
+</html>

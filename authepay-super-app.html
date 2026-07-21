@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Super App</title>
+    <meta name="description" content="AuthePay Super App – Your all-in-one financial super app." />
+    <style>
+        /* ============================================================
+           AUTHEPAY SUPER APP – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           Mobile-first fintech super app design
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: 80px;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* ── STATUS BAR ── */
+        .status-bar {
+            padding: 0.5rem 1rem 0.3rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding-top: var(--safe-top);
+        }
+
+        /* ── HEADER ── */
+        .app-header {
+            padding: 0.8rem 1.2rem 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+        .app-header .logo .icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #fff;
+        }
+        .app-header .actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .app-header .actions .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            position: relative;
+        }
+        .app-header .actions .icon-btn:hover {
+            border-color: var(--brand);
+            color: var(--text-primary);
+        }
+        .app-header .actions .icon-btn .dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--bg-primary);
+        }
+
+        /* ── BOTTOM NAV ── */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.4rem 0.5rem;
+            z-index: 100;
+            padding-bottom: var(--safe-bottom);
+        }
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            font-weight: 600;
+            background: none;
+            border: none;
+            font-family: var(--font);
+            min-width: 50px;
+            position: relative;
+        }
+        .bottom-nav .nav-item .icon {
+            font-size: 1.4rem;
+            transition: var(--transition);
+        }
+        .bottom-nav .nav-item.active {
+            color: var(--brand);
+        }
+        .bottom-nav .nav-item.active .icon {
+            transform: scale(1.1);
+        }
+        .bottom-nav .nav-item .badge {
+            position: absolute;
+            top: 0;
+            right: 4px;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.5rem;
+            padding: 1px 6px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+
+        /* ── PAGE CONTAINER ── */
+        .page-container {
+            padding: 0.5rem 1rem 1rem;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* ── PAGES ── */
+        .page {
+            display: none;
+            animation: fadeUp 0.35s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── WALLET CARD ── */
+        .wallet-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(255, 107, 0, 0.06), transparent 70%);
+            pointer-events: none;
+        }
+        .wallet-card .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        .wallet-card .balance {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            color: var(--text-primary);
+            margin: 0.2rem 0 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .wallet-card .balance .currency {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+        .wallet-card .sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 1;
+        }
+        .wallet-card .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        .wallet-card .actions .btn {
+            flex: 1;
+            min-width: 60px;
+            padding: 10px 0;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            text-align: center;
+        }
+        .wallet-card .actions .btn-primary {
+            background: var(--brand);
+            color: #fff;
+        }
+        .wallet-card .actions .btn-primary:hover {
+            background: var(--brand-dark);
+            box-shadow: 0 4px 16px var(--brand-glow);
+        }
+        .wallet-card .actions .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .wallet-card .actions .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--text-primary);
+        }
+
+        /* ── QUICK ACTIONS ── */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 1.2rem;
+        }
+        .quick-actions .qa-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .quick-actions .qa-item:hover {
+            border-color: var(--brand);
+            transform: translateY(-2px);
+        }
+        .quick-actions .qa-item .icon {
+            font-size: 1.5rem;
+        }
+        .quick-actions .qa-item .label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* ── SECTION ── */
+        .section {
+            margin-bottom: 1.2rem;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+        .section-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .section-header a {
+            font-size: 0.75rem;
+            color: var(--brand);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* ── TRANSACTION ITEM ── */
+        .tx-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 6px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .tx-item:hover {
+            border-color: var(--border-light);
+        }
+        .tx-item .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .tx-item .icon.incoming {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .tx-item .icon.outgoing {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .tx-item .icon.pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .tx-item .details {
+            flex: 1;
+            min-width: 0;
+        }
+        .tx-item .details .name {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .tx-item .details .meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .tx-item .amount {
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+        .tx-item .amount.positive {
+            color: var(--success);
+        }
+        .tx-item .amount.negative {
+            color: var(--brand);
+        }
+
+        /* ── AI ASSISTANT BUBBLE ── */
+        .ai-bubble {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .ai-bubble:hover {
+            border-color: var(--accent);
+        }
+        .ai-bubble .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #6d28d9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .ai-bubble .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-bubble .text strong {
+            color: var(--text-primary);
+        }
+        .ai-bubble .badge-ai {
+            font-size: 0.6rem;
+            padding: 2px 10px;
+            border-radius: 50px;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+            font-weight: 700;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        /* ── SERVICE GRID ── */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .service-grid .service-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .service-grid .service-item:hover {
+            border-color: var(--brand);
+            transform: translateY(-2px);
+        }
+        .service-grid .service-item .icon {
+            font-size: 1.5rem;
+        }
+        .service-grid .service-item .label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* ── AUTH PAGES ── */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .auth-container .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .auth-container .logo .icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+        .auth-container h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+        .auth-container p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .auth-container .form-group {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .auth-container .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .auth-container .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .auth-container .form-group input:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .auth-container .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: var(--brand);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+        }
+        .auth-container .btn-auth:hover {
+            background: var(--brand-dark);
+            box-shadow: 0 4px 16px var(--brand-glow);
+        }
+        .auth-container .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+        .auth-container .divider::before,
+        .auth-container .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .auth-container .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+        }
+        .auth-container .social-login button {
+            padding: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+        }
+        .auth-container .social-login button:hover {
+            border-color: var(--brand);
+        }
+        .auth-container .bio-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+            margin: 0.5rem 0 1rem;
+        }
+        .auth-container .bio-options button {
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            text-align: center;
+        }
+        .auth-container .bio-options button:hover {
+            border-color: var(--brand);
+        }
+        .auth-container .bio-options button .icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .auth-container .link {
+            color: var(--brand);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .auth-container .link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 480px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 400px;
+            animation: slideDown 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (min-width: 480px) {
+            .page-container {
+                padding: 0.5rem 1.5rem 1rem;
+            }
+        }
+        @media (max-width: 380px) {
+            .quick-actions {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .service-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .wallet-card .balance {
+                font-size: 2rem;
+            }
+        }
+
+        /* ── PULSE DOT ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    AUTH PAGE – LOGIN
+    ============================================================ -->
+    <div class="page active" id="auth-page">
+        <div class="auth-container">
+            <div class="logo">
+                <span class="icon">⚡</span>
+                <span>AuthePay</span>
+            </div>
+            <h2>Welcome Back</h2>
+            <p>Sign in to manage your finances</p>
+
+            <div class="form-group">
+                <label>Email or Phone</label>
+                <input type="text" placeholder="+267 71 234 567" id="loginEmail" value="demo@authepay.co" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Enter your password" id="loginPassword" value="password123" />
+            </div>
+            <button class="btn-auth" onclick="login()">🔐 Sign In</button>
+
+            <div class="divider">or continue with</div>
+
+            <div class="social-login">
+                <button onclick="showToast('Google authentication started','info')">G Google</button>
+                <button onclick="showToast('Apple authentication started','info')">🍎 Apple</button>
+            </div>
+
+            <div class="bio-options">
+                <button onclick="showToast('Face ID verified!','success')"><span class="icon">👤</span>Face ID</button>
+                <button onclick="showToast('Fingerprint verified!','success')"><span class="icon">👆</span>Fingerprint</button>
+            </div>
+
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.5rem;">
+                Don't have an account? <span class="link" onclick="showToast('Registration screen would open','info')">Sign Up</span>
+            </p>
+            <p style="font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;">
+                <span class="link" onclick="showToast('MFA verification sent','success')">🔐 MFA</span> ·
+                <span class="link" onclick="showToast('Passkey authentication started','info')">🔑 Passkey</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MAIN APP
+    ============================================================ -->
+    <div class="page" id="app-page">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>📶 5G</span>
+            <span>🔒 Secure</span>
+            <span>🔋 87%</span>
+        </div>
+
+        <!-- Header -->
+        <div class="app-header">
+            <div class="logo">
+                <span class="icon">⚡</span>
+                <span>AuthePay</span>
+            </div>
+            <div class="actions">
+                <div class="icon-btn" onclick="showToast('🔍 Search opened','info')">🔍</div>
+                <div class="icon-btn" onclick="navigateTo('notifications')">
+                    🔔
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Container -->
+        <div class="page-container">
+
+            <!-- ============================================================
+            PAGE: HOME
+            ============================================================ -->
+            <div class="page active" id="page-home">
+
+                <!-- AI Assistant Bubble -->
+                <div class="ai-bubble" onclick="navigateTo('ai')">
+                    <div class="avatar">🧠</div>
+                    <div class="text">
+                        <strong>KaTSo AI</strong> – Good morning! You spent P 1,200 this week. Want insights?
+                    </div>
+                    <span class="badge-ai">AI</span>
+                </div>
+
+                <!-- Wallet Card -->
+                <div class="wallet-card">
+                    <div class="label">Available Balance</div>
+                    <div class="balance"><span class="currency">P</span> 12,450.00</div>
+                    <div class="sub">🟢 Wallet active · Last transaction: 2h ago</div>
+                    <div class="actions">
+                        <button class="btn btn-primary" onclick="showToast('💳 Deposit screen opened','info')">💰 Deposit</button>
+                        <button class="btn btn-primary" onclick="showToast('📤 Send money screen opened','info')">📤 Send</button>
+                        <button class="btn btn-outline" onclick="showToast('📊 Statement generated','success')">📊 Statement</button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="qa-item" onclick="showToast('📱 QR Pay opened','info')">
+                        <span class="icon">📱</span>
+                        <span class="label">QR Pay</span>
+                    </div>
+                    <div class="qa-item" onclick="showToast('💳 Tap to Pay opened','info')">
+                        <span class="icon">💳</span>
+                        <span class="label">Tap to Pay</span>
+                    </div>
+                    <div class="qa-item" onclick="showToast('🔗 Payment Link generated','success')">
+                        <span class="icon">🔗</span>
+                        <span class="label">Payment Link</span>
+                    </div>
+                    <div class="qa-item" onclick="showToast('📄 Bills opened','info')">
+                        <span class="icon">📄</span>
+                        <span class="label">Bills</span>
+                    </div>
+                    <div class="qa-item" onclick="showToast('📱 Airtime purchase opened','info')">
+                        <span class="icon">📱</span>
+                        <span class="label">Airtime</span>
+                    </div>
+                    <div class="qa-item" onclick="navigateTo('shop')">
+                        <span class="icon">🛒</span>
+                        <span class="label">Shop</span>
+                    </div>
+                    <div class="qa-item" onclick="navigateTo('government')">
+                        <span class="icon">🏛️</span>
+                        <span class="label">Gov Services</span>
+                    </div>
+                    <div class="qa-item" onclick="navigateTo('authetec')">
+                        <span class="icon">🛡️</span>
+                        <span class="label">Verify ID</span>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3>Recent Transactions</h3>
+                        <a href="#" onclick="navigateTo('payments')">View All</a>
+                    </div>
+                    <div class="tx-item" onclick="showToast('📋 Transaction #TX-8921 details','info')">
+                        <div class="icon incoming">📥</div>
+                        <div class="details">
+                            <div class="name">ABC Shop</div>
+                            <div class="meta">Payment received · 14:23</div>
+                        </div>
+                        <div class="amount positive">+P 150.00</div>
+                    </div>
+                    <div class="tx-item" onclick="showToast('📋 Transaction #TX-8920 details','info')">
+                        <div class="icon outgoing">📤</div>
+                        <div class="details">
+                            <div class="name">QuickBet</div>
+                            <div class="meta">Payment sent · 13:45</div>
+                        </div>
+                        <div class="amount negative">-P 85.00</div>
+                    </div>
+                    <div class="tx-item" onclick="showToast('📋 Transaction #TX-8919 details','info')">
+                        <div class="icon pending">⏳</div>
+                        <div class="details">
+                            <div class="name">TechHub</div>
+                            <div class="meta">Processing · 12:18</div>
+                        </div>
+                        <div class="amount negative">-P 220.00</div>
+                    </div>
+                    <div class="tx-item" onclick="showToast('📋 Transaction #TX-8918 details','info')">
+                        <div class="icon incoming">📥</div>
+                        <div class="details">
+                            <div class="name">PayrollCo</div>
+                            <div class="meta">Salary received · 11:02</div>
+                        </div>
+                        <div class="amount positive">+P 45.00</div>
+                    </div>
+                </div>
+
+                <!-- Financial Insights -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3>💡 Financial Insights</h3>
+                        <span class="badge-ai" style="font-size:0.6rem;padding:2px 10px;border-radius:50px;background:rgba(139,92,246,0.15);color:var(--accent);font-weight:700;border:1px solid rgba(139,92,246,0.2);">AI</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:6px;border-left:3px solid var(--brand);">
+                        <div style="font-weight:700;font-size:0.85rem;">📈 You saved 15% more this month</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);">Based on your spending patterns, you're on track.</div>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;border-left:3px solid var(--success);">
+                        <div style="font-weight:700;font-size:0.85rem;">✅ Budget for groceries: 80% used</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);">You have P 200 left for the month.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: PAYMENTS
+            ============================================================ -->
+            <div class="page" id="page-payments">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">💳 Payments</h2>
+
+                <div class="service-grid" style="margin-bottom:1.2rem;">
+                    <div class="service-item" onclick="showToast('📱 QR Pay opened','info')">
+                        <span class="icon">📱</span>
+                        <span class="label">QR Pay</span>
+                    </div>
+                    <div class="service-item" onclick="showToast('💳 NFC Tap to Pay opened','info')">
+                        <span class="icon">💳</span>
+                        <span class="label">Tap to Pay</span>
+                    </div>
+                    <div class="service-item" onclick="showToast('🔗 Payment Link generated','success')">
+                        <span class="icon">🔗</span>
+                        <span class="label">Payment Link</span>
+                    </div>
+                    <div class="service-item" onclick="showToast('📄 Bills opened','info')">
+                        <span class="icon">📄</span>
+                        <span class="label">Bills</span>
+                    </div>
+                    <div class="service-item" onclick="showToast('📱 Airtime purchase opened','info')">
+                        <span class="icon">📱</span>
+                        <span class="label">Airtime</span>
+                    </div>
+                    <div class="service-item" onclick="showToast('📡 Data Bundles opened','info')">
+                        <span class="icon">📡</span>
+                        <span class="label">Data Bundles</span>
+                    </div>
+                    <div class="service-item" onclick="showToast('🏪 Merchant Payments opened','info')">
+                        <span class="icon">🏪</span>
+                        <span class="label">Merchant</span>
+                    </div>
+                    <div class="service-item" onclick="showToast('📊 Payment History opened','info')">
+                        <span class="icon">📊</span>
+                        <span class="label">History</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>Recent Payments</h3></div>
+                    <div class="tx-item"><div class="icon outgoing">📤</div><div class="details"><div class="name">ABC Shop</div><div class="meta">P 150.00 · 14:23</div></div><div class="amount negative">-P 150.00</div></div>
+                    <div class="tx-item"><div class="icon outgoing">📤</div><div class="details"><div class="name">QuickBet</div><div class="meta">P 85.00 · 13:45</div></div><div class="amount negative">-P 85.00</div></div>
+                    <div class="tx-item"><div class="icon outgoing">📤</div><div class="details"><div class="name">TechHub</div><div class="meta">P 220.00 · 12:18</div></div><div class="amount negative">-P 220.00</div></div>
+                </div>
+
+                <button class="btn btn-primary" style="width:100%;padding:14px;border:none;border-radius:var(--radius);font-weight:700;font-size:1rem;cursor:pointer;background:var(--brand);color:#fff;font-family:var(--font);" onclick="showToast('💳 New payment initiated','success')">+ New Payment</button>
+            </div>
+
+            <!-- ============================================================
+            PAGE: WALLET
+            ============================================================ -->
+            <div class="page" id="page-wallet">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">👛 Wallet</h2>
+
+                <div class="wallet-card" style="margin-bottom:1.2rem;">
+                    <div class="label">Total Balance</div>
+                    <div class="balance"><span class="currency">P</span> 12,450.00</div>
+                    <div class="sub">💳 2 accounts · 🏦 1 savings wallet</div>
+                </div>
+
+                <div class="quick-actions" style="grid-template-columns:repeat(4,1fr);">
+                    <div class="qa-item" onclick="showToast('💰 Deposit opened','info')"><span class="icon">💰</span><span class="label">Deposit</span></div>
+                    <div class="qa-item" onclick="showToast('📤 Send opened','info')"><span class="icon">📤</span><span class="label">Send</span></div>
+                    <div class="qa-item" onclick="showToast('📥 Receive opened','info')"><span class="icon">📥</span><span class="label">Receive</span></div>
+                    <div class="qa-item" onclick="showToast('📊 Statement generated','success')"><span class="icon">📊</span><span class="label">Statement</span></div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>Multi-Currency</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <span>🇺🇸 USD</span>
+                        <span style="font-weight:700;">$ 150.00</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <span>🇪🇺 EUR</span>
+                        <span style="font-weight:700;">€ 80.00</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+                        <span>🇬🇧 GBP</span>
+                        <span style="font-weight:700;">£ 65.00</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>Savings Wallet</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;border-left:3px solid var(--success);">
+                        <div style="font-weight:700;">🏦 Emergency Fund</div>
+                        <div style="font-size:0.85rem;color:var(--text-muted);">P 5,000.00 · Goal: P 10,000</div>
+                        <div style="margin-top:6px;"><div class="progress-bar" style="height:6px;background:var(--bg-input);border-radius:3px;overflow:hidden;"><div class="progress-fill" style="width:50%;height:100%;background:var(--success);border-radius:3px;"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: BANKING
+            ============================================================ -->
+            <div class="page" id="page-banking">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">🏦 Banking</h2>
+
+                <div class="section">
+                    <div class="section-header"><h3>Linked Accounts</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <div><span style="font-weight:700;">FNB Botswana</span><br><span style="font-size:0.75rem;color:var(--text-muted);">•••• 1234</span></div>
+                        <span style="color:var(--success);">✅ Connected</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <div><span style="font-weight:700;">Stanbic Bank</span><br><span style="font-size:0.75rem;color:var(--text-muted);">•••• 5678</span></div>
+                        <span style="color:var(--success);">✅ Connected</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+                        <div><span style="font-weight:700;">ABSA Botswana</span><br><span style="font-size:0.75rem;color:var(--text-muted);">•••• 9012</span></div>
+                        <span style="color:var(--warning);">⏳ Pending</span>
+                    </div>
+                </div>
+
+                <div class="quick-actions" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.2rem;">
+                    <div class="qa-item" onclick="showToast('📤 Bank Transfer opened','info')"><span class="icon">📤</span><span class="label">Transfer</span></div>
+                    <div class="qa-item" onclick="showToast('📊 Statements opened','info')"><span class="icon">📊</span><span class="label">Statements</span></div>
+                    <div class="qa-item" onclick="showToast('👤 Beneficiaries opened','info')"><span class="icon">👤</span><span class="label">Beneficiaries</span></div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>Scheduled Payments</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <div><span style="font-weight:700;">Rent</span><br><span style="font-size:0.75rem;color:var(--text-muted);">Due: 2026-08-01</span></div>
+                        <span style="font-weight:700;">P 4,500</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+                        <div><span style="font-weight:700;">Insurance</span><br><span style="font-size:0.75rem;color:var(--text-muted);">Due: 2026-07-25</span></div>
+                        <span style="font-weight:700;">P 1,200</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SHOP
+            ============================================================ -->
+            <div class="page" id="page-shop">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">🛒 Shop</h2>
+
+                <div style="display:flex;gap:8px;margin-bottom:1rem;">
+                    <input type="text" class="form-input" style="flex:1;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-size:0.9rem;font-family:var(--font);" placeholder="🔍 Search products..." />
+                    <button class="btn btn-primary" style="padding:10px 18px;border:none;border-radius:var(--radius);background:var(--brand);color:#fff;font-weight:700;cursor:pointer;font-family:var(--font);" onclick="showToast('🔍 Search results loaded','info')">Search</button>
+                </div>
+
+                <div class="service-grid" style="margin-bottom:1.2rem;">
+                    <div class="service-item" onclick="navigateTo('marketplace')"><span class="icon">🏪</span><span class="label">Marketplace</span></div>
+                    <div class="service-item" onclick="showToast('🛒 Cart opened','info')"><span class="icon">🛒</span><span class="label">Cart</span></div>
+                    <div class="service-item" onclick="showToast('📦 Orders opened','info')"><span class="icon">📦</span><span class="label">Orders</span></div>
+                    <div class="service-item" onclick="showToast('🚚 Delivery tracking opened','info')"><span class="icon">🚚</span><span class="label">Delivery</span></div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>Popular Products</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;cursor:pointer;" onclick="showToast('🛍️ Product details opened','info')">
+                        <div><span style="font-weight:700;">Premium Widget</span><br><span style="font-size:0.75rem;color:var(--text-muted);">⭐ 4.8 · 234 sold</span></div>
+                        <span style="font-weight:700;">P 299</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;cursor:pointer;" onclick="showToast('🛍️ Product details opened','info')">
+                        <div><span style="font-weight:700;">Deluxe Bundle</span><br><span style="font-size:0.75rem;color:var(--text-muted);">⭐ 4.6 · 89 sold</span></div>
+                        <span style="font-weight:700;">P 499</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="showToast('🛍️ Product details opened','info')">
+                        <div><span style="font-weight:700;">Eco-Friendly Kit</span><br><span style="font-size:0.75rem;color:var(--text-muted);">⭐ 4.9 · 45 sold</span></div>
+                        <span style="font-weight:700;">P 149</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: GOVERNMENT
+            ============================================================ -->
+            <div class="page" id="page-government">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">🏛️ Government Services</h2>
+
+                <div class="service-grid" style="margin-bottom:1.2rem;">
+                    <div class="service-item" onclick="showToast('📄 Licence Payments opened','info')"><span class="icon">📄</span><span class="label">Licences</span></div>
+                    <div class="service-item" onclick="showToast('📊 Tax Payments opened','info')"><span class="icon">📊</span><span class="label">Tax</span></div>
+                    <div class="service-item" onclick="showToast('🎓 Student Portal opened','info')"><span class="icon">🎓</span><span class="label">Student</span></div>
+                    <div class="service-item" onclick="showToast('💡 Utility Bills opened','info')"><span class="icon">💡</span><span class="label">Utilities</span></div>
+                    <div class="service-item" onclick="showToast('🏙️ Municipality Services opened','info')"><span class="icon">🏙️</span><span class="label">Municipality</span></div>
+                    <div class="service-item" onclick="showToast('📑 Permit Payments opened','info')"><span class="icon">📑</span><span class="label">Permits</span></div>
+                    <div class="service-item" onclick="showToast('🛂 Public Services opened','info')"><span class="icon">🛂</span><span class="label">Public Services</span></div>
+                    <div class="service-item" onclick="showToast('📋 All Services opened','info')"><span class="icon">📋</span><span class="label">All Services</span></div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>Recent Payments</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <div><span style="font-weight:700;">Water Bill</span><br><span style="font-size:0.75rem;color:var(--text-muted);">Gaborone Municipality</span></div>
+                        <span style="font-weight:700;">P 450.00</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+                        <div><span style="font-weight:700;">Electricity Bill</span><br><span style="font-size:0.75rem;color:var(--text-muted);">BPC</span></div>
+                        <span style="font-weight:700;">P 890.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUTHETEC
+            ============================================================ -->
+            <div class="page" id="page-authetec">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">🛡️ Authetec Services</h2>
+
+                <div class="service-grid" style="margin-bottom:1.2rem;">
+                    <div class="service-item" onclick="showToast('🆔 ID Verification opened','info')"><span class="icon">🆔</span><span class="label">ID Verify</span></div>
+                    <div class="service-item" onclick="showToast('📄 Document Verify opened','info')"><span class="icon">📄</span><span class="label">Documents</span></div>
+                    <div class="service-item" onclick="showToast('✍️ Signature Guard opened','info')"><span class="icon">✍️</span><span class="label">Signature</span></div>
+                    <div class="service-item" onclick="showToast('📜 Trust Certificate opened','info')"><span class="icon">📜</span><span class="label">Trust</span></div>
+                    <div class="service-item" onclick="showToast('👤 Digital Identity opened','info')"><span class="icon">👤</span><span class="label">Digital ID</span></div>
+                    <div class="service-item" onclick="showToast('🔒 Secure Vault opened','info')"><span class="icon">🔒</span><span class="label">Secure Vault</span></div>
+                    <div class="service-item" onclick="showToast('📋 Verification History opened','info')"><span class="icon">📋</span><span class="label">History</span></div>
+                    <div class="service-item" onclick="showToast('📊 Trust Score opened','info')"><span class="icon">📊</span><span class="label">Trust Score</span></div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>Verification Status</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;border-left:3px solid var(--success);margin-bottom:6px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-weight:700;">✅ Identity Verified</span>
+                            <span style="font-size:0.75rem;color:var(--success);">98%</span>
+                        </div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);">Verified: 2026-07-20</div>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;border-left:3px solid var(--brand);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-weight:700;">📜 Trust Score</span>
+                            <span style="font-size:0.75rem;color:var(--brand);">86/100</span>
+                        </div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);">High trust · Verified business</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI
+            ============================================================ -->
+            <div class="page" id="page-ai">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">🧠 KaTSo AI</h2>
+
+                <div class="ai-bubble" style="margin-bottom:1rem;border-color:var(--accent);">
+                    <div class="avatar">🧠</div>
+                    <div class="text">
+                        <strong>KaTSo AI</strong> – Good morning! I'm your financial assistant. How can I help you today?
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:1rem;">
+                    <div style="display:flex;gap:8px;">
+                        <input type="text" class="form-input" style="flex:1;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-size:0.9rem;font-family:var(--font);" placeholder="Ask KaTSo AI anything..." />
+                        <button class="btn btn-primary" style="padding:10px 18px;border:none;border-radius:var(--radius);background:var(--brand);color:#fff;font-weight:700;cursor:pointer;font-family:var(--font);" onclick="askAI()">Send</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>AI Services</h3></div>
+                    <div class="quick-actions" style="grid-template-columns:repeat(3,1fr);">
+                        <div class="qa-item" onclick="showToast('💬 Financial Advisor opened','info')"><span class="icon">💬</span><span class="label">Advisor</span></div>
+                        <div class="qa-item" onclick="showToast('🛡️ Fraud Alerts opened','info')"><span class="icon">🛡️</span><span class="label">Fraud Alerts</span></div>
+                        <div class="qa-item" onclick="showToast('📊 Spending Analysis opened','info')"><span class="icon">📊</span><span class="label">Spending</span></div>
+                        <div class="qa-item" onclick="showToast('💰 Budget Assistant opened','info')"><span class="icon">💰</span><span class="label">Budget</span></div>
+                        <div class="qa-item" onclick="showToast('🏪 Business Assistant opened','info')"><span class="icon">🏪</span><span class="label">Business</span></div>
+                        <div class="qa-item" onclick="showToast('🎤 Voice Assistant opened','info')"><span class="icon">🎤</span><span class="label">Voice</span></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>AI Insights</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:6px;border-left:3px solid var(--brand);">
+                        <div style="font-weight:700;font-size:0.85rem;">📈 You're saving 15% more this month</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);">Keep up the good work!</div>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;border-left:3px solid var(--warning);">
+                        <div style="font-weight:700;font-size:0.85rem;">⚠️ Unusual spending pattern detected</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);">You spent 30% more on dining this week.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: MARKETPLACE
+            ============================================================ -->
+            <div class="page" id="page-marketplace">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">🏪 Marketplace</h2>
+
+                <div style="display:flex;gap:8px;margin-bottom:1rem;">
+                    <input type="text" class="form-input" style="flex:1;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-primary);font-size:0.9rem;font-family:var(--font);" placeholder="🔍 Search merchants..." />
+                    <button class="btn btn-primary" style="padding:10px 18px;border:none;border-radius:var(--radius);background:var(--brand);color:#fff;font-weight:700;cursor:pointer;font-family:var(--font);" onclick="showToast('🔍 Search results loaded','info')">Search</button>
+                </div>
+
+                <div class="section">
+                    <div class="section-header"><h3>Featured Merchants</h3></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;cursor:pointer;" onclick="showToast('🏪 ABC Shop store opened','info')">
+                        <div><span style="font-weight:700;">ABC Shop</span><br><span style="font-size:0.75rem;color:var(--text-muted);">⭐ 4.8 · 234 reviews</span></div>
+                        <span style="color:var(--brand);">Open →</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;cursor:pointer;" onclick="showToast('🏪 TechHub store opened','info')">
+                        <div><span style="font-weight:700;">TechHub</span><br><span style="font-size:0.75rem;color:var(--text-muted);">⭐ 4.6 · 89 reviews</span></div>
+                        <span style="color:var(--brand);">Open →</span>
+                    </div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="showToast('🏪 GreenEnergy store opened','info')">
+                        <div><span style="font-weight:700;">GreenEnergy</span><br><span style="font-size:0.75rem;color:var(--text-muted);">⭐ 4.9 · 45 reviews</span></div>
+                        <span style="color:var(--brand);">Open →</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: NOTIFICATIONS
+            ============================================================ -->
+            <div class="page" id="page-notifications">
+                <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;">🔔 Notifications</h2>
+
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:6px;border-left:3px solid var(--success);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-weight:700;">✅ Payment received</span>
+                        <span style="font-size:0.65rem;color:var(--text-muted);">14:23</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">You received P 150.00 from ABC Shop</div>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:6px;border-left:3px solid var(--warning);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-weight:700;">⚠️ Security alert</span>
+                        <span style="font-size:0.65rem;color:var(--text-muted);">13:45</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">New login from unknown device</div>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:6px;border-left:3px solid var(--brand);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-weight:700;">💡 AI Insight</span>
+                        <span style="font-size:0.65rem;color:var(--text-muted);">12:18</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">You're on track to save 15% more this month</div>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:6px;border-left:3px solid var(--info);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-weight:700;">ℹ️ Promotion</span>
+                        <span style="font-size:0.65rem;color:var(--text-muted);">11:02</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">Get 10% cashback on your next purchase!</div>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;border-left:3px solid var(--success);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-weight:700;">✅ Subscription renewed</span>
+                        <span style="font-size:0.65rem;color:var(--text-muted);">09:30</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);">Pro Plan renewed successfully</div>
+                </div>
+            </div>
+
+        </div><!-- /page-container -->
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="navigateTo('home')">
+                <span class="icon">🏠</span>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('payments')">
+                <span class="icon">💳</span>
+                <span>Payments</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('wallet')">
+                <span class="icon">👛</span>
+                <span>Wallet</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('banking')">
+                <span class="icon">🏦</span>
+                <span>Banking</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('shop')">
+                <span class="icon">🛒</span>
+                <span>Shop</span>
+                <span class="badge">2</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('ai')">
+                <span class="icon">🧠</span>
+                <span>AI</span>
+            </button>
+        </div>
+
+    </div><!-- /app-page -->
+
+    <!-- ============================================================
+    TOAST CONTAINER
+    ============================================================ -->
+    <div id="toastContainer"></div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Super App
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY SUPER APP – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'home',
+            isLoggedIn: false,
+            aiChat: []
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            // Show app page if logged in
+            if (!state.isLoggedIn && page !== 'auth') {
+                showToast('Please sign in first', 'warning');
+                return;
+            }
+
+            state.currentPage = page;
+
+            // Handle special pages
+            if (page === 'auth') {
+                document.getElementById('auth-page').classList.add('active');
+                document.getElementById('app-page').classList.remove('active');
+                return;
+            }
+
+            document.getElementById('auth-page').classList.remove('active');
+            document.getElementById('app-page').classList.add('active');
+
+            // Update pages
+            document.querySelectorAll('.page-container .page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            // Update bottom nav
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+                item.classList.remove('active');
+                // Match by onclick
+                const onclick = item.getAttribute('onclick') || '';
+                if (onclick.includes(`'${page}'`)) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ── LOGIN ──
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+
+            if (!email || !pass) {
+                showToast('Please enter your credentials', 'warning');
+                return;
+            }
+
+            showToast('🔐 Authenticating...', 'info');
+
+            setTimeout(() => {
+                state.isLoggedIn = true;
+                showToast('✅ Welcome back!', 'success');
+                navigateTo('home');
+            }, 1200);
+        }
+
+        // ── AI CHAT ──
+        function askAI() {
+            const input = document.querySelector('#page-ai .form-input');
+            const question = input?.value?.trim();
+
+            if (!question) {
+                showToast('Please ask a question', 'warning');
+                return;
+            }
+
+            showToast('🧠 Thinking...', 'info');
+            input.value = '';
+
+            setTimeout(() => {
+                const responses = [
+                    "Based on your spending, I recommend reducing dining out by 20% this month.",
+                    "You're on track to reach your savings goal by December. Great work!",
+                    "I've detected a potential subscription you're not using. Want to cancel it?",
+                    "Your cash flow is healthy. You have P 2,450 available for investments.",
+                    "Consider moving P 500 to your emergency fund. You're 50% towards your goal."
+                ];
+                const reply = responses[Math.floor(Math.random() * responses.length)];
+                showToast('🧠 ' + reply, 'info');
+            }, 1500);
+        }
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const existing = container.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => existing.remove(), 300);
+            }
+
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            container.appendChild(t);
+
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.3s ease forwards';
+                    setTimeout(() => t.remove(), 300);
+                }
+            }, 3500);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const active = document.activeElement;
+                if (active && active.id === 'loginPassword') {
+                    login();
+                }
+                if (active && active.closest('#page-ai')) {
+                    askAI();
+                }
+            }
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('⚡ AuthePay Super App loaded');
+            console.log('📱 Features: Wallet, Payments, Banking, Shopping, Government, Authetec, KaTSo AI');
+            console.log('🔐 Security: Biometrics, MFA, Device Trust');
+            console.log('🧠 AI: Financial Advisor, Fraud Alerts, Spending Analysis, Budget Assistant');
+            console.log('🏦 Integrations: Banks, Mobile Money, QR, NFC, Payment Links');
+
+            // Show login page initially
+            document.getElementById('auth-page').classList.add('active');
+            document.getElementById('app-page').classList.remove('active');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.login = login;
+        window.askAI = askAI;
+        window.showToast = showToast;
+    </script>
+
+</body>
+</html>

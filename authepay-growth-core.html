@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Growth Core – Business Intelligence</title>
+    <meta name="description" content="AuthePay Growth Core – Merchant growth, analytics, customer engagement, and business intelligence." />
+    <style>
+        /* ============================================================
+           AUTHEPAY GROWTH CORE – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --brand-glow-strong: rgba(255, 107, 0, 0.4);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 270px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+        .stat-card .trend.neutral {
+            color: var(--text-muted);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── GROWTH RECOMMENDATION ── */
+        .growth-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+            border-left: 3px solid var(--brand);
+        }
+        .growth-card:hover {
+            border-color: var(--brand);
+        }
+        .growth-card .title {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .growth-card .desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .growth-card .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* ── CUSTOMER PROFILE ── */
+        .profile-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+        }
+        .profile-card:hover {
+            border-color: var(--brand);
+        }
+        .profile-card .name {
+            font-weight: 700;
+        }
+        .profile-card .email {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .profile-card .stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .profile-card .stats span {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── ENVIRONMENT TOGGLE ── */
+        .env-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            padding: 4px;
+            border: 1px solid var(--border);
+        }
+        .env-toggle button {
+            padding: 4px 14px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+        }
+        .env-toggle button.active {
+            background: var(--brand);
+            color: #fff;
+        }
+        .env-toggle button:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        /* ── CAMPAIGN CARD ── */
+        .campaign-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            transition: var(--transition);
+        }
+        .campaign-card:hover {
+            border-color: var(--brand);
+        }
+        .campaign-card .name {
+            font-weight: 700;
+        }
+        .campaign-card .status {
+            margin-top: 4px;
+        }
+        .campaign-card .meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">📈</span>
+                <div>
+                    <span>Growth Core</span>
+                    <span class="sub">Business Intelligence</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Analytics</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="merchants">🏪 Merchant Growth</a>
+                <a href="#" data-page="customers">👥 Customer Engagement</a>
+
+                <div class="sidebar-section-label">Marketing</div>
+                <a href="#" data-page="campaigns">🚀 Campaigns</a>
+                <a href="#" data-page="intelligence">🧠 AI Growth</a>
+
+                <div class="sidebar-section-label">Intelligence</div>
+                <a href="#" data-page="bi">📈 Business Intelligence</a>
+                <a href="#" data-page="admin">🛡️ Admin</a>
+
+                <div class="sidebar-section-label">Compliance</div>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Live</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · KaTSo AI active</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Growth Dashboard <small>Business Intelligence</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI Growth</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('campaignModal')">🚀 New Campaign</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="statRevenue">—</div>
+                        <div class="label">Total Revenue (MTD)</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="statTransactions">—</div>
+                        <div class="label">Transactions</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="statCustomers">—</div>
+                        <div class="label">Customer Growth</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="statMerchants">—</div>
+                        <div class="label">Merchant Growth</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="statActive">—</div>
+                        <div class="label">Active Merchants</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="statRetention">—</div>
+                        <div class="label">Retention Rate</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Revenue Trend (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: Analytics API – revenue data from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📈 Growth Metrics</span>
+                            <span class="badge badge-neutral">Live</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>📊 Merchant Growth</span>
+                                <span class="trend up">▲ Dynamic</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>👥 Customer Acquisition</span>
+                                <span class="trend up">▲ Dynamic</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>💳 Transaction Volume</span>
+                                <span class="trend up">▲ Dynamic</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span>🌍 Geographic Expansion</span>
+                                <span class="trend neutral">⬡ Tracking</span>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: Growth metrics from KaTSo AI Core -->
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🏪 Merchant Activity</span></div>
+                        <div><span style="color:var(--text-muted);">Total Merchants</span> <span style="float:right;color:var(--text-primary);" id="totalMerchants">—</span></div>
+                        <div><span style="color:var(--text-muted);">Active Today</span> <span style="float:right;color:var(--text-primary);" id="activeToday">—</span></div>
+                        <div><span style="color:var(--text-muted);">New (30d)</span> <span style="float:right;color:var(--success);" id="newMerchants">—</span></div>
+                        <!-- CONNECTION POINT: merchant_stats table from Supabase -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">👥 Customer Insights</span></div>
+                        <div><span style="color:var(--text-muted);">Total Customers</span> <span style="float:right;color:var(--text-primary);" id="totalCustomers">—</span></div>
+                        <div><span style="color:var(--text-muted);">Active (30d)</span> <span style="float:right;color:var(--text-primary);" id="activeCustomers">—</span></div>
+                        <div><span style="color:var(--text-muted);">Avg Spend</span> <span style="float:right;color:var(--text-primary);" id="avgSpend">—</span></div>
+                        <!-- CONNECTION POINT: customer_analytics table from Supabase -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🤖 KaTSo AI Growth</span></div>
+                        <div><span style="color:var(--text-muted);">Recommendations</span> <span style="float:right;color:var(--text-primary);">3 active</span></div>
+                        <div><span style="color:var(--text-muted);">Risk Score</span> <span style="float:right;color:var(--success);">12/100</span></div>
+                        <div><span style="color:var(--text-muted);">Growth Potential</span> <span style="float:right;color:var(--brand);">High</span></div>
+                        <!-- CONNECTION POINT: KaTSo AI Core – growth insights -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: growth_dashboard API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: MERCHANT GROWTH
+            ============================================================ -->
+            <div class="page" id="page-merchants">
+                <div class="section-header">
+                    <h2>🏪 Merchant Growth Tools</h2>
+                    <p>Performance analytics, sales insights, and growth recommendations for merchants.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand" id="merchantRevenue">—</div><div class="label">Total Revenue</div></div>
+                    <div class="stat-card"><div class="value blue" id="merchantTx">—</div><div class="label">Transactions</div></div>
+                    <div class="stat-card"><div class="value purple" id="merchantGrowth">—</div><div class="label">Growth Rate</div></div>
+                    <div class="stat-card"><div class="value green" id="merchantRetention">—</div><div class="label">Retention</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Merchant Performance</span>
+                            <span class="badge badge-neutral">Top performers</span>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>Merchant</th><th>Revenue</th><th>Growth</th><th>Status</th></tr></thead>
+                                <tbody id="merchantTable">
+                                    <tr><td>ABC Shop</td><td class="dynamic-value">—</td><td class="trend up">▲ Dynamic</td><td><span class="badge badge-success">Active</span></td></tr>
+                                    <tr><td>QuickBet</td><td class="dynamic-value">—</td><td class="trend up">▲ Dynamic</td><td><span class="badge badge-success">Active</span></td></tr>
+                                    <tr><td>PayrollCo</td><td class="dynamic-value">—</td><td class="trend up">▲ Dynamic</td><td><span class="badge badge-success">Active</span></td></tr>
+                                    <tr><td>TechHub</td><td class="dynamic-value">—</td><td class="trend neutral">○ Dynamic</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- CONNECTION POINT: merchant_performance table from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📈 Growth Recommendations</span>
+                            <span class="badge badge-accent">KaTSo AI</span>
+                        </div>
+                        <div class="growth-card" style="margin-bottom:8px;">
+                            <div class="title">💡 Optimize payment methods</div>
+                            <div class="desc">Add Orange Money to increase reach by estimated 15%</div>
+                            <div class="meta"><span class="badge badge-brand">High impact</span> <span>Based on customer preferences</span></div>
+                        </div>
+                        <div class="growth-card" style="margin-bottom:8px;">
+                            <div class="title">💡 Loyalty program launch</div>
+                            <div class="desc">Retention increases by 20% with rewards for repeat customers</div>
+                            <div class="meta"><span class="badge badge-success">Medium impact</span> <span>Customer engagement</span></div>
+                        </div>
+                        <div class="growth-card">
+                            <div class="title">💡 Expand to QR payments</div>
+                            <div class="desc">Merchants with QR see 30% higher transaction volume</div>
+                            <div class="meta"><span class="badge badge-info">Low impact</span> <span>Based on market trends</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: KaTSo AI Core – growth recommendations -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: merchant_growth API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: CUSTOMER ENGAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-customers">
+                <div class="section-header">
+                    <h2>👥 Customer Engagement</h2>
+                    <p>Customer profiles, transaction history, loyalty, and promotions.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="totalCustomers2">—</div><div class="label">Total Customers</div></div>
+                    <div class="stat-card"><div class="value blue" id="activeCustomers2">—</div><div class="label">Active (30d)</div></div>
+                    <div class="stat-card"><div class="value purple" id="loyaltyRate">—</div><div class="label">Loyalty Rate</div></div>
+                    <div class="stat-card"><div class="value yellow" id="avgLifetime">—</div><div class="label">Avg Lifetime Value</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">👤 Customer Profiles</span>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('👤 Customer management opened','info')">View All</button>
+                        </div>
+                        <div class="profile-card" style="margin-bottom:8px;">
+                            <div class="name">Thabo M.</div>
+                            <div class="email">thabo@email.com</div>
+                            <div class="stats"><span>💰 Transactions: <span class="dynamic-value">—</span></span> <span>🛒 Orders: <span class="dynamic-value">—</span></span></div>
+                            <div><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">Last: 2d ago</span></div>
+                        </div>
+                        <div class="profile-card" style="margin-bottom:8px;">
+                            <div class="name">Kefilwe N.</div>
+                            <div class="email">kefilwe@email.com</div>
+                            <div class="stats"><span>💰 Transactions: <span class="dynamic-value">—</span></span> <span>🛒 Orders: <span class="dynamic-value">—</span></span></div>
+                            <div><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">Last: 1d ago</span></div>
+                        </div>
+                        <div class="profile-card">
+                            <div class="name">Oatile M.</div>
+                            <div class="email">oatile@email.com</div>
+                            <div class="stats"><span>💰 Transactions: <span class="dynamic-value">—</span></span> <span>🛒 Orders: <span class="dynamic-value">—</span></span></div>
+                            <div><span class="badge badge-warning">Inactive</span> <span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">Last: 14d ago</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: customers table from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">🎯 Loyalty &amp; Rewards</span>
+                            <button class="btn btn-brand btn-sm" onclick="showToast('🎯 Loyalty program launched','success')">Launch</button>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                                <span>🌟 Points Program</span>
+                                <span><span class="badge badge-success">Active</span> <span style="color:var(--text-muted);font-size:0.8rem;">1,234 pts issued</span></span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                                <span>🎁 Referral Rewards</span>
+                                <span><span class="badge badge-brand">Setup</span> <span style="color:var(--text-muted);font-size:0.8rem;">12 referrals</span></span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:8px 0;">
+                                <span>🏆 VIP Tiers</span>
+                                <span><span class="badge badge-accent">Coming soon</span></span>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('📊 Loyalty analytics loaded','info')">📊 View Analytics</button>
+                        </div>
+                        <!-- CONNECTION POINT: loyalty_programs table from Supabase -->
+                        <!-- CONNECTION POINT: rewards_engine API -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: customer_engagement API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: CAMPAIGNS
+            ============================================================ -->
+            <div class="page" id="page-campaigns">
+                <div class="section-header">
+                    <h2>🚀 Campaign Management</h2>
+                    <p>Create, track, and analyse marketing campaigns across SMS, email, and push.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Active Campaigns</span>
+                        <button class="btn btn-brand btn-sm" onclick="openModal('campaignModal')">➕ New Campaign</button>
+                    </div>
+                    <div class="grid-3" id="campaignList">
+                        <div class="campaign-card">
+                            <div class="name">🎉 Summer Sale 2026</div>
+                            <div class="status"><span class="badge badge-success">Active</span></div>
+                            <div class="meta"><span>📧 Email</span> <span>📱 SMS</span> <span>Reach: <span class="dynamic-value">—</span></span></div>
+                            <div class="meta"><span>Conversion: <span class="dynamic-value">—</span></span> <span>Budget: <span class="dynamic-value">—</span></span></div>
+                            <button class="btn btn-outline btn-xs" style="margin-top:6px;" onclick="showToast('📊 Campaign analytics','info')">📊 Analytics</button>
+                        </div>
+                        <div class="campaign-card">
+                            <div class="name">📱 App Launch Promotion</div>
+                            <div class="status"><span class="badge badge-warning">Scheduled</span></div>
+                            <div class="meta"><span>📱 Push</span> <span>📧 Email</span> <span>Reach: <span class="dynamic-value">—</span></span></div>
+                            <div class="meta"><span>Conversion: <span class="dynamic-value">—</span></span> <span>Budget: <span class="dynamic-value">—</span></span></div>
+                            <button class="btn btn-outline btn-xs" style="margin-top:6px;" onclick="showToast('📊 Campaign analytics','info')">📊 Analytics</button>
+                        </div>
+                        <div class="campaign-card">
+                            <div class="name">💳 Loyalty Rewards Blast</div>
+                            <div class="status"><span class="badge badge-brand">Draft</span></div>
+                            <div class="meta"><span>📧 Email</span> <span>Reach: <span class="dynamic-value">—</span></span></div>
+                            <div class="meta"><span>Conversion: <span class="dynamic-value">—</span></span> <span>Budget: <span class="dynamic-value">—</span></span></div>
+                            <button class="btn btn-outline btn-xs" style="margin-top:6px;" onclick="showToast('📊 Campaign analytics','info')">📊 Analytics</button>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: campaigns table from Supabase -->
+                    <!-- CONNECTION POINT: campaign_analytics API -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Campaign Performance</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span>Open Rate</span>
+                            <span class="dynamic-value">—</span>
+                            <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill brand" style="width:0%;"></div></div></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                            <span>Click Rate</span>
+                            <span class="dynamic-value">—</span>
+                            <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill blue" style="width:0%;"></div></div></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                            <span>Conversion Rate</span>
+                            <span class="dynamic-value">—</span>
+                            <div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:0%;"></div></div></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: campaign_metrics from Supabase -->
+                </div>
+
+                <!-- CONNECTION POINT: campaigns API endpoint -->
+                <!-- CONNECTION POINT: SMS/Email/Push integration gateways -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI GROWTH
+            ============================================================ -->
+            <div class="page" id="page-intelligence">
+                <div class="section-header">
+                    <h2>🧠 AI Growth Assistant</h2>
+                    <p>KaTSo AI-powered business recommendations, pattern analysis, and insights.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value purple" id="aiRecommendations">—</div><div class="label">Active Recommendations</div></div>
+                    <div class="stat-card"><div class="value green" id="aiInsights">—</div><div class="label">Insights Generated</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiRisk">—</div><div class="label">Risk Score</div></div>
+                    <div class="stat-card"><div class="value yellow" id="aiPotential">—</div><div class="label">Growth Potential</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 AI Recommendations</span>
+                            <span class="badge badge-accent">KaTSo AI</span>
+                        </div>
+                        <div class="growth-card" style="margin-bottom:8px;border-left-color:var(--success);">
+                            <div class="title">📊 Increase pricing by 5% on premium services</div>
+                            <div class="desc">Based on demand elasticity analysis, 5% increase could boost revenue by 8% without affecting volume.</div>
+                            <div class="meta"><span class="badge badge-success">High confidence</span> <span>Pattern analysis</span></div>
+                        </div>
+                        <div class="growth-card" style="margin-bottom:8px;border-left-color:var(--brand);">
+                            <div class="title">👥 Target high-value customers with personalised offers</div>
+                            <div class="desc">Top 10% of customers generate 45% of revenue. Personalised offers could increase retention.</div>
+                            <div class="meta"><span class="badge badge-brand">Medium confidence</span> <span>Behaviour insight</span></div>
+                        </div>
+                        <div class="growth-card" style="border-left-color:var(--accent);">
+                            <div class="title">🌍 Expand to new geographic regions</div>
+                            <div class="desc">Transaction patterns show demand in Francistown and Maun. Consider targeted marketing.</div>
+                            <div class="meta"><span class="badge badge-accent">Low confidence</span> <span>Geographic analysis</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: KaTSo AI Core – growth recommendations -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Behaviour Insights</span>
+                            <span class="badge badge-info">Real-time</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--brand);">
+                                <div style="font-weight:700;">Transaction Pattern</div>
+                                <div style="font-size:0.85rem;color:var(--text-muted);">Peak transaction times: 12:00–14:00 and 18:00–20:00</div>
+                            </div>
+                            <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--success);">
+                                <div style="font-weight:700;">Customer Behaviour</div>
+                                <div style="font-size:0.85rem;color:var(--text-muted);">Repeat customers spend 40% more than one-time buyers</div>
+                            </div>
+                            <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);border-left:3px solid var(--warning);">
+                                <div style="font-weight:700;">Fraud‑aware Suggestion</div>
+                                <div style="font-size:0.85rem;color:var(--text-muted);">Monitor high-velocity transactions from new merchants</div>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="showToast('🧠 Full AI insights loaded','info')">📊 View All Insights</button>
+                        </div>
+                        <!-- CONNECTION POINT: KaTSo AI Core – behaviour analysis -->
+                        <!-- CONNECTION POINT: transaction_patterns API -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: ai_growth API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: BUSINESS INTELLIGENCE
+            ============================================================ -->
+            <div class="page" id="page-bi">
+                <div class="section-header">
+                    <h2>📈 Business Intelligence</h2>
+                    <p>Revenue trends, transaction insights, merchant activity, and market expansion.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand" id="biRevenue">—</div><div class="label">Revenue (MTD)</div></div>
+                    <div class="stat-card"><div class="value blue" id="biTransactions">—</div><div class="label">Transactions</div></div>
+                    <div class="stat-card"><div class="value green" id="biMerchants">—</div><div class="label">Active Merchants</div></div>
+                    <div class="stat-card"><div class="value purple" id="biRetention">—</div><div class="label">Customer Retention</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Revenue Trends</span></div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:30%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:45%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:38%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:60%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:70%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:85%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:80%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:12px;"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+                            <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+                        </div>
+                        <!-- CONNECTION POINT: revenue_trends from Supabase -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🌍 Market Expansion</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>🇧🇼 Gaborone</span>
+                                <span><span class="dynamic-value">—</span> merchants</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>🇧🇼 Francistown</span>
+                                <span><span class="dynamic-value">—</span> merchants</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span>🇧🇼 Maun</span>
+                                <span><span class="dynamic-value">—</span> merchants</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span>🇿🇦 South Africa (Coming)</span>
+                                <span><span class="badge badge-neutral">Planned</span></span>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: geographic_expansion from Supabase -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: business_intelligence API endpoint -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: ADMIN
+            ============================================================ -->
+            <div class="page" id="page-admin">
+                <div class="section-header">
+                    <h2>🛡️ Admin Control Panel</h2>
+                    <p>Platform overview, merchant management, growth monitoring, and system alerts.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="adminMerchants">—</div><div class="label">Total Merchants</div></div>
+                    <div class="stat-card"><div class="value green" id="adminActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value yellow" id="adminPending">—</div><div class="label">Pending Verification</div></div>
+                    <div class="stat-card"><div class="value purple" id="adminGrowth">—</div><div class="label">Growth Rate</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 System Alerts</span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> All systems operational</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">Now</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-warning">⚠️</span> Merchant verification pending</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">2h ago</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                                <span><span class="badge badge-info">ℹ️</span> New growth report available</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">4h ago</span>
+                            </div>
+                        </div>
+                        <!-- CONNECTION POINT: system_alerts from Supabase -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Growth Monitoring</span></div>
+                        <div><span style="color:var(--text-muted);">Merchant Growth</span> <span style="float:right;" class="trend up">▲ Dynamic</span><div class="progress-bar"><div class="progress-fill brand" style="width:0%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Transaction Volume</span> <span style="float:right;" class="trend up">▲ Dynamic</span><div class="progress-bar"><div class="progress-fill blue" style="width:0%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Customer Acquisition</span> <span style="float:right;" class="trend up">▲ Dynamic</span><div class="progress-bar"><div class="progress-fill green" style="width:0%;"></div></div></div>
+                        <!-- CONNECTION POINT: growth_metrics from Supabase -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: admin_growth API endpoint -->
+                <!-- CONNECTION POINT: compliance_checks from KaTSo System Core -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance &amp; Safety</h2>
+                    <p>Botswana Data Protection Act, consent management, and secure analytics.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compScore">—</div><div class="label">Compliance Score</div></div>
+                    <div class="stat-card"><div class="value blue" id="compConsents">—</div><div class="label">Consents Recorded</div></div>
+                    <div class="stat-card"><div class="value purple" id="compAudit">—</div><div class="label">Audit Events</div></div>
+                    <div class="stat-card"><div class="value green" id="compBreaches">—</div><div class="label">Data Breaches</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📜 Regulatory Alignment</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Botswana Data Protection Act</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>User Consent Management</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Data Minimisation</span><span class="badge badge-success">✅</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Role-Based Access</span><span class="badge badge-success">✅</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: compliance_framework from KaTSo System Core -->
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🔐 Security Controls</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Audit Logs</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Encryption</span><span class="badge badge-success">AES-256</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Secure Analytics</span><span class="badge badge-success">Architected</span></div>
+                        </div>
+                        <!-- CONNECTION POINT: security_controls from KaTSo System Core -->
+                    </div>
+                </div>
+
+                <!-- CONNECTION POINT: compliance_growth API endpoint -->
+                <!-- CONNECTION POINT: Data Protection Officer contact -->
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all growth, analytics, and system events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('growth')">Growth</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('merchant')">Merchant</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>admin@authecorp</td><td>Growth Report Generated</td>
+                                    <td><span class="badge badge-brand">Growth</span></td>
+                                    <td>Monthly growth report</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>merchant@abc</td><td>Campaign Launched</td>
+                                    <td><span class="badge badge-info">Merchant</span></td>
+                                    <td>Summer Sale 2026</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>system</td><td>Security Alert</td>
+                                    <td><span class="badge badge-danger">Security</span></td>
+                                    <td>Unusual merchant activity</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>compliance@authecorp</td><td>Consent Updated</td>
+                                    <td><span class="badge badge-success">Compliance</span></td>
+                                    <td>User consent refresh</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Campaign Modal -->
+    <div class="modal-overlay" id="campaignModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🚀 Create Campaign</h2><button class="modal-close" onclick="closeModal('campaignModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Campaign Name</label><input type="text" class="form-input" placeholder="Summer Sale 2026" id="campaignName" /></div>
+                <div class="form-group"><label class="form-label">Channel</label>
+                    <div class="form-check"><input type="checkbox" checked /> Email</div>
+                    <div class="form-check"><input type="checkbox" /> SMS</div>
+                    <div class="form-check"><input type="checkbox" /> Push Notification</div>
+                </div>
+                <div class="form-group"><label class="form-label">Target Audience</label><select class="form-select"><option>All Customers</option><option>High Value</option><option>New Customers</option><option>Inactive</option></select></div>
+                <div class="form-group"><label class="form-label">Budget</label><input type="number" class="form-input" placeholder="0.00" id="campaignBudget" /></div>
+                <div class="form-group"><label class="form-label">Start Date</label><input type="date" class="form-input" id="campaignStart" /></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('campaignModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('campaignModal');showToast('🚀 Campaign created successfully!','success')">Create Campaign</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Growth Core Engine
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY GROWTH CORE – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard',
+            env: 'sandbox'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Growth Dashboard',
+                merchants: 'Merchant Growth',
+                customers: 'Customer Engagement',
+                campaigns: 'Campaign Management',
+                intelligence: 'AI Growth Assistant',
+                bi: 'Business Intelligence',
+                admin: 'Admin Control',
+                compliance: 'Compliance & Safety',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Growth Core';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── ENVIRONMENT SWITCH ──
+        function switchEnv(env) {
+            state.env = env;
+            document.querySelectorAll('.env-toggle button').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.env-toggle button[data-env="${env}"]`).classList.add('active');
+            showToast(`🔀 Switched to ${env.charAt(0).toUpperCase() + env.slice(1)} environment`, 'info');
+            // CONNECTION POINT: Update API base URL and keys
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing growth data...', 'info');
+
+            // Simulate loading dynamic values
+            // CONNECTION POINT: API call to fetch growth metrics
+            // CONNECTION POINT: Supabase query for analytics data
+
+            const dynamicValues = document.querySelectorAll('.dynamic-value');
+            dynamicValues.forEach(el => {
+                el.textContent = 'Loading...';
+            });
+
+            // Simulate data load
+            setTimeout(() => {
+                // CONNECTION POINT: Replace with actual API response
+                dynamicValues.forEach(el => {
+                    el.textContent = '—';
+                });
+
+                // Update stat cards with placeholder values
+                // CONNECTION POINT: Replace with real data from Supabase
+                const stats = {
+                    'statRevenue': '—',
+                    'statTransactions': '—',
+                    'statCustomers': '—',
+                    'statMerchants': '—',
+                    'statActive': '—',
+                    'statRetention': '—',
+                    'totalMerchants': '—',
+                    'activeToday': '—',
+                    'newMerchants': '—',
+                    'totalCustomers': '—',
+                    'activeCustomers': '—',
+                    'avgSpend': '—',
+                    'merchantRevenue': '—',
+                    'merchantTx': '—',
+                    'merchantGrowth': '—',
+                    'merchantRetention': '—',
+                    'totalCustomers2': '—',
+                    'activeCustomers2': '—',
+                    'loyaltyRate': '—',
+                    'avgLifetime': '—',
+                    'aiRecommendations': '—',
+                    'aiInsights': '—',
+                    'aiRisk': '—',
+                    'aiPotential': '—',
+                    'biRevenue': '—',
+                    'biTransactions': '—',
+                    'biMerchants': '—',
+                    'biRetention': '—',
+                    'adminMerchants': '—',
+                    'adminActive': '—',
+                    'adminPending': '—',
+                    'adminGrowth': '—',
+                    'compScore': '—',
+                    'compConsents': '—',
+                    'compAudit': '—',
+                    'compBreaches': '—'
+                };
+
+                Object.keys(stats).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = stats[id];
+                });
+
+                // Update progress bars to 0%
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+
+                showToast('✅ Data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial data load
+            refreshData();
+
+            console.log('📈 AuthePay Growth Core loaded');
+            console.log('📦 Modules: Dashboard, Merchant Growth, Customer Engagement, Campaigns, AI Growth, Business Intelligence, Admin, Compliance, Audit');
+            console.log('🔗 Integrations: AuthePay Gateway, KaTSo AI Core, Supabase ready');
+            console.log('🛡️ Compliance: Botswana DPA, Consent Management, RBAC, Audit Logging');
+            console.log('🧠 AI: KaTSo AI Growth Assistant, Pattern Analysis, Recommendations');
+            console.log('📊 All metrics are dynamic placeholders – ready for backend integration');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.switchEnv = switchEnv;
+        window.refreshData = refreshData;
+        window.filterAudit = filterAudit;
+    </script>
+
+</body>
+</html>

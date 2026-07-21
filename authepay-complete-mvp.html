@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuthePay – Complete MVP</title>
+    <style>
+        /* --- RESET & VARIABLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --brand: #FF6B00;
+            --brand-hover: #E55D00;
+            --brand-glow: rgba(255,107,0,0.25);
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1A1A1A;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.4);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+            display: flex;
+            min-height: 100vh;
+        }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-logo-icon {
+            width: 38px; height: 38px;
+            background: var(--brand);
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1.1rem; color: #fff;
+        }
+        .sidebar-logo-text { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; }
+        .sidebar-nav { flex: 1; padding: 12px; }
+        .sidebar-section { margin-bottom: 20px; }
+        .sidebar-section-title {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-muted); padding: 8px 12px; font-weight: 700;
+        }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: var(--radius-sm);
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500; transition: var(--transition);
+            cursor: pointer;
+        }
+        .sidebar-link:hover { background: var(--bg-card); color: var(--text-primary); }
+        .sidebar-link.active { background: var(--brand); color: #fff; font-weight: 600; }
+        .sidebar-link .icon { font-size: 1.1rem; width: 22px; text-align: center; }
+        .sidebar-link .badge {
+            margin-left: auto; background: var(--danger); color: #fff;
+            font-size: 0.65rem; padding: 2px 8px; border-radius: 50px; font-weight: 700;
+        }
+        .sidebar-user {
+            padding: 16px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .sidebar-user-avatar {
+            width: 36px; height: 36px; background: var(--brand);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem;
+        }
+        .sidebar-user-info { flex: 1; }
+        .sidebar-user-name { font-size: 0.85rem; font-weight: 600; }
+        .sidebar-user-role { font-size: 0.7rem; color: var(--text-muted); }
+
+        /* --- MAIN --- */
+        .main { flex: 1; margin-left: 260px; min-height: 100vh; transition: margin var(--transition); }
+
+        /* --- TOPBAR --- */
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 50; gap: 16px;
+        }
+        .topbar-search {
+            background: var(--bg-input); border: 1px solid var(--border);
+            border-radius: 50px; padding: 9px 18px;
+            color: var(--text-primary); font-size: 0.85rem;
+            width: 300px; font-family: var(--font);
+            transition: var(--transition);
+        }
+        .topbar-search:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-glow); }
+        .topbar-actions { display: flex; align-items: center; gap: 12px; }
+        .topbar-icon-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: var(--bg-card); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition); color: var(--text-secondary);
+            position: relative; font-size: 1.1rem;
+        }
+        .topbar-icon-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+        .topbar-icon-btn .dot {
+            position: absolute; top: 6px; right: 6px;
+            width: 8px; height: 8px; background: var(--danger);
+            border-radius: 50%; border: 2px solid var(--bg-secondary);
+        }
+
+        /* --- PAGE CONTENT --- */
+        .page-content { padding: 24px; max-width: 1400px; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CARDS --- */
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+            transition: var(--transition);
+        }
+        .card:hover { border-color: var(--border-light); }
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+        }
+        .card-title { font-size: 1.05rem; font-weight: 700; }
+
+        /* --- STATS --- */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px; margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px; transition: var(--transition);
+        }
+        .stat-card:hover { border-color: var(--brand); box-shadow: 0 0 20px var(--brand-glow); }
+        .stat-card.brand { border-left: 3px solid var(--brand); }
+        .stat-value { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+        .stat-value.brand { color: var(--brand); }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        .stat-change { font-size: 0.75rem; margin-top: 4px; }
+        .stat-change.up { color: var(--success); }
+        .stat-change.down { color: var(--danger); }
+
+        /* --- GRIDS --- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 18px; border-radius: var(--radius-sm);
+            font-weight: 600; font-size: 0.85rem; cursor: pointer;
+            border: none; transition: var(--transition); font-family: var(--font);
+            text-decoration: none; white-space: nowrap;
+        }
+        .btn-brand { background: var(--brand); color: #fff; }
+        .btn-brand:hover { background: var(--brand-hover); box-shadow: 0 4px 16px var(--brand-glow); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--border-light); color: var(--text-primary); }
+        .btn-outline:hover { border-color: var(--brand); color: var(--brand); }
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-warning { background: var(--warning); color: #000; }
+
+        /* --- TABLES --- */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th {
+            text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border);
+            color: var(--text-muted); font-weight: 600; font-size: 0.7rem;
+            text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
+        }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+        tr:hover td { background: var(--bg-card-hover); }
+
+        /* --- BADGES --- */
+        .badge {
+            display: inline-block; padding: 3px 10px; border-radius: 50px;
+            font-size: 0.7rem; font-weight: 700;
+        }
+        .badge-success { background: rgba(34,197,94,0.15); color: var(--success); }
+        .badge-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
+        .badge-danger { background: rgba(239,68,68,0.15); color: var(--danger); }
+        .badge-info { background: rgba(59,130,246,0.15); color: var(--info); }
+        .badge-brand { background: rgba(255,107,0,0.15); color: var(--brand); }
+
+        /* --- FORMS --- */
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: var(--text-secondary); }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; padding: 10px 14px; background: var(--bg-input);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text-primary); font-size: 0.9rem; font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* --- TABS --- */
+        .tabs {
+            display: flex; gap: 4px; background: var(--bg-input);
+            border-radius: var(--radius); padding: 4px; margin-bottom: 16px; overflow-x: auto;
+        }
+        .tab {
+            padding: 8px 16px; border: none; background: transparent;
+            color: var(--text-muted); border-radius: var(--radius-sm);
+            cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            transition: var(--transition); white-space: nowrap; font-family: var(--font);
+        }
+        .tab.active { background: var(--brand); color: #fff; }
+        .tab:hover:not(.active) { color: var(--text-primary); }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.75); z-index: 200;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 24px; width: 100%;
+            max-width: 560px; max-height: 85vh; overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+
+        /* --- CHAT UI --- */
+        .chat-container { display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 8px; }
+        .chat-msg { padding: 12px; border-radius: var(--radius); max-width: 80%; }
+        .chat-msg.sent { background: var(--brand); align-self: flex-end; }
+        .chat-msg.received { background: var(--bg-tertiary); align-self: flex-start; }
+        .chat-input-row { display: flex; gap: 8px; margin-top: 12px; }
+        .chat-input-row .form-input { flex: 1; }
+
+        /* --- QR placeholder --- */
+        .qr-box {
+            width: 180px; height: 180px; background: var(--bg-input);
+            margin: 0 auto; border-radius: var(--radius);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; color: var(--text-muted);
+        }
+
+        /* --- MOBILE --- */
+        .mobile-toggle { display: none; background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; padding: 8px; }
+        @media(max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .mobile-toggle { display: block; }
+            .topbar-search { width: 160px; }
+        }
+        @media(max-width: 640px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .page-content { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">AP</div>
+            <span class="sidebar-logo-text">AuthePay</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Core</div>
+                <a class="sidebar-link active" onclick="navigate('dashboard')"><span class="icon">📊</span>Dashboard</a>
+                <a class="sidebar-link" onclick="navigate('gateway')"><span class="icon">⚡</span>Gateway</a>
+                <a class="sidebar-link" onclick="navigate('api')"><span class="icon">🔌</span>API</a>
+                <a class="sidebar-link" onclick="navigate('chat')"><span class="icon">💬</span>Chat</a>
+                <a class="sidebar-link" onclick="navigate('ticket')"><span class="icon">🎟️</span>Ticket</a>
+                <a class="sidebar-link" onclick="navigate('book')"><span class="icon">📚</span>Book</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Payments</div>
+                <a class="sidebar-link" onclick="navigate('instant')"><span class="icon">⚡</span>Instant</a>
+                <a class="sidebar-link" onclick="navigate('softpos')"><span class="icon">📱</span>SoftPOS</a>
+                <a class="sidebar-link" onclick="navigate('merchant')"><span class="icon">🏪</span>Merchant</a>
+                <a class="sidebar-link" onclick="navigate('customer')"><span class="icon">👤</span>Customer</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Admin &amp; Compliance</div>
+                <a class="sidebar-link" onclick="navigate('admin')"><span class="icon">🛡️</span>Admin</a>
+                <a class="sidebar-link" onclick="navigate('compliance')"><span class="icon">📋</span>Compliance</a>
+            </div>
+        </nav>
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">BM</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">Braincade</div>
+                <div class="sidebar-user-role">Super Admin</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main" id="mainContent">
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+            <input type="search" class="topbar-search" placeholder="🔍 Search...">
+            <div class="topbar-actions">
+                <button class="topbar-icon-btn" title="Notifications"><span class="dot"></span>🔔</button>
+                <button class="topbar-icon-btn" title="Settings">⚙️</button>
+                <button class="btn btn-brand btn-sm">+ New Payment</button>
+            </div>
+        </div>
+
+        <!-- ========== DASHBOARD ========== -->
+        <div class="page-content page active" id="page-dashboard">
+            <h2 style="margin-bottom:16px;">📊 AuthePay Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card brand"><div class="stat-value brand">P 1.24M</div><div class="stat-label">Volume (MTD)</div><div class="stat-change up">▲ 22%</div></div>
+                <div class="stat-card"><div class="stat-value">8,452</div><div class="stat-label">Transactions</div><div class="stat-change up">▲ 15%</div></div>
+                <div class="stat-card"><div class="stat-value">P 34,200</div><div class="stat-label">Pending Settlements</div></div>
+                <div class="stat-card"><div class="stat-value">99.8%</div><div class="stat-label">Success Rate</div><div class="stat-change up">▲ 0.3%</div></div>
+                <div class="stat-card"><div class="stat-value">1,247</div><div class="stat-label">Active Merchants</div></div>
+                <div class="stat-card"><div class="stat-value">P 892K</div><div class="stat-label">Wallet Balance</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card"><div class="card-header"><span class="card-title">📈 Revenue Trend</span></div><div style="height:150px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">[Chart Placeholder]</div></div>
+                <div class="card"><div class="card-header"><span class="card-title">🕐 Recent Transactions</span></div>
+                    <div class="table-wrap"><table>
+                        <thead><tr><th>ID</th><th>Amount</th><th>Status</th></tr></thead>
+                        <tbody id="dashTxs"><tr><td>#TX-8921</td><td>P 12,450</td><td><span class="badge badge-success">Done</span></td></tr><tr><td>#TX-8920</td><td>P 8,900</td><td><span class="badge badge-success">Done</span></td></tr></tbody>
+                    </table></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== GATEWAY ========== -->
+        <div class="page-content page" id="page-gateway">
+            <h2 style="margin-bottom:16px;">⚡ Gateway</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">1,245</div><div class="stat-label">Today's Payments</div></div>
+                <div class="stat-card"><div class="stat-value">P 145K</div><div class="stat-label">Today's Volume</div></div>
+                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Failed</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔗 Create Payment Link</span></div>
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Amount (BWP)</label><input type="number" class="form-input" id="linkAmount" value="500"></div>
+                        <div class="form-group"><label class="form-label">Reference</label><input type="text" class="form-input" id="linkRef" value="INV-123"></div>
+                    </div>
+                    <button class="btn btn-brand" onclick="generateLink()">🔗 Generate Link</button>
+                    <div id="linkOutput" style="margin-top:12px;background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);word-break:break-all;font-family:monospace;">https://pay.authepay.co/link/abc123</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📱 QR Payment</span></div>
+                    <div class="qr-box" id="qrBox">📱</div>
+                    <button class="btn btn-outline btn-sm" onclick="generateQR()">Generate QR</button>
+                </div>
+            </div>
+            <div class="card"><div class="card-header"><span class="card-title">💳 Recent Transactions</span></div>
+                <div class="table-wrap"><table>
+                    <thead><tr><th>ID</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
+                    <tbody id="gatewayTxs"></tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- ========== API ========== -->
+        <div class="page-content page" id="page-api">
+            <h2 style="margin-bottom:16px;">🔌 API Marketplace</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔑 API Keys</span><button class="btn btn-brand btn-sm" onclick="generateApiKey()">+ Generate</button></div>
+                    <div id="apiKeysList"><div style="padding:8px;background:var(--bg-input);border-radius:var(--radius-sm);">sk_live_•••••••• <span class="badge badge-success">Active</span></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📚 Documentation</span></div>
+                    <div><a href="#" style="color:var(--brand);">📖 API Reference</a><br><a href="#" style="color:var(--brand);">🧪 Sandbox</a></div>
+                </div>
+            </div>
+            <div class="card"><div class="card-header"><span class="card-title">📊 API Analytics</span></div><div style="color:var(--text-muted);">Requests today: 12,345 | Avg latency: 98ms</div></div>
+        </div>
+
+        <!-- ========== CHAT ========== -->
+        <div class="page-content page" id="page-chat">
+            <h2 style="margin-bottom:16px;">💬 Business Chat</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Conversations</span></div>
+                    <div id="chatList"><div style="padding:8px;border-bottom:1px solid var(--border);cursor:pointer;" onclick="openChat('ABC Shop')">ABC Shop</div><div style="padding:8px;border-bottom:1px solid var(--border);cursor:pointer;" onclick="openChat('QuickBet')">QuickBet</div></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title" id="chatPartner">Select a chat</span></div>
+                    <div class="chat-container" id="chatMessages"><div style="color:var(--text-muted);text-align:center;">No messages</div></div>
+                    <div class="chat-input-row">
+                        <input type="text" class="form-input" placeholder="Type a message..." id="chatInput">
+                        <button class="btn btn-brand" onclick="sendChat()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TICKET ========== -->
+        <div class="page-content page" id="page-ticket">
+            <h2 style="margin-bottom:16px;">🎟️ Events & Tickets</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Active Events</div></div>
+                <div class="stat-card"><div class="stat-value">345</div><div class="stat-label">Tickets Sold</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Create Event</span></div>
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Event Name</label><input type="text" class="form-input" id="eventName" placeholder="Music Fest"></div>
+                        <div class="form-group"><label class="form-label">Price (BWP)</label><input type="number" class="form-input" id="eventPrice" value="50"></div>
+                    </div>
+                    <button class="btn btn-brand" onclick="createEvent()">➕ Create Event</button>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">QR Ticket Scanner</span></div>
+                    <div style="text-align:center;"><div class="qr-box" style="width:120px;height:120px;">📷</div><button class="btn btn-outline btn-sm" onclick="alert('Scanning...')">Scan Ticket</button></div>
+                </div>
+            </div>
+            <div class="card"><div class="card-header"><span class="card-title">Recent Events</span></div>
+                <div id="eventList"></div>
+            </div>
+        </div>
+
+        <!-- ========== BOOK ========== -->
+        <div class="page-content page" id="page-book">
+            <h2 style="margin-bottom:16px;">📚 Accounting</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">P 1.02M</div><div class="stat-label">Revenue</div></div>
+                <div class="stat-card"><div class="stat-value">P 340K</div><div class="stat-label">Expenses</div></div>
+                <div class="stat-card"><div class="stat-value">P 680K</div><div class="stat-label">Net Profit</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📄 Create Invoice</span></div>
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Customer</label><input type="text" class="form-input" id="invCustomer" placeholder="Client name"></div>
+                        <div class="form-group"><label class="form-label">Amount</label><input type="number" class="form-input" id="invAmount" value="1000"></div>
+                    </div>
+                    <button class="btn btn-brand" onclick="createInvoice()">📤 Create & Send</button>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Reports</span></div>
+                    <button class="btn btn-outline btn-sm">📈 P&L</button>
+                    <button class="btn btn-outline btn-sm">📊 Balance Sheet</button>
+                    <button class="btn btn-outline btn-sm">📉 Cash Flow</button>
+                </div>
+            </div>
+            <div class="card"><div class="card-header"><span class="card-title">Recent Invoices</span></div><div id="invoiceList"></div></div>
+        </div>
+
+        <!-- ========== INSTANT ========== -->
+        <div class="page-content page" id="page-instant">
+            <h2 style="margin-bottom:16px;">⚡ Instant Payments</h2>
+            <div class="card" style="max-width:500px;margin:0 auto;">
+                <div class="card-header"><span class="card-title">Instant Payment</span></div>
+                <div class="form-group"><label class="form-label">Amount (BWP)</label><input type="number" class="form-input" id="instantAmount" value="250"></div>
+                <div class="form-group"><label class="form-label">Merchant ID</label><input type="text" class="form-input" id="instantMerchant" value="M-842"></div>
+                <button class="btn btn-brand" onclick="processInstant()">⚡ Pay Now</button>
+                <div id="instantResult" style="margin-top:12px;color:var(--text-muted);"></div>
+            </div>
+        </div>
+
+        <!-- ========== SOFTPOS ========== -->
+        <div class="page-content page" id="page-softpos">
+            <h2 style="margin-bottom:16px;">📱 SoftPOS (Tap to Pay)</h2>
+            <div class="card" style="max-width:400px;margin:0 auto;text-align:center;">
+                <div style="font-size:4rem;">💳</div>
+                <p>Tap your card or phone</p>
+                <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius);">
+                    <div>Amount: <strong>P 150.00</strong></div>
+                    <button class="btn btn-brand" onclick="processTap()">✅ Simulate Tap</button>
+                    <div id="tapResult" style="margin-top:8px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== MERCHANT DASHBOARD ========== -->
+        <div class="page-content page" id="page-merchant">
+            <h2 style="margin-bottom:16px;">🏪 Merchant Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">P 45,200</div><div class="stat-label">Balance</div></div>
+                <div class="stat-card"><div class="stat-value">234</div><div class="stat-label">Today's Orders</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Sales</span></div>
+                    <div>Today: P 12,400<br>This week: P 67,800</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔗 QR Code</span></div>
+                    <div class="qr-box" style="width:100px;height:100px;">📱</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CUSTOMER APP ========== -->
+        <div class="page-content page" id="page-customer">
+            <h2 style="margin-bottom:16px;">👤 Customer Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">P 1,250</div><div class="stat-label">Wallet</div></div>
+                <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Transactions</div></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">💳 Saved Methods</span></div>
+                <div>• Visa ending 4242<br>• Orange Money</div>
+            </div>
+        </div>
+
+        <!-- ========== ADMIN ========== -->
+        <div class="page-content page" id="page-admin">
+            <h2 style="margin-bottom:16px;">🛡️ Admin</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">1,247</div><div class="stat-label">Merchants</div></div>
+                <div class="stat-card"><div class="stat-value">8,452</div><div class="stat-label">Customers</div></div>
+                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Fraud Alerts</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Merchant KYC Queue</span></div>
+                    <div class="table-wrap"><table><thead><tr><th>Name</th><th>Risk</th><th>Action</th></tr></thead><tbody><tr><td>NewShop Ltd</td><td><span class="badge badge-warning">Medium</span></td><td><button class="btn btn-brand btn-sm">Review</button></td></tr></tbody></table></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">System Health</span></div>
+                    <div>API: <span class="badge badge-success">Up</span><br>Database: <span class="badge badge-success">Up</span><br>Fraud: <span class="badge badge-warning">Degraded</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== COMPLIANCE ========== -->
+        <div class="page-content page" id="page-compliance">
+            <h2 style="margin-bottom:16px;">📋 Compliance</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">23</div><div class="stat-label">Open Alerts</div></div>
+                <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Pending KYC</div></div>
+                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">AML Alerts</div></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">📋 Audit Logs</span></div>
+                <div class="table-wrap"><table><thead><tr><th>Time</th><th>Action</th><th>User</th></tr></thead><tbody><tr><td>2026-07-21 10:23</td><td>KYC Review</td><td>admin</td></tr></tbody></table></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- STATE ---
+        const state = {
+            transactions: [
+                { id: '#TX-8921', amount: 12450, method: 'Orange Money', status: 'Completed' },
+                { id: '#TX-8920', amount: 8900, method: 'MyZaka', status: 'Completed' },
+                { id: '#TX-8919', amount: 45000, method: 'Bank', status: 'Pending' }
+            ],
+            events: [
+                { name: 'Music Fest', price: 50, tickets: 120 },
+                { name: 'Tech Summit', price: 200, tickets: 45 }
+            ],
+            invoices: [
+                { customer: 'ABC Shop', amount: 1200, status: 'Paid' },
+                { customer: 'QuickBet', amount: 850, status: 'Unpaid' }
+            ],
+            chatMessages: {},
+            currentChat: null
+        };
+
+        // --- NAVIGATION ---
+        function navigate(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                const onclick = link.getAttribute('onclick') || '';
+                if (onclick.includes(`'${page}'`)) link.classList.add('active');
+            });
+            closeSidebar();
+            // refresh dynamic content
+            if (page === 'gateway') renderGatewayTxs();
+            if (page === 'ticket') renderEvents();
+            if (page === 'book') renderInvoices();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); }
+
+        // --- GATEWAY ---
+        function generateLink() {
+            const amt = document.getElementById('linkAmount').value || 500;
+            const ref = document.getElementById('linkRef').value || 'INV-' + Math.floor(Math.random()*1000);
+            document.getElementById('linkOutput').textContent = `https://pay.authepay.co/link/${ref}-${Math.random().toString(36).substr(2,6)}`;
+        }
+        function generateQR() {
+            document.getElementById('qrBox').textContent = '✅ QR Generated';
+        }
+        function renderGatewayTxs() {
+            const tbody = document.getElementById('gatewayTxs');
+            tbody.innerHTML = state.transactions.map(t => `
+                <tr><td>${t.id}</td><td>P ${t.amount.toLocaleString()}</td><td>${t.method}</td><td><span class="badge ${t.status==='Completed'?'badge-success':'badge-warning'}">${t.status}</span></td></tr>
+            `).join('');
+        }
+        // --- API ---
+        function generateApiKey() {
+            const key = 'sk_live_' + Math.random().toString(36).substr(2,16);
+            document.getElementById('apiKeysList').innerHTML += `<div style="padding:8px;background:var(--bg-input);border-radius:var(--radius-sm);">${key} <span class="badge badge-success">Active</span></div>`;
+        }
+        // --- CHAT ---
+        function openChat(partner) {
+            state.currentChat = partner;
+            document.getElementById('chatPartner').textContent = partner;
+            if (!state.chatMessages[partner]) state.chatMessages[partner] = [];
+            renderChat();
+        }
+        function renderChat() {
+            const container = document.getElementById('chatMessages');
+            const msgs = state.chatMessages[state.currentChat] || [];
+            container.innerHTML = msgs.map(m => `<div class="chat-msg ${m.sender === 'me' ? 'sent' : 'received'}">${m.text}</div>`).join('') || '<div style="color:var(--text-muted);text-align:center;">No messages</div>';
+        }
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text || !state.currentChat) return;
+            if (!state.chatMessages[state.currentChat]) state.chatMessages[state.currentChat] = [];
+            state.chatMessages[state.currentChat].push({ sender: 'me', text });
+            input.value = '';
+            // Simulate reply
+            setTimeout(() => {
+                state.chatMessages[state.currentChat].push({ sender: 'them', text: 'Thanks! We\'ll process that.' });
+                renderChat();
+            }, 1000);
+            renderChat();
+        }
+        // --- TICKET ---
+        function createEvent() {
+            const name = document.getElementById('eventName').value || 'New Event';
+            const price = parseInt(document.getElementById('eventPrice').value) || 0;
+            state.events.push({ name, price, tickets: 0 });
+            renderEvents();
+        }
+        function renderEvents() {
+            const container = document.getElementById('eventList');
+            container.innerHTML = state.events.map(e => `<div style="padding:8px;border-bottom:1px solid var(--border);">${e.name} – P${e.price} (${e.tickets} sold)</div>`).join('');
+        }
+        // --- BOOK ---
+        function createInvoice() {
+            const customer = document.getElementById('invCustomer').value || 'Client';
+            const amount = parseInt(document.getElementById('invAmount').value) || 0;
+            state.invoices.push({ customer, amount, status: 'Unpaid' });
+            renderInvoices();
+        }
+        function renderInvoices() {
+            const container = document.getElementById('invoiceList');
+            container.innerHTML = state.invoices.map(i => `<div style="padding:8px;border-bottom:1px solid var(--border);">${i.customer} – P${i.amount} <span class="badge ${i.status==='Paid'?'badge-success':'badge-warning'}">${i.status}</span></div>`).join('');
+        }
+        // --- INSTANT ---
+        function processInstant() {
+            const amt = document.getElementById('instantAmount').value || 250;
+            const merch = document.getElementById('instantMerchant').value || 'M-842';
+            document.getElementById('instantResult').innerHTML = '✅ Payment of P' + amt + ' to ' + merch + ' processed instantly!';
+            state.transactions.unshift({ id: '#TX-' + Date.now(), amount: amt, method: 'Instant', status: 'Completed' });
+        }
+        // --- SOFTPOS ---
+        function processTap() {
+            document.getElementById('tapResult').innerHTML = '✅ Tap accepted! Payment of P150.00 successful.';
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGatewayTxs();
+            renderEvents();
+            renderInvoices();
+            // Dash txs
+            document.getElementById('dashTxs').innerHTML = state.transactions.slice(0,3).map(t =>
+                `<tr><td>${t.id}</td><td>P ${t.amount.toLocaleString()}</td><td><span class="badge ${t.status==='Completed'?'badge-success':'badge-warning'}">${t.status}</span></td></tr>`
+            ).join('');
+        });
+
+        // Close sidebar on outside click (mobile)
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-toggle');
+            if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && !toggle.contains(e.target)) closeSidebar();
+        });
+
+        console.log('✅ AuthePay MVP loaded – all modules functional');
+    </script>
+</body>
+</html>

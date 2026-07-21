@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuthePay Compliance | Regulatory Foundation</title>
+    <style>
+        /* --- RESET & VARIABLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --brand: #FF6B00;
+            --brand-hover: #E55D00;
+            --brand-light: #FFF0E5;
+            --brand-glow: rgba(255,107,0,0.25);
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1A1A1A;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            min-height: 100vh;
+        }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-logo-icon {
+            width: 38px; height: 38px;
+            background: var(--brand);
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1.1rem; color: #fff;
+        }
+        .sidebar-logo-text { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; }
+        .sidebar-nav { flex: 1; padding: 12px; }
+        .sidebar-section { margin-bottom: 20px; }
+        .sidebar-section-title {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-muted); padding: 8px 12px; font-weight: 700;
+        }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: var(--radius-sm);
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500; transition: var(--transition);
+            cursor: pointer;
+        }
+        .sidebar-link:hover { background: var(--bg-card); color: var(--text-primary); }
+        .sidebar-link.active { background: var(--brand); color: #fff; font-weight: 600; }
+        .sidebar-link .icon { font-size: 1.1rem; width: 22px; text-align: center; }
+        .sidebar-link .badge {
+            margin-left: auto; background: var(--danger); color: #fff;
+            font-size: 0.65rem; padding: 2px 8px; border-radius: 50px; font-weight: 700;
+        }
+        .sidebar-user {
+            padding: 16px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .sidebar-user-avatar {
+            width: 36px; height: 36px; background: var(--brand);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem;
+        }
+        .sidebar-user-info { flex: 1; }
+        .sidebar-user-name { font-size: 0.85rem; font-weight: 600; }
+        .sidebar-user-role { font-size: 0.7rem; color: var(--text-muted); }
+
+        /* --- MAIN --- */
+        .main { flex: 1; margin-left: 260px; min-height: 100vh; transition: margin var(--transition); }
+
+        /* --- TOPBAR --- */
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 50; gap: 16px;
+        }
+        .topbar-search {
+            background: var(--bg-input); border: 1px solid var(--border);
+            border-radius: 50px; padding: 9px 18px;
+            color: var(--text-primary); font-size: 0.85rem;
+            width: 300px; font-family: var(--font);
+            transition: var(--transition);
+        }
+        .topbar-search:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-glow); }
+        .topbar-actions { display: flex; align-items: center; gap: 12px; }
+        .topbar-icon-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: var(--bg-card); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition); color: var(--text-secondary);
+            position: relative; font-size: 1.1rem;
+        }
+        .topbar-icon-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+        .topbar-icon-btn .dot {
+            position: absolute; top: 6px; right: 6px;
+            width: 8px; height: 8px; background: var(--danger);
+            border-radius: 50%; border: 2px solid var(--bg-secondary);
+        }
+
+        /* --- PAGE CONTENT --- */
+        .page-content { padding: 24px; max-width: 1400px; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CARDS --- */
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+            transition: var(--transition);
+        }
+        .card:hover { border-color: var(--border-light); }
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+        }
+        .card-title { font-size: 1.05rem; font-weight: 700; }
+
+        /* --- STATS --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px; transition: var(--transition);
+        }
+        .stat-card:hover { border-color: var(--brand); box-shadow: 0 0 20px var(--brand-glow); }
+        .stat-card.brand { border-left: 3px solid var(--brand); }
+        .stat-value { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+        .stat-value.brand { color: var(--brand); }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        .stat-change { font-size: 0.75rem; margin-top: 4px; }
+        .stat-change.up { color: var(--success); }
+        .stat-change.down { color: var(--danger); }
+
+        /* --- GRIDS --- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 18px; border-radius: var(--radius-sm);
+            font-weight: 600; font-size: 0.85rem; cursor: pointer;
+            border: none; transition: var(--transition); font-family: var(--font);
+            text-decoration: none; white-space: nowrap;
+        }
+        .btn-brand { background: var(--brand); color: #fff; }
+        .btn-brand:hover { background: var(--brand-hover); box-shadow: 0 4px 16px var(--brand-glow); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--border-light); color: var(--text-primary); }
+        .btn-outline:hover { border-color: var(--brand); color: var(--brand); }
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-warning { background: var(--warning); color: #000; }
+
+        /* --- TABLES --- */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th {
+            text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border);
+            color: var(--text-muted); font-weight: 600; font-size: 0.7rem;
+            text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
+        }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+        tr:hover td { background: var(--bg-card-hover); }
+
+        /* --- BADGES --- */
+        .badge {
+            display: inline-block; padding: 3px 10px; border-radius: 50px;
+            font-size: 0.7rem; font-weight: 700;
+        }
+        .badge-success { background: rgba(34,197,94,0.15); color: var(--success); }
+        .badge-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
+        .badge-danger { background: rgba(239,68,68,0.15); color: var(--danger); }
+        .badge-info { background: rgba(59,130,246,0.15); color: var(--info); }
+        .badge-brand { background: rgba(255,107,0,0.15); color: var(--brand); }
+
+        /* --- FORMS --- */
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: var(--text-secondary); }
+        .form-input, .form-select {
+            width: 100%; padding: 10px 14px; background: var(--bg-input);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text-primary); font-size: 0.9rem; font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* --- TABS --- */
+        .tabs { display: flex; gap: 4px; background: var(--bg-input); border-radius: var(--radius); padding: 4px; margin-bottom: 16px; overflow-x: auto; }
+        .tab {
+            padding: 8px 16px; border: none; background: transparent;
+            color: var(--text-muted); border-radius: var(--radius-sm);
+            cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            transition: var(--transition); white-space: nowrap; font-family: var(--font);
+        }
+        .tab.active { background: var(--brand); color: #fff; }
+        .tab:hover:not(.active) { color: var(--text-primary); }
+
+        /* --- MODAL (simulated) --- */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.75); z-index: 200;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 24px; width: 100%;
+            max-width: 560px; max-height: 85vh; overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+
+        /* --- MOBILE --- */
+        .mobile-toggle { display: none; background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; padding: 8px; }
+        @media(max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .mobile-toggle { display: block; }
+            .topbar-search { width: 160px; }
+        }
+        @media(max-width: 640px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .page-content { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">AC</div>
+            <span class="sidebar-logo-text">AuthePay</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Compliance</div>
+                <a class="sidebar-link active" onclick="navigate('dashboard')"><span class="icon">📊</span>Dashboard</a>
+                <a class="sidebar-link" onclick="navigate('kyc')"><span class="icon">🆔</span>KYC Review <span class="badge">12</span></a>
+                <a class="sidebar-link" onclick="navigate('kyb')"><span class="icon">🏢</span>KYB Review <span class="badge">5</span></a>
+                <a class="sidebar-link" onclick="navigate('aml')"><span class="icon">🚨</span>AML Alerts <span class="badge">3</span></a>
+                <a class="sidebar-link" onclick="navigate('fraud')"><span class="icon">🛡️</span>Fraud Alerts</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Risk &amp; Monitoring</div>
+                <a class="sidebar-link" onclick="navigate('risk')"><span class="icon">📈</span>Risk Dashboard</a>
+                <a class="sidebar-link" onclick="navigate('transaction')"><span class="icon">💳</span>Transaction Monitoring</a>
+                <a class="sidebar-link" onclick="navigate('audit')"><span class="icon">📋</span>Audit Logs</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Governance</div>
+                <a class="sidebar-link" onclick="navigate('policy')"><span class="icon">📜</span>Policy Management</a>
+                <a class="sidebar-link" onclick="navigate('privacy')"><span class="icon">🔐</span>Privacy &amp; Consent</a>
+                <a class="sidebar-link" onclick="navigate('data')"><span class="icon">🗃️</span>Data Governance</a>
+                <a class="sidebar-link" onclick="navigate('security')"><span class="icon">🔒</span>Security Center</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Reporting</div>
+                <a class="sidebar-link" onclick="navigate('reports')"><span class="icon">📄</span>Compliance Reports</a>
+                <a class="sidebar-link" onclick="navigate('regulatory')"><span class="icon">🏛️</span>Regulatory Reporting</a>
+                <a class="sidebar-link" onclick="navigate('health')"><span class="icon">❤️</span>System Health</a>
+            </div>
+        </nav>
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">CO</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">Compliance Officer</div>
+                <div class="sidebar-user-role">Braincade Holdings</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main" id="mainContent">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+            <input type="search" class="topbar-search" placeholder="🔍 Search compliance events...">
+            <div class="topbar-actions">
+                <button class="topbar-icon-btn" title="Notifications"><span class="dot"></span>🔔</button>
+                <button class="topbar-icon-btn" title="Settings">⚙️</button>
+                <button class="btn btn-brand btn-sm">+ New Case</button>
+            </div>
+        </div>
+
+        <!-- ========== DASHBOARD ========== -->
+        <div class="page-content page active" id="page-dashboard">
+            <h2 style="margin-bottom: 16px;">📊 Compliance Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card brand"><div class="stat-value brand">23</div><div class="stat-label">Open Alerts</div><div class="stat-change up">▲ 4 from yesterday</div></div>
+                <div class="stat-card"><div class="stat-value">1,284</div><div class="stat-label">Verified Customers</div><div class="stat-change up">▲ 12%</div></div>
+                <div class="stat-card"><div class="stat-value">347</div><div class="stat-label">Merchants Onboarded</div><div class="stat-change up">▲ 8%</div></div>
+                <div class="stat-card"><div class="stat-value">99.97%</div><div class="stat-label">System Uptime</div><div class="stat-change up">▲ 0.02%</div></div>
+                <div class="stat-card"><div class="stat-value">P 12.4M</div><div class="stat-label">Total Transactions (MTD)</div><div class="stat-change up">▲ 15%</div></div>
+                <div class="stat-card"><div class="stat-value">16</div><div class="stat-label">Pending KYC Reviews</div><div class="stat-change down">⏳ 3 overdue</div></div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🚨 Recent Alerts</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Type</th><th>Entity</th><th>Risk</th><th>Time</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="badge badge-danger">AML</span></td><td>Merchant #M-842</td><td>High</td><td>10:23</td><td><span class="badge badge-warning">Open</span></td></tr>
+                                <tr><td><span class="badge badge-warning">Fraud</span></td><td>Customer #C-119</td><td>Medium</td><td>09:45</td><td><span class="badge badge-info">Review</span></td></tr>
+                                <tr><td><span class="badge badge-danger">KYC</span></td><td>Individual #K-73</td><td>High</td><td>08:12</td><td><span class="badge badge-danger">Escalated</span></td></tr>
+                                <tr><td><span class="badge badge-info">Sanctions</span></td><td>Transaction #TX-901</td><td>Critical</td><td>07:55</td><td><span class="badge badge-danger">Blocked</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Compliance Health</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);"><span>KYC Coverage</span><span style="color:var(--success);">98%</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);"><span>KYB Coverage</span><span style="color:var(--warning);">85%</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);"><span>AML Monitoring</span><span style="color:var(--success);">Active</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);"><span>Data Privacy</span><span style="color:var(--success);">Compliant</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:8px 0;"><span>Audit Trail</span><span style="color:var(--success);">100% Logged</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">📈 Regulatory Metrics</span></div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
+                    <div><span style="color:var(--text-muted);">SARs Filed</span><br><strong>34</strong> (this quarter)</div>
+                    <div><span style="color:var(--text-muted);">PEP Checks</span><br><strong>12</strong> positive</div>
+                    <div><span style="color:var(--text-muted);">Sanctions Matches</span><br><strong>2</strong> blocked</div>
+                    <div><span style="color:var(--text-muted);">EDD Cases</span><br><strong>7</strong> active</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== KYC REVIEW ========== -->
+        <div class="page-content page" id="page-kyc">
+            <h2 style="margin-bottom:16px;">🆔 KYC Review Queue</h2>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Pending Individual Verifications</span>
+                    <button class="btn btn-brand btn-sm">+ New KYC</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Name</th><th>ID Type</th><th>Submitted</th><th>Risk</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>Thabo M.</td><td>National ID</td><td>2026-07-20</td><td><span class="badge badge-warning">Medium</span></td><td><span class="badge badge-info">Pending</span></td><td><button class="btn btn-brand btn-sm" onclick="alert('Verify KYC for Thabo M.')">Review</button></td></tr>
+                            <tr><td>Kefilwe N.</td><td>Passport</td><td>2026-07-19</td><td><span class="badge badge-danger">High</span></td><td><span class="badge badge-warning">Escalated</span></td><td><button class="btn btn-danger btn-sm" onclick="alert('Escalate case')">Escalate</button></td></tr>
+                            <tr><td>Oatile M.</td><td>Driver's Licence</td><td>2026-07-18</td><td><span class="badge badge-success">Low</span></td><td><span class="badge badge-success">Verified</span></td><td><span class="badge badge-success">✅ Done</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">🧪 Liveness &amp; Face Match</span></div>
+                <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                    <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);">Face Match Score: <strong>92%</strong></div>
+                    <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);">Liveness Check: <span class="badge badge-success">Passed</span></div>
+                    <button class="btn btn-outline btn-sm">🔬 Re-run</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== KYB REVIEW ========== -->
+        <div class="page-content page" id="page-kyb">
+            <h2 style="margin-bottom:16px;">🏢 KYB Review Queue</h2>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Business Verifications</span>
+                    <button class="btn btn-brand btn-sm">+ New KYB</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Business</th><th>Registration</th><th>Directors</th><th>Risk</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>TechHub Ltd</td><td>BOCRA-8842</td><td>2 verified</td><td><span class="badge badge-success">Low</span></td><td><span class="badge badge-success">Approved</span></td><td>✅</td></tr>
+                            <tr><td>GreenEnergy Co</td><td>BOCRA-9910</td><td>1 pending</td><td><span class="badge badge-warning">Medium</span></td><td><span class="badge badge-info">Review</span></td><td><button class="btn btn-brand btn-sm" onclick="alert('Review KYB for GreenEnergy')">Review</button></td></tr>
+                            <tr><td>FastCash Services</td><td>BOCRA-5521</td><td>Beneficial owners unclear</td><td><span class="badge badge-danger">High</span></td><td><span class="badge badge-danger">Blocked</span></td><td><button class="btn btn-danger btn-sm">Escalate</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">🔍 Beneficial Ownership</span></div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);">Ownership ≥25%: <strong>3 individuals</strong></div>
+                    <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);">PEP Status: <span class="badge badge-warning">1 flagged</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== AML ALERTS ========== -->
+        <div class="page-content page" id="page-aml">
+            <h2 style="margin-bottom:16px;">🚨 AML Alerts</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Open Alerts</div></div>
+                <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Escalated</div></div>
+                <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">Blocked</div></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Alert Details</span></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Alert ID</th><th>Trigger</th><th>Score</th><th>Entity</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>#AML-102</td><td>Large cash deposit</td><td>89</td><td>Merchant M-842</td><td><span class="badge badge-warning">Open</span></td><td><button class="btn btn-brand btn-sm">Investigate</button></td></tr>
+                            <tr><td>#AML-101</td><td>Unusual transaction pattern</td><td>76</td><td>Customer C-119</td><td><span class="badge badge-info">Review</span></td><td><button class="btn btn-outline btn-sm">View</button></td></tr>
+                            <tr><td>#AML-100</td><td>Sanctions hit</td><td>100</td><td>TX-901</td><td><span class="badge badge-danger">Blocked</span></td><td><span class="badge badge-danger">Closed</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">📋 Case Management</span></div>
+                <p style="color:var(--text-muted);">Case #C-2026-07-21: Suspicious activity report (SAR) being prepared.</p>
+                <button class="btn btn-brand btn-sm">➕ Create SAR</button>
+            </div>
+        </div>
+
+        <!-- ========== FRAUD ALERTS ========== -->
+        <div class="page-content page" id="page-fraud">
+            <h2 style="margin-bottom:16px;">🛡️ Fraud Alerts</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Real-time Alerts</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Alert</th><th>Method</th><th>Risk</th><th>Time</th></tr></thead>
+                            <tbody>
+                                <tr><td>Impossible travel</td><td>Device fingerprint</td><td><span class="badge badge-danger">High</span></td><td>10:45</td></tr>
+                                <tr><td>Bot activity</td><td>IP intelligence</td><td><span class="badge badge-warning">Medium</span></td><td>09:10</td></tr>
+                                <tr><td>Duplicate payment</td><td>Behaviour analysis</td><td><span class="badge badge-info">Low</span></td><td>08:30</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🛡️ Fraud Rules</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div><input type="checkbox" checked /> Velocity check >5 transactions/min</div>
+                        <div><input type="checkbox" checked /> Impossible travel threshold</div>
+                        <div><input type="checkbox" /> Device fingerprint mismatch</div>
+                        <button class="btn btn-outline btn-sm">+ Add Rule</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== RISK DASHBOARD ========== -->
+        <div class="page-content page" id="page-risk">
+            <h2 style="margin-bottom:16px;">📈 Risk Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">78</div><div class="stat-label">Avg Risk Score (MTD)</div></div>
+                <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">High Risk Entities</div></div>
+                <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Critical Risk</div></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Risk Distribution</span></div>
+                <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;text-align:center;">
+                    <div style="background:var(--success);padding:8px;border-radius:var(--radius-sm);">Low 45%</div>
+                    <div style="background:var(--info);padding:8px;border-radius:var(--radius-sm);">Medium 30%</div>
+                    <div style="background:var(--warning);padding:8px;border-radius:var(--radius-sm);">High 18%</div>
+                    <div style="background:var(--danger);padding:8px;border-radius:var(--radius-sm);">Critical 7%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TRANSACTION MONITORING ========== -->
+        <div class="page-content page" id="page-transaction">
+            <h2 style="margin-bottom:16px;">💳 Transaction Monitoring</h2>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Recent Transactions</span>
+                    <div><input type="date" class="form-input" style="width:auto;display:inline;" /> <button class="btn btn-outline btn-sm">Filter</button></div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>ID</th><th>Amount</th><th>Method</th><th>Merchant</th><th>Risk</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>#TX-1024</td><td>P 45,000</td><td>Bank Transfer</td><td>ABC Shop</td><td><span class="badge badge-success">Low</span></td><td>Completed</td></tr>
+                            <tr><td>#TX-1023</td><td>P 120,000</td><td>Orange Money</td><td>QuickBet</td><td><span class="badge badge-warning">Medium</span></td><td>Pending</td></tr>
+                            <tr><td>#TX-1022</td><td>P 500,000</td><td>MyZaka</td><td>GreenEnergy</td><td><span class="badge badge-danger">High</span></td><td>Blocked</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== AUDIT LOGS ========== -->
+        <div class="page-content page" id="page-audit">
+            <h2 style="margin-bottom:16px;">📋 Audit Logs</h2>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Immutable Audit Trail</span>
+                    <button class="btn btn-outline btn-sm">📥 Export</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Resource</th><th>IP</th></tr></thead>
+                        <tbody>
+                            <tr><td>2026-07-21 10:23</td><td>admin@braincade</td><td>KYC Review</td><td>Customer #C-119</td><td>192.168.1.1</td></tr>
+                            <tr><td>2026-07-21 09:45</td><td>compliance@braincade</td><td>Case Escalation</td><td>Alert #AML-102</td><td>10.0.0.2</td></tr>
+                            <tr><td>2026-07-21 08:12</td><td>system</td><td>Transaction Blocked</td><td>TX-901</td><td>N/A</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== POLICY MANAGEMENT ========== -->
+        <div class="page-content page" id="page-policy">
+            <h2 style="margin-bottom:16px;">📜 Policy Management</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Active Policies</span></div>
+                    <ul style="list-style:none;padding:0;">
+                        <li style="padding:8px 0;border-bottom:1px solid var(--border);">✔️ AML Policy v2.1 <span class="badge badge-success">Active</span></li>
+                        <li style="padding:8px 0;border-bottom:1px solid var(--border);">✔️ Data Protection v1.3 <span class="badge badge-success">Active</span></li>
+                        <li style="padding:8px 0;border-bottom:1px solid var(--border);">✔️ KYC Procedure v3.0 <span class="badge badge-success">Active</span></li>
+                        <li style="padding:8px 0;">🔄 Privacy Policy v2.0 <span class="badge badge-warning">Draft</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Regulatory Changes</span></div>
+                    <div style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);">
+                        <p><strong>Bank of Botswana</strong> – New NCSS requirements due Aug 2026</p>
+                        <button class="btn btn-outline btn-sm">Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PRIVACY & CONSENT ========== -->
+        <div class="page-content page" id="page-privacy">
+            <h2 style="margin-bottom:16px;">🔐 Privacy &amp; Consent</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Consent Management</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>User</th><th>Consent</th><th>Date</th><th>Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>thabo.m</td><td>Data Processing</td><td>2026-07-01</td><td><span class="badge badge-success">Active</span></td></tr>
+                                <tr><td>kefilwe.n</td><td>Marketing</td><td>2026-06-15</td><td><span class="badge badge-warning">Withdrawn</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Privacy Requests</span></div>
+                    <ul style="list-style:none;padding:0;">
+                        <li style="padding:8px 0;border-bottom:1px solid var(--border);">Data Export – User #123 <span class="badge badge-info">Processing</span></li>
+                        <li style="padding:8px 0;">Data Deletion – User #456 <span class="badge badge-warning">Pending</span></li>
+                    </ul>
+                    <button class="btn btn-brand btn-sm">+ New Request</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== DATA GOVERNANCE ========== -->
+        <div class="page-content page" id="page-data">
+            <h2 style="margin-bottom:16px;">🗃️ Data Governance</h2>
+            <div class="grid-3">
+                <div class="card"><h4>Data Inventory</h4><p style="color:var(--text-muted);">Personal: 1,284 records<br>Financial: 8,452 transactions</p></div>
+                <div class="card"><h4>Retention Policies</h4><p style="color:var(--text-muted);">Customer data: 7 years<br>Transaction logs: 10 years</p></div>
+                <div class="card"><h4>Encryption</h4><p style="color:var(--text-muted);">At-rest: AES-256<br>In-transit: TLS 1.3</p></div>
+            </div>
+        </div>
+
+        <!-- ========== SECURITY CENTER ========== -->
+        <div class="page-content page" id="page-security">
+            <h2 style="margin-bottom:16px;">🔒 Security Center</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Access Controls</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div>RBAC: <span class="badge badge-success">Enabled</span></div>
+                        <div>ABAC: <span class="badge badge-success">Enabled</span></div>
+                        <div>MFA: <span class="badge badge-success">Required</span></div>
+                        <div>Zero Trust: <span class="badge badge-success">Active</span></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Threat Protection</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div>WAF: <span class="badge badge-success">Active</span></div>
+                        <div>DDoS: <span class="badge badge-success">Protected</span></div>
+                        <div>Secrets Management: <span class="badge badge-success">HSM Ready</span></div>
+                        <div>OWASP Top 10: <span class="badge badge-success">Compliant</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== COMPLIANCE REPORTS ========== -->
+        <div class="page-content page" id="page-reports">
+            <h2 style="margin-bottom:16px;">📄 Compliance Reports</h2>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Generated Reports</span>
+                    <button class="btn btn-brand btn-sm">+ Generate</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Name</th><th>Date</th><th>Type</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>AML_Report_Q2_2026</td><td>2026-06-30</td><td>AML</td><td><button class="btn btn-outline btn-sm">📥 Download</button></td></tr>
+                            <tr><td>KYC_Report_July</td><td>2026-07-20</td><td>KYC</td><td><button class="btn btn-outline btn-sm">📥 Download</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== REGULATORY REPORTING ========== -->
+        <div class="page-content page" id="page-regulatory">
+            <h2 style="margin-bottom:16px;">🏛️ Regulatory Reporting</h2>
+            <div class="card">
+                <div class="card-header"><span class="card-title">FIA Reporting (Botswana)</span></div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);"><span>SARs filed</span><span>34 (Q2 2026)</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);"><span>PEP declarations</span><span>12</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:8px 0;"><span>Sanctions checks</span><span>2 matches</span></div>
+                    <button class="btn btn-brand">📤 Submit Report</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SYSTEM HEALTH ========== -->
+        <div class="page-content page" id="page-health">
+            <h2 style="margin-bottom:16px;">❤️ System Health</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">99.97%</div><div class="stat-label">Uptime (last 30d)</div></div>
+                <div class="stat-card"><div class="stat-value">120ms</div><div class="stat-label">Avg Response</div></div>
+                <div class="stat-card"><div class="stat-value">0</div><div class="stat-label">Critical Errors</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card"><h4>🟢 API Gateway</h4><span class="badge badge-success">Healthy</span></div>
+                <div class="card"><h4>🟢 Database</h4><span class="badge badge-success">Healthy</span></div>
+                <div class="card"><h4>🟡 Fraud Engine</h4><span class="badge badge-warning">Degraded</span></div>
+                <div class="card"><h4>🟢 Queue Service</h4><span class="badge badge-success">Healthy</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- NAVIGATION ---
+        function navigate(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                const onclick = link.getAttribute('onclick') || '';
+                if (onclick.includes(`'${page}'`)) link.classList.add('active');
+            });
+            closeSidebar();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        // Close sidebar on outside click (mobile)
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-toggle');
+            if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                closeSidebar();
+            }
+        });
+
+        // --- TAB SWITCHING (for any .tabs groups) ---
+        document.querySelectorAll('.tabs').forEach(group => {
+            group.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tab')) {
+                    this.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    e.target.classList.add('active');
+                }
+            });
+        });
+
+        console.log('✅ AuthePay Compliance Foundation loaded');
+        console.log('📦 Modules: Dashboard, KYC, KYB, AML, Fraud, Risk, Transaction Monitoring, Audit, Policy, Privacy, Data, Security, Reports, Regulatory, Health');
+        console.log('🎨 Design: Premium FinTech | #FF6B00 Brand | Dark Mode');
+    </script>
+</body>
+</html>

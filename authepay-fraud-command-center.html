@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay AI Fraud Command Center</title>
+    <meta name="description" content="AuthePay Fraud Command Center – AI-powered fraud detection, AML/CFT, cybersecurity, and risk intelligence." />
+    <style>
+        /* ============================================================
+           AUTHEPAY AI FRAUD COMMAND CENTER – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           Dark, professional security dashboard
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --shadow-glow: 0 0 40px rgba(255, 107, 0, 0.08);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .topbar-actions .status-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+        .progress-fill.red {
+            background: var(--danger);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── CASE/INCIDENT CARD ── */
+        .incident-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .incident-card:hover {
+            border-color: var(--brand);
+        }
+        .incident-card .left .id {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .incident-card .left .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .incident-card .right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .incident-card .right .risk-badge {
+            font-size: 0.65rem;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .incident-card .right .risk-badge.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        .incident-card .right .risk-badge.high {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .incident-card .right .risk-badge.medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .incident-card .right .risk-badge.low {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+
+        /* ── AI CARD ── */
+        .ai-card {
+            padding: 0.8rem 1rem;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            margin-bottom: 6px;
+            border-left: 3px solid var(--brand);
+            transition: var(--transition);
+        }
+        .ai-card:hover {
+            border-color: var(--brand);
+        }
+        .ai-card .title {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .ai-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .ai-card .confidence {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ── THREAT METER ── */
+        .threat-meter {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .threat-meter .meter {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+        .threat-meter .meter svg {
+            transform: rotate(-90deg);
+        }
+        .threat-meter .meter .bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 10;
+        }
+        .threat-meter .meter .progress {
+            fill: none;
+            stroke: var(--brand);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        .threat-meter .meter .label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+        .threat-meter .details {
+            flex: 1;
+        }
+        .threat-meter .details .value {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+        .threat-meter .details .sub {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .threat-meter {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-5 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .incident-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .incident-card .right {
+                justify-content: center;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── AI BANNER ── */
+        .ai-banner {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-banner .icon {
+            font-size: 1.5rem;
+        }
+        .ai-banner .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-banner .text strong {
+            color: var(--text-primary);
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">🛡️</span>
+                <div>
+                    <span>Fraud Command</span>
+                    <span class="sub">AI Security Center</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Security</div>
+                <a href="#" class="active" data-page="dashboard">📊 SOC Dashboard</a>
+                <a href="#" data-page="fraud">🚨 Fraud Detection</a>
+                <a href="#" data-page="aml">💰 AML/CFT Monitoring</a>
+                <a href="#" data-page="cybersecurity">🛡️ Cybersecurity</a>
+
+                <div class="sidebar-section-label">Identity</div>
+                <a href="#" data-page="identity">👤 Identity Protection</a>
+                <a href="#" data-page="cases">📋 Case Management</a>
+
+                <div class="sidebar-section-label">Intelligence</div>
+                <a href="#" data-page="risk">📊 Risk Intelligence</a>
+                <a href="#" data-page="ai-intelligence">🧠 AI Intelligence</a>
+
+                <div class="sidebar-section-label">Reporting &amp; Compliance</div>
+                <a href="#" data-page="reporting">📈 Reporting</a>
+                <a href="#" data-page="compliance">📋 Compliance</a>
+                <a href="#" data-page="audit">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Live</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · KaTSo AI</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">SOC Dashboard <small>Security Operations Center</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI</span>
+                    <span class="status-badge">🟢 All systems secure</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('incidentModal')">🚨 New Incident</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: SOC DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value red" id="dashIncidents">—</div>
+                        <div class="label">Active Incidents</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value brand" id="dashFraud">—</div>
+                        <div class="label">Fraud Attempts (24h)</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="dashAML">—</div>
+                        <div class="label">AML Alerts</div>
+                        <div class="trend">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="dashBlocked">—</div>
+                        <div class="label">Threats Blocked</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="dashRiskScore">—</div>
+                        <div class="label">Avg Risk Score</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="dashUptime">—</div>
+                        <div class="label">Security Uptime</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Fraud Activity (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: fraud_activity from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">🚨 Recent Incidents</span>
+                            <a href="#" onclick="navigateTo('cases');return false;" style="font-size:0.8rem;color:var(--brand);">View all</a>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-danger">🚨</span> Suspicious transaction</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-warning">⚠️</span> Unusual login pattern</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-info">ℹ️</span> API abuse detected</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span><span class="badge badge-success">✅</span> Incident resolved</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🛡️ Threat Intelligence</span></div>
+                        <div><span style="color:var(--text-muted);">Active Threats</span> <span style="float:right;color:var(--text-primary);" id="threatActive">—</span></div>
+                        <div><span style="color:var(--text-muted);">Blocked</span> <span style="float:right;color:var(--success);" id="threatBlocked">—</span></div>
+                        <div><span style="color:var(--text-muted);">Intelligence Feed</span> <span style="float:right;color:var(--success);" id="threatFeed">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📡 Security Monitoring</span></div>
+                        <div><span style="color:var(--text-muted);">Events (24h)</span> <span style="float:right;color:var(--text-primary);" id="monEvents">—</span></div>
+                        <div><span style="color:var(--text-muted);">Correlated Alerts</span> <span style="float:right;color:var(--text-primary);" id="monAlerts">—</span></div>
+                        <div><span style="color:var(--text-muted);">Status</span> <span style="float:right;color:var(--success);" id="monStatus">✅</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🧠 AI Intelligence</span></div>
+                        <div><span style="color:var(--text-muted);">DeepSeek Engine</span> <span style="float:right;color:var(--success);" id="aiDeepSeek">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Qwen Vision</span> <span style="float:right;color:var(--success);" id="aiQwen">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Predictive Fraud</span> <span style="float:right;color:var(--success);" id="aiPredict">✅</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: FRAUD DETECTION
+            ============================================================ -->
+            <div class="page" id="page-fraud">
+                <div class="section-header">
+                    <h2>🚨 Fraud Detection Engine</h2>
+                    <p>Transaction fraud, account takeover, identity fraud, merchant fraud, payment fraud, QR fraud, wallet fraud, and card fraud.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value red" id="fraudTotal">—</div><div class="label">Total Attempts</div></div>
+                    <div class="stat-card"><div class="value yellow" id="fraudBlocked">—</div><div class="label">Blocked</div></div>
+                    <div class="stat-card"><div class="value green" id="fraudCleared">—</div><div class="label">Cleared</div></div>
+                    <div class="stat-card"><div class="value purple" id="fraudRate">—</div><div class="label">Detection Rate</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Fraud Alerts</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#FRD-001</div><div class="meta">Transaction Fraud · Merchant M-842 · P 12,450</div></div>
+                            <div class="right"><span class="risk-badge critical">Critical</span><button class="btn btn-danger btn-xs">Investigate</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#FRD-002</div><div class="meta">Account Takeover · User #1234 · Unusual login</div></div>
+                            <div class="right"><span class="risk-badge high">High</span><button class="btn btn-warning btn-xs">Review</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#FRD-003</div><div class="meta">Identity Fraud · New account · Suspicious documents</div></div>
+                            <div class="right"><span class="risk-badge medium">Medium</span><button class="btn btn-outline btn-xs">Review</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#FRD-004</div><div class="meta">QR Fraud · QR code manipulation detected</div></div>
+                            <div class="right"><span class="risk-badge low">Low</span><button class="btn btn-outline btn-xs">Review</button></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: fraud_alerts from Supabase -->
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Fraud by Type</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Transaction Fraud</span><span>34%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Account Takeover</span><span>22%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Identity Fraud</span><span>18%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Merchant Fraud</span><span>12%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Payment Fraud</span><span>14%</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Detection Engine</span></div>
+                        <div><span style="color:var(--text-muted);">Rule Engine</span> <span style="float:right;color:var(--success);">Active</span></div>
+                        <div><span style="color:var(--text-muted);">AI Detection</span> <span style="float:right;color:var(--success);">Active</span></div>
+                        <div><span style="color:var(--text-muted);">Device Fingerprinting</span> <span style="float:right;color:var(--success);">Active</span></div>
+                        <div><span style="color:var(--text-muted);">Behaviour Analytics</span> <span style="float:right;color:var(--success);">Active</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">⚙️ Fraud Rules</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Velocity Check</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Amount Threshold</span><span class="badge badge-success">Active</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Geolocation Check</span><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('⚙️ Fraud rules updated','success')">Edit Rules</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AML/CFT MONITORING
+            ============================================================ -->
+            <div class="page" id="page-aml">
+                <div class="section-header">
+                    <h2>💰 AML/CFT Monitoring</h2>
+                    <p>Transaction monitoring, risk scoring, customer risk profiles, suspicious activity monitoring, case management, regulatory reporting, and investigation dashboard.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value yellow" id="amlAlerts">—</div><div class="label">Alerts (24h)</div></div>
+                    <div class="stat-card"><div class="value blue" id="amlCases">—</div><div class="label">Open Cases</div></div>
+                    <div class="stat-card"><div class="value green" id="amlResolved">—</div><div class="label">Resolved</div></div>
+                    <div class="stat-card"><div class="value purple" id="amlRisk">—</div><div class="label">Avg Risk Score</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Suspicious Activity</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#AML-001</div><div class="meta">Large deposit · P 450,000 · Customer #1234</div></div>
+                            <div class="right"><span class="risk-badge critical">Critical</span><button class="btn btn-danger btn-xs">Investigate</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#AML-002</div><div class="meta">Unusual pattern · Merchant M-842 · 12 tx in 5 min</div></div>
+                            <div class="right"><span class="risk-badge high">High</span><button class="btn btn-warning btn-xs">Review</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#AML-003</div><div class="meta">Sanctions match · Customer #5678</div></div>
+                            <div class="right"><span class="risk-badge critical">Critical</span><button class="btn btn-danger btn-xs">Investigate</button></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: aml_alerts from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Risk Profiles</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Low Risk</span><span>78%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Medium Risk</span><span>15%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>High Risk</span><span>7%</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Regulatory Reporting</span></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 AML report generated','success')">📊 AML Report</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 FIA report generated','success')">📊 FIA Report</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 SAR report generated','success')">📊 SAR Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CYBERSECURITY
+            ============================================================ -->
+            <div class="page" id="page-cybersecurity">
+                <div class="section-header">
+                    <h2>🛡️ Cybersecurity</h2>
+                    <p>Intrusion detection, threat detection, malware monitoring, API security, network monitoring, vulnerability monitoring, and security health.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="cyberHealth">—</div><div class="label">Security Health</div></div>
+                    <div class="stat-card"><div class="value blue" id="cyberIntrusions">—</div><div class="label">Intrusions</div></div>
+                    <div class="stat-card"><div class="value purple" id="cyberVulns">—</div><div class="label">Vulnerabilities</div></div>
+                    <div class="stat-card"><div class="value green" id="cyberAPISec">—</div><div class="label">API Security</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Security Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="incident-card">
+                            <div class="left"><div class="id">🛡️ Intrusion Detection</div><div class="meta">0 intrusions detected · Status: Clear</div></div>
+                            <div class="right"><span class="badge badge-success">Protected</span></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">🔍 Threat Detection</div><div class="meta">12 threats analyzed · 0 active</div></div>
+                            <div class="right"><span class="badge badge-success">Clear</span></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">🦠 Malware Monitoring</div><div class="meta">0 malware detected · All systems clean</div></div>
+                            <div class="right"><span class="badge badge-success">Clean</span></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">🔌 API Security</div><div class="meta">12.4K requests · 0 threats</div></div>
+                            <div class="right"><span class="badge badge-success">Secure</span></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">📡 Network Monitoring</div><div class="meta">99.98% uptime · 0 anomalies</div></div>
+                            <div class="right"><span class="badge badge-success">Healthy</span></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">🔐 Vulnerability Monitoring</div><div class="meta">0 critical vulnerabilities</div></div>
+                            <div class="right"><span class="badge badge-success">Secure</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: cybersecurity_status from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Security Health</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">Overall</span><br><span class="badge badge-success">98%</span></div>
+                        <div><span style="color:var(--text-muted);">Network</span><br><span class="badge badge-success">99.98%</span></div>
+                        <div><span style="color:var(--text-muted);">API</span><br><span class="badge badge-success">99.7%</span></div>
+                        <div><span style="color:var(--text-muted);">Systems</span><br><span class="badge badge-success">100%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: IDENTITY PROTECTION
+            ============================================================ -->
+            <div class="page" id="page-identity">
+                <div class="section-header">
+                    <h2>👤 Identity Protection</h2>
+                    <p>Device intelligence, behaviour analytics, geolocation analysis, login monitoring, MFA monitoring, session protection, and identity alerts.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="idDevices">—</div><div class="label">Devices Monitored</div></div>
+                    <div class="stat-card"><div class="value green" id="idSessions">—</div><div class="label">Active Sessions</div></div>
+                    <div class="stat-card"><div class="value yellow" id="idAlerts">—</div><div class="label">Identity Alerts</div></div>
+                    <div class="stat-card"><div class="value purple" id="idMFA">—</div><div class="label">MFA Rate</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Identity Alerts</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="incident-card">
+                            <div class="left"><div class="id">👤 Unusual login</div><div class="meta">User #1234 · Lagos, NG · New device</div></div>
+                            <div class="right"><span class="risk-badge high">High</span><button class="btn btn-warning btn-xs">Review</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">🔐 MFA failure</div><div class="meta">User #5678 · 3 failed attempts</div></div>
+                            <div class="right"><span class="risk-badge medium">Medium</span><button class="btn btn-outline btn-xs">Review</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">📍 Impossible travel</div><div class="meta">User #9012 · Gaborone to London in 2h</div></div>
+                            <div class="right"><span class="risk-badge critical">Critical</span><button class="btn btn-danger btn-xs">Investigate</button></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: identity_alerts from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Device Intelligence</span></div>
+                        <div><span style="color:var(--text-muted);">Trusted Devices</span> <span style="float:right;">1,247</span></div>
+                        <div><span style="color:var(--text-muted);">Untrusted</span> <span style="float:right;">12</span></div>
+                        <div><span style="color:var(--text-muted);">New Devices (24h)</span> <span style="float:right;">34</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Behaviour Analytics</span></div>
+                        <div><span style="color:var(--text-muted);">Normal</span> <span style="float:right;">98%</span></div>
+                        <div><span style="color:var(--text-muted);">Anomalous</span> <span style="float:right;">2%</span></div>
+                        <div><span style="color:var(--text-muted);">Sessions Protected</span> <span style="float:right;">100%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CASE MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-cases">
+                <div class="section-header">
+                    <h2>📋 Case Management</h2>
+                    <p>Investigation queue, evidence management, escalation workflow, analyst workspace, resolution tracking, audit trail, and case reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value red" id="caseOpen">—</div><div class="label">Open Cases</div></div>
+                    <div class="stat-card"><div class="value yellow" id="caseEscalated">—</div><div class="label">Escalated</div></div>
+                    <div class="stat-card"><div class="value green" id="caseResolved">—</div><div class="label">Resolved</div></div>
+                    <div class="stat-card"><div class="value blue" id="caseTotal">—</div><div class="label">Total Cases</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Investigation Queue</span>
+                        <button class="btn btn-brand btn-sm" onclick="openModal('incidentModal')">+ New Case</button>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#C-001 · Fraud</div><div class="meta">John D. · Suspicious transaction · 2h ago</div></div>
+                            <div class="right"><span class="risk-badge critical">Critical</span><button class="btn btn-danger btn-xs">Investigate</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#C-002 · AML</div><div class="meta">ABC Corp · Sanctions match · 4h ago</div></div>
+                            <div class="right"><span class="risk-badge high">High</span><button class="btn btn-warning btn-xs">Review</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#C-003 · Identity</div><div class="meta">Sarah M. · Account takeover · 1d ago</div></div>
+                            <div class="right"><span class="risk-badge medium">Medium</span><button class="btn btn-outline btn-xs">Review</button></div>
+                        </div>
+                        <div class="incident-card">
+                            <div class="left"><div class="id">#C-004 · Cybersecurity</div><div class="meta">API abuse detected · 2d ago</div></div>
+                            <div class="right"><span class="risk-badge low">Low</span><button class="btn btn-outline btn-xs">Review</button></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: cases from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Case Analytics</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">Avg Resolution</span><br><strong>4.2 hours</strong></div>
+                        <div><span style="color:var(--text-muted);">Escalation Rate</span><br><strong>12%</strong></div>
+                        <div><span style="color:var(--text-muted);">Backlog</span><br><strong>3</strong></div>
+                        <div><span style="color:var(--text-muted);">SLA Compliance</span><br><span class="badge badge-success">98%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: RISK INTELLIGENCE
+            ============================================================ -->
+            <div class="page" id="page-risk">
+                <div class="section-header">
+                    <h2>📊 Risk Intelligence</h2>
+                    <p>Customer risk score, merchant risk score, device risk, network risk, country risk, transaction risk, and enterprise risk.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value brand" id="riskCustomer">—</div><div class="label">Customer Risk</div></div>
+                    <div class="stat-card"><div class="value yellow" id="riskMerchant">—</div><div class="label">Merchant Risk</div></div>
+                    <div class="stat-card"><div class="value blue" id="riskDevice">—</div><div class="label">Device Risk</div></div>
+                    <div class="stat-card"><div class="value purple" id="riskEnterprise">—</div><div class="label">Enterprise Risk</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Risk Breakdown</span></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Customer Risk</span><span>12/100</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:12%;"></div></div></div></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Merchant Risk</span><span>18/100</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:18%;"></div></div></div></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Device Risk</span><span>8/100</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:8%;"></div></div></div></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Transaction Risk</span><span>15/100</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:15%;"></div></div></div></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Enterprise Risk</span><span>14/100</span><div style="flex:1;margin-left:12px;"><div class="progress-bar"><div class="progress-fill green" style="width:14%;"></div></div></div></div>
+                    </div>
+                    <!-- CONNECTION POINT: risk_scores from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 High Risk Entities</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Customers</span><span>12</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Merchants</span><span>3</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Devices</span><span>5</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Country Risk</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>🇧🇼 Botswana</span><span class="badge badge-success">Low</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>🇿🇦 South Africa</span><span class="badge badge-warning">Medium</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>🇳🇬 Nigeria</span><span class="badge badge-warning">Medium</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI INTELLIGENCE
+            ============================================================ -->
+            <div class="page" id="page-ai-intelligence">
+                <div class="section-header">
+                    <h2>🧠 AI Intelligence</h2>
+                    <p>KaTSo AI Router, DeepSeek Risk Engine, Qwen Vision Verification, Kimi Automation, Predictive Fraud, Threat Prediction, and Continuous Learning.</p>
+                </div>
+
+                <div class="ai-banner" style="margin-bottom:1.5rem;">
+                    <span class="icon">🧠</span>
+                    <div class="text">
+                        <strong>KaTSo AI Intelligence</strong> – Real-time fraud detection, risk scoring, and predictive analytics powered by KaTSo AI OS.
+                        <span style="display:block;font-size:0.75rem;color:var(--text-muted);">DeepSeek · Qwen Vision · Kimi Automation · Continuous Learning</span>
+                    </div>
+                    <button class="btn btn-accent btn-sm" onclick="showToast('🧠 AI insights loaded','success')">📊 Load Insights</button>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value purple" id="aiRouter2">—</div><div class="label">AI Router</div></div>
+                    <div class="stat-card"><div class="value green" id="aiDeepSeek2">—</div><div class="label">DeepSeek Engine</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiQwen2">—</div><div class="label">Qwen Vision</div></div>
+                    <div class="stat-card"><div class="value yellow" id="aiPredict2">—</div><div class="label">Predictive Fraud</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AI Insights</span></div>
+                        <div class="ai-card">
+                            <div class="title">🛡️ Fraud Risk: 12/100 (Low)</div>
+                            <div class="desc">No suspicious patterns detected in recent transactions.</div>
+                            <div class="confidence">Confidence: 94% · DeepSeek</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--warning);">
+                            <div class="title">⚠️ 2 high-risk transactions flagged</div>
+                            <div class="desc">Merchant M-842 and Customer #1234 require review.</div>
+                            <div class="confidence">Confidence: 88% · Qwen Vision</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--success);">
+                            <div class="title">✅ 12 threats automatically blocked</div>
+                            <div class="desc">Automated response executed by Kimi Automation.</div>
+                            <div class="confidence">Confidence: 96% · Kimi Agent</div>
+                        </div>
+                        <div class="ai-card" style="border-left-color:var(--accent);">
+                            <div class="title">📈 Threat prediction: 0 active threats</div>
+                            <div class="desc">Predictive analysis shows no imminent threats.</div>
+                            <div class="confidence">Confidence: 91% · Continuous Learning</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AI Model Performance</span></div>
+                        <div><span style="color:var(--text-muted);">DeepSeek Accuracy</span> <span style="float:right;">98.7%</span><div class="progress-bar"><div class="progress-fill brand" style="width:98.7%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Qwen Vision Accuracy</span> <span style="float:right;">96.2%</span><div class="progress-bar"><div class="progress-fill purple" style="width:96.2%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Kimi Automation</span> <span style="float:right;">99.1%</span><div class="progress-bar"><div class="progress-fill blue" style="width:99.1%;"></div></div></div>
+                        <div><span style="color:var(--text-muted);">Predictive Fraud</span> <span style="float:right;">94.5%</span><div class="progress-bar"><div class="progress-fill green" style="width:94.5%;"></div></div></div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 AI performance report generated','success')">📊 Generate Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: REPORTING
+            ============================================================ -->
+            <div class="page" id="page-reporting">
+                <div class="section-header">
+                    <h2>📈 Reporting</h2>
+                    <p>Executive reports, fraud reports, AML reports, compliance reports, security reports, incident reports, and risk reports.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Executive Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">High-level security overview for leadership.</p>
+                        <button class="btn btn-brand btn-sm" onclick="generateReport('executive')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Fraud Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Detailed fraud detection and analysis.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('fraud')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AML Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">AML/CFT monitoring and suspicious activity.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('aml')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Compliance Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Regulatory compliance and audit status.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('compliance')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Security Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Cybersecurity posture and threat intelligence.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('security')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Incident Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Incident management and resolution summary.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('incident')">📄 Generate</button>
+                    </div>
+                </div>
+
+                <div id="reportOutput" style="display:none;" class="card">
+                    <div class="card-header"><span class="card-title">📄 Report Generated</span><button class="btn btn-outline btn-sm" onclick="downloadReport()">⬇ Download</button></div>
+                    <div id="reportContent" style="background:var(--bg-input);padding:1.5rem;border-radius:var(--radius);font-family:monospace;font-size:0.8rem;color:var(--text-secondary);white-space:pre-wrap;max-height:300px;overflow-y:auto;"></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-compliance">
+                <div class="section-header">
+                    <h2>📋 Compliance</h2>
+                    <p>AML/CFT, PCI DSS, Data Protection, Audit Logs, Evidence Retention, Regulatory Reporting, and Governance.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="compPCIDSS">✅</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value green" id="compAML">✅</div><div class="label">AML/CFT</div></div>
+                    <div class="stat-card"><div class="value green" id="compData">✅</div><div class="label">Data Protection</div></div>
+                    <div class="stat-card"><div class="value green" id="compGov">✅</div><div class="label">Governance</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Regulatory Alignment</span></div>
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Bank of Botswana</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>FIA AML/CFT</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>PCI DSS</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Botswana DPA</span><span class="badge badge-success">✅</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>ISO 27001</span><span class="badge badge-success">✅</span></div>
+                    </div>
+                    <!-- CONNECTION POINT: compliance_framework from KaTSo System Core -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Evidence Retention</span></div>
+                        <div><span style="color:var(--text-muted);">Retention Period</span> <span style="float:right;">7 years</span></div>
+                        <div><span style="color:var(--text-muted);">Evidence Stored</span> <span style="float:right;">1.2K items</span></div>
+                        <div><span style="color:var(--text-muted);">Compliance Rate</span> <span style="float:right;color:var(--success);">100%</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Regulatory Reports</span></div>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Regulatory report generated','success')">📊 FIA Report</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Audit report generated','success')">📊 Audit</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📊 Governance report generated','success')">📊 Governance</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all security, fraud, and compliance events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('fraud')">Fraud</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('security')">Security</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('compliance')">Compliance</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>system</td><td>Fraud Alert</td>
+                                    <td><span class="badge badge-danger">Fraud</span></td>
+                                    <td>#FRD-001 flagged</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>system</td><td>Security Check</td>
+                                    <td><span class="badge badge-info">Security</span></td>
+                                    <td>SSL certificate validated</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>analyst@authecorp</td><td>Case Escalated</td>
+                                    <td><span class="badge badge-warning">Fraud</span></td>
+                                    <td>#C-001 escalated</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>system</td><td>Compliance Check</td>
+                                    <td><span class="badge badge-success">Compliance</span></td>
+                                    <td>PCI DSS audit passed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Incident Modal -->
+    <div class="modal-overlay" id="incidentModal">
+        <div class="modal">
+            <div class="modal-header"><h2>🚨 New Incident</h2><button class="modal-close" onclick="closeModal('incidentModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Type</label><select class="form-select"><option>Fraud</option><option>AML</option><option>Cybersecurity</option><option>Identity</option></select></div>
+                <div class="form-group"><label class="form-label">Priority</label><select class="form-select"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+                <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" rows="3" placeholder="Incident description..."></textarea></div>
+                <div class="form-group"><label class="form-label">Entity</label><input type="text" class="form-input" placeholder="Customer ID, Merchant ID, or System" /></div>
+                <div class="form-group"><label class="form-label">Evidence</label><input type="file" class="form-input" style="padding:6px;" /></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('incidentModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('incidentModal');showToast('🚨 Incident created!','success')">Create Incident</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay AI Fraud Command Center
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY AI FRAUD COMMAND CENTER – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'SOC Dashboard',
+                fraud: 'Fraud Detection Engine',
+                aml: 'AML/CFT Monitoring',
+                cybersecurity: 'Cybersecurity',
+                identity: 'Identity Protection',
+                cases: 'Case Management',
+                risk: 'Risk Intelligence',
+                'ai-intelligence': 'AI Intelligence',
+                reporting: 'Reporting',
+                compliance: 'Compliance',
+                audit: 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Fraud Command Center';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── REPORTS ──
+        function generateReport(type) {
+            const output = document.getElementById('reportOutput');
+            const content = document.getElementById('reportContent');
+            if (!output || !content) return;
+
+            let report = `=== AUTHEPAY FRAUD COMMAND CENTER ===\n`;
+            report += `Report: ${type.toUpperCase()}\n`;
+            report += `Generated: ${new Date().toLocaleString()}\n`;
+            report += `==================================\n\n`;
+
+            if (type === 'executive') {
+                report += `EXECUTIVE SECURITY SUMMARY\n`;
+                report += `───────────────────────────\n`;
+                report += `Overall Security Posture: ✅ Strong\n`;
+                report += `Active Incidents: 0\n`;
+                report += `Fraud Attempts (24h): 0\n`;
+                report += `Threats Blocked: 0\n`;
+                report += `Risk Score: 12/100 (Low)\n`;
+                report += `Compliance Status: ✅ All clear\n`;
+            } else if (type === 'fraud') {
+                report += `FRAUD DETECTION REPORT\n`;
+                report += `──────────────────────\n`;
+                report += `Total Fraud Attempts: 0\n`;
+                report += `Blocked: 0\n`;
+                report += `Detection Rate: 99.7%\n`;
+                report += `By Type:\n`;
+                report += `  Transaction: 0\n`;
+                report += `  Account Takeover: 0\n`;
+                report += `  Identity: 0\n`;
+                report += `  Merchant: 0\n`;
+            } else if (type === 'aml') {
+                report += `AML/CFT MONITORING REPORT\n`;
+                report += `─────────────────────────\n`;
+                report += `Alerts Generated: 0\n`;
+                report += `Open Cases: 0\n`;
+                report += `Resolved: 0\n`;
+                report += `Risk Profiles:\n`;
+                report += `  Low Risk: 78%\n`;
+                report += `  Medium Risk: 15%\n`;
+                report += `  High Risk: 7%\n`;
+                report += `SARs Filed: 34\n`;
+            } else if (type === 'compliance') {
+                report += `COMPLIANCE REPORT\n`;
+                report += `─────────────────\n`;
+                report += `PCI DSS: ✅ Compliant\n`;
+                report += `AML/CFT: ✅ Compliant\n`;
+                report += `Data Protection: ✅ Compliant\n`;
+                report += `Governance: ✅ Active\n`;
+                report += `Evidence Retention: 7 years\n`;
+                report += `Audit Logs: 1.2K events\n`;
+            } else if (type === 'security') {
+                report += `SECURITY REPORT\n`;
+                report += `───────────────\n`;
+                report += `Security Health: 98%\n`;
+                report += `Intrusions: 0\n`;
+                report += `Vulnerabilities: 0\n`;
+                report += `API Security: ✅ Protected\n`;
+                report += `Network Uptime: 99.98%\n`;
+                report += `Threats Blocked: 0\n`;
+            } else if (type === 'incident') {
+                report += `INCIDENT REPORT\n`;
+                report += `───────────────\n`;
+                report += `Open Cases: 0\n`;
+                report += `Escalated: 0\n`;
+                report += `Resolved: 0\n`;
+                report += `Avg Resolution Time: 4.2 hours\n`;
+                report += `SLA Compliance: 98%\n`;
+            }
+
+            content.textContent = report;
+            output.style.display = 'block';
+            output.scrollIntoView({ behavior: 'smooth' });
+            showToast(`✅ ${type} report generated`, 'success');
+        }
+
+        function downloadReport() {
+            const content = document.getElementById('reportContent');
+            if (!content || !content.textContent) {
+                showToast('No report to download', 'warning');
+                return;
+            }
+            const blob = new Blob([content.textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fraud-report-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📥 Report downloaded', 'success');
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing security data...', 'info');
+            // CONNECTION POINT: API call to fetch security metrics
+            setTimeout(() => {
+                const statIds = [
+                    'dashIncidents', 'dashFraud', 'dashAML', 'dashBlocked', 'dashRiskScore', 'dashUptime',
+                    'threatActive', 'threatBlocked', 'threatFeed',
+                    'monEvents', 'monAlerts', 'monStatus',
+                    'aiDeepSeek', 'aiQwen', 'aiPredict',
+                    'fraudTotal', 'fraudBlocked', 'fraudCleared', 'fraudRate',
+                    'amlAlerts', 'amlCases', 'amlResolved', 'amlRisk',
+                    'cyberHealth', 'cyberIntrusions', 'cyberVulns', 'cyberAPISec',
+                    'idDevices', 'idSessions', 'idAlerts', 'idMFA',
+                    'caseOpen', 'caseEscalated', 'caseResolved', 'caseTotal',
+                    'riskCustomer', 'riskMerchant', 'riskDevice', 'riskEnterprise',
+                    'aiRouter2', 'aiDeepSeek2', 'aiQwen2', 'aiPredict2'
+                ];
+                statIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update progress bars to 0%
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+
+                showToast('✅ Security data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+
+            // Animate threat meter
+            const meter = document.querySelector('.threat-meter .meter .progress');
+            if (meter) {
+                const circ = 2 * Math.PI * 52;
+                meter.style.strokeDasharray = circ;
+                meter.style.strokeDashoffset = circ;
+                setTimeout(() => {
+                    meter.style.transition = 'stroke-dashoffset 1.5s ease';
+                    meter.style.strokeDashoffset = circ * 0.12; // 88% score (low risk)
+                }, 300);
+            }
+
+            console.log('🛡️ AuthePay AI Fraud Command Center loaded');
+            console.log('📦 Modules: SOC, Fraud Detection, AML/CFT, Cybersecurity, Identity, Cases, Risk, AI Intelligence, Reporting, Compliance, Audit');
+            console.log('🧠 AI: DeepSeek, Qwen Vision, Kimi Automation, Predictive Fraud');
+            console.log('🔗 Integrations: KaTSo AI OS, AuthePay Gateway, Supabase ready');
+            console.log('📋 Compliance: AML/CFT, PCI DSS, Botswana DPA, ISO 27001');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.filterAudit = filterAudit;
+        window.refreshData = refreshData;
+        window.generateReport = generateReport;
+        window.downloadReport = downloadReport;
+    </script>
+
+</body>
+</html>

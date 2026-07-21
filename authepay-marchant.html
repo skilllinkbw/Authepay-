@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuthePay Core | Phase 3 – Merchant Portal & Payment Gateway</title>
+    <meta name="description" content="AuthePay Core - Merchant Portal, Payment Gateway, Wallet, API Marketplace, Developer Portal. By Braincade Holdings.">
+    <style>
+        :root {
+            --brand: #FF6B00;
+            --brand-hover: #E55D00;
+            --brand-light: #FFF0E5;
+            --brand-glow: rgba(255,107,0,0.25);
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1A1A1A;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+        body{
+            font-family:var(--font);
+            background:var(--bg-primary);
+            color:var(--text-primary);
+            line-height:1.5;
+            overflow-x:hidden;
+            -webkit-font-smoothing:antialiased;
+            display:flex;
+            min-height:100vh;
+        }
+
+        ::-webkit-scrollbar{width:5px}
+        ::-webkit-scrollbar-track{background:var(--bg-primary)}
+        ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+        /* SIDEBAR */
+        .sidebar{
+            width:260px;
+            min-height:100vh;
+            background:var(--bg-secondary);
+            border-right:1px solid var(--border);
+            position:fixed;
+            top:0;left:0;bottom:0;
+            z-index:100;
+            display:flex;
+            flex-direction:column;
+            transition:transform var(--transition);
+            overflow-y:auto;
+        }
+        .sidebar-logo{
+            padding:20px;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            border-bottom:1px solid var(--border);
+        }
+        .sidebar-logo-icon{
+            width:38px;height:38px;
+            background:var(--brand);
+            border-radius:var(--radius-sm);
+            display:flex;align-items:center;justify-content:center;
+            font-weight:900;font-size:1.1rem;color:#fff;
+        }
+        .sidebar-logo-text{font-size:1.2rem;font-weight:800;letter-spacing:-0.5px}
+        .sidebar-nav{flex:1;padding:12px}
+        .sidebar-section{margin-bottom:20px}
+        .sidebar-section-title{
+            font-size:0.7rem;text-transform:uppercase;letter-spacing:1.5px;
+            color:var(--text-muted);padding:8px 12px;font-weight:700;
+        }
+        .sidebar-link{
+            display:flex;align-items:center;gap:10px;
+            padding:10px 12px;border-radius:var(--radius-sm);
+            color:var(--text-secondary);text-decoration:none;
+            font-size:0.9rem;font-weight:500;transition:var(--transition);
+            cursor:pointer;
+        }
+        .sidebar-link:hover{background:var(--bg-card);color:var(--text-primary)}
+        .sidebar-link.active{background:var(--brand);color:#fff;font-weight:600}
+        .sidebar-link .icon{font-size:1.1rem;width:22px;text-align:center}
+        .sidebar-link .badge{
+            margin-left:auto;background:var(--danger);color:#fff;
+            font-size:0.65rem;padding:2px 8px;border-radius:50px;font-weight:700;
+        }
+        .sidebar-user{
+            padding:16px;border-top:1px solid var(--border);
+            display:flex;align-items:center;gap:10px;
+        }
+        .sidebar-user-avatar{
+            width:36px;height:36px;background:var(--brand);
+            border-radius:50%;display:flex;align-items:center;justify-content:center;
+            font-weight:700;font-size:0.85rem;
+        }
+        .sidebar-user-info{flex:1}
+        .sidebar-user-name{font-size:0.85rem;font-weight:600}
+        .sidebar-user-role{font-size:0.7rem;color:var(--text-muted)}
+
+        /* MAIN */
+        .main{
+            flex:1;margin-left:260px;
+            min-height:100vh;
+            transition:margin var(--transition);
+        }
+
+        /* TOPBAR */
+        .topbar{
+            background:var(--bg-secondary);
+            border-bottom:1px solid var(--border);
+            padding:14px 24px;
+            display:flex;align-items:center;justify-content:space-between;
+            position:sticky;top:0;z-index:50;gap:16px;
+        }
+        .topbar-search{
+            background:var(--bg-input);border:1px solid var(--border);
+            border-radius:50px;padding:9px 18px;
+            color:var(--text-primary);font-size:0.85rem;
+            width:300px;font-family:var(--font);
+            transition:var(--transition);
+        }
+        .topbar-search:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-glow)}
+        .topbar-actions{display:flex;align-items:center;gap:12px}
+        .topbar-icon-btn{
+            width:38px;height:38px;border-radius:50%;
+            background:var(--bg-card);border:1px solid var(--border);
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;transition:var(--transition);color:var(--text-secondary);
+            position:relative;font-size:1.1rem;
+        }
+        .topbar-icon-btn:hover{background:var(--bg-card-hover);color:var(--text-primary)}
+        .topbar-icon-btn .dot{
+            position:absolute;top:6px;right:6px;
+            width:8px;height:8px;background:var(--danger);
+            border-radius:50%;border:2px solid var(--bg-secondary);
+        }
+
+        /* PAGE CONTENT */
+        .page-content{padding:24px;max-width:1400px}
+        .page{display:none}
+        .page.active{display:block;animation:fadeIn 0.3s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+        /* CARDS */
+        .card{
+            background:var(--bg-card);border:1px solid var(--border);
+            border-radius:var(--radius);padding:20px;margin-bottom:16px;
+            transition:var(--transition);
+        }
+        .card:hover{border-color:var(--border-light)}
+        .card-header{
+            display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:16px;flex-wrap:wrap;gap:8px;
+        }
+        .card-title{font-size:1.05rem;font-weight:700}
+
+        /* STATS */
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+        .stat-card{
+            background:var(--bg-card);border:1px solid var(--border);
+            border-radius:var(--radius);padding:16px;transition:var(--transition);cursor:pointer;
+        }
+        .stat-card:hover{border-color:var(--brand);box-shadow:0 0 20px var(--brand-glow)}
+        .stat-card.brand{border-left:3px solid var(--brand)}
+        .stat-value{font-size:1.6rem;font-weight:800;letter-spacing:-0.5px}
+        .stat-value.brand{color:var(--brand)}
+        .stat-label{font-size:0.8rem;color:var(--text-muted);margin-top:4px}
+        .stat-change{font-size:0.75rem;margin-top:4px}
+        .stat-change.up{color:var(--success)}
+        .stat-change.down{color:var(--danger)}
+
+        /* GRIDS */
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+        .grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+
+        /* BUTTONS */
+        .btn{
+            display:inline-flex;align-items:center;gap:6px;
+            padding:9px 18px;border-radius:var(--radius-sm);
+            font-weight:600;font-size:0.85rem;cursor:pointer;
+            border:none;transition:var(--transition);font-family:var(--font);
+            text-decoration:none;white-space:nowrap;
+        }
+        .btn-brand{background:var(--brand);color:#fff}
+        .btn-brand:hover{background:var(--brand-hover);box-shadow:0 4px 16px var(--brand-glow);transform:translateY(-1px)}
+        .btn-outline{background:transparent;border:1px solid var(--border-light);color:var(--text-primary)}
+        .btn-outline:hover{border-color:var(--brand);color:var(--brand)}
+        .btn-sm{padding:6px 12px;font-size:0.8rem}
+        .btn-lg{padding:12px 24px;font-size:0.95rem;border-radius:var(--radius)}
+
+        /* TABLES */
+        .table-wrap{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;font-size:0.85rem}
+        th{
+            text-align:left;padding:10px 12px;border-bottom:2px solid var(--border);
+            color:var(--text-muted);font-weight:600;font-size:0.7rem;
+            text-transform:uppercase;letter-spacing:1px;white-space:nowrap;
+        }
+        td{padding:10px 12px;border-bottom:1px solid var(--border)}
+        tr:hover td{background:var(--bg-card-hover)}
+
+        /* BADGES */
+        .badge{
+            display:inline-block;padding:3px 10px;border-radius:50px;
+            font-size:0.7rem;font-weight:700;
+        }
+        .badge-success{background:rgba(34,197,94,0.15);color:var(--success)}
+        .badge-warning{background:rgba(245,158,11,0.15);color:var(--warning)}
+        .badge-danger{background:rgba(239,68,68,0.15);color:var(--danger)}
+        .badge-info{background:rgba(59,130,246,0.15);color:var(--info)}
+        .badge-brand{background:rgba(255,107,0,0.15);color:var(--brand)}
+
+        /* FORMS */
+        .form-group{margin-bottom:14px}
+        .form-label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:5px;color:var(--text-secondary)}
+        .form-input,.form-select{
+            width:100%;padding:10px 14px;background:var(--bg-input);
+            border:1px solid var(--border);border-radius:var(--radius-sm);
+            color:var(--text-primary);font-size:0.9rem;font-family:var(--font);
+            transition:var(--transition);
+        }
+        .form-input:focus,.form-select:focus{
+            outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-glow);
+        }
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+        /* TABS */
+        .tabs{display:flex;gap:4px;background:var(--bg-input);border-radius:var(--radius);padding:4px;margin-bottom:16px;overflow-x:auto}
+        .tab{
+            padding:8px 16px;border:none;background:transparent;
+            color:var(--text-muted);border-radius:var(--radius-sm);
+            cursor:pointer;font-weight:600;font-size:0.85rem;
+            transition:var(--transition);white-space:nowrap;font-family:var(--font);
+        }
+        .tab.active{background:var(--brand);color:#fff}
+        .tab:hover:not(.active){color:var(--text-primary)}
+
+        /* MODAL */
+        .modal-overlay{
+            display:none;position:fixed;inset:0;
+            background:rgba(0,0,0,0.75);z-index:200;
+            align-items:center;justify-content:center;padding:20px;
+        }
+        .modal-overlay.active{display:flex}
+        .modal{
+            background:var(--bg-secondary);border:1px solid var(--border);
+            border-radius:var(--radius-lg);padding:24px;width:100%;
+            max-width:560px;max-height:85vh;overflow-y:auto;
+            animation:modalIn 0.3s ease;
+        }
+        @keyframes modalIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .modal-close{background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer}
+
+        /* FEE ENGINE SLIDERS */
+        .fee-slider-group{margin-bottom:16px}
+        .fee-slider-label{display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px}
+        .fee-slider{width:100%;accent-color:var(--brand)}
+        .fee-preview{background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);text-align:center;font-size:0.9rem}
+        .fee-preview span{color:var(--brand);font-weight:700}
+
+        /* MOBILE */
+        .mobile-toggle{display:none;background:none;border:none;color:var(--text-primary);font-size:1.5rem;cursor:pointer;padding:8px}
+        @media(max-width:1024px){
+            .sidebar{transform:translateX(-100%)}
+            .sidebar.open{transform:translateX(0)}
+            .main{margin-left:0}
+            .mobile-toggle{display:block}
+            .topbar-search{width:160px}
+        }
+        @media(max-width:640px){
+            .grid-2{grid-template-columns:1fr}
+            .form-row{grid-template-columns:1fr}
+            .stats-grid{grid-template-columns:1fr 1fr}
+            .page-content{padding:16px}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">AP</div>
+            <span class="sidebar-logo-text">AuthePay</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Main</div>
+                <a class="sidebar-link active" onclick="navigate('dashboard')"><span class="icon">📊</span>Dashboard</a>
+                <a class="sidebar-link" onclick="navigate('transactions')"><span class="icon">💳</span>Transactions<span class="badge">3</span></a>
+                <a class="sidebar-link" onclick="navigate('wallet')"><span class="icon">👛</span>Wallet</a>
+                <a class="sidebar-link" onclick="navigate('settlements')"><span class="icon">🏦</span>Settlements</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Payments</div>
+                <a class="sidebar-link" onclick="navigate('payment-links')"><span class="icon">🔗</span>Payment Links</a>
+                <a class="sidebar-link" onclick="navigate('checkout')"><span class="icon">🛒</span>Checkout</a>
+                <a class="sidebar-link" onclick="navigate('qr-payments')"><span class="icon">📱</span>QR Payments</a>
+                <a class="sidebar-link" onclick="navigate('split-payments')"><span class="icon">🔀</span>Split Payments</a>
+                <a class="sidebar-link" onclick="navigate('refunds')"><span class="icon">↩️</span>Refunds</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Platform</div>
+                <a class="sidebar-link" onclick="navigate('api-marketplace')"><span class="icon">⚡</span>API Marketplace</a>
+                <a class="sidebar-link" onclick="navigate('developer')"><span class="icon">💻</span>Developer Portal</a>
+                <a class="sidebar-link" onclick="navigate('fee-engine')"><span class="icon">⚙️</span>Fee Engine</a>
+                <a class="sidebar-link" onclick="navigate('admin')"><span class="icon">🛡️</span>Admin</a>
+            </div>
+        </nav>
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">BM</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">Braincade Merchants</div>
+                <div class="sidebar-user-role">Business Account</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main" id="mainContent">
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+            <input type="search" class="topbar-search" placeholder="🔍 Search transactions, merchants...">
+            <div class="topbar-actions">
+                <button class="topbar-icon-btn" title="Notifications"><span class="dot"></span>🔔</button>
+                <button class="topbar-icon-btn" title="Settings">⚙️</button>
+                <button class="btn btn-brand btn-sm">+ New Payout</button>
+            </div>
+        </div>
+
+        <!-- ========== DASHBOARD PAGE ========== -->
+        <div class="page-content page active" id="page-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card brand"><div class="stat-value brand">P 1,247,890</div><div class="stat-label">Total Volume (MTD)</div><div class="stat-change up">▲ 22% vs last month</div></div>
+                <div class="stat-card"><div class="stat-value">8,452</div><div class="stat-label">Transactions</div><div class="stat-change up">▲ 15% vs last month</div></div>
+                <div class="stat-card"><div class="stat-value">P 34,200</div><div class="stat-label">Pending Settlements</div><div class="stat-change">12 payouts</div></div>
+                <div class="stat-card"><div class="stat-value">99.8%</div><div class="stat-label">Success Rate</div><div class="stat-change up">▲ 0.3%</div></div>
+                <div class="stat-card"><div class="stat-value">1,247</div><div class="stat-label">Active Merchants</div><div class="stat-change up">▲ 8%</div></div>
+                <div class="stat-card"><div class="stat-value">P 892,000</div><div class="stat-label">Wallet Balance</div></div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Revenue Overview</span></div>
+                    <div id="revenueChart" style="height:250px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">
+                        📈 Chart placeholder – Revenue trend (Chart.js ready)
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🕐 Recent Transactions</span></div>
+                    <div class="table-wrap"><table>
+                        <thead><tr><th>ID</th><th>Merchant</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>#TX-8921</td><td>ABC Shop</td><td>P 12,450</td><td>Orange Money</td><td><span class="badge badge-success">Done</span></td></tr>
+                            <tr><td>#TX-8920</td><td>QuickBet</td><td>P 8,900</td><td>MyZaka</td><td><span class="badge badge-success">Done</span></td></tr>
+                            <tr><td>#TX-8919</td><td>PayrollCo</td><td>P 45,000</td><td>Bank</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                        </tbody>
+                    </table></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TRANSACTIONS PAGE ========== -->
+        <div class="page-content page" id="page-transactions">
+            <h2 style="margin-bottom:16px;">💳 Transaction Centre</h2>
+            <div class="tabs">
+                <button class="tab active">All</button><button class="tab">Completed</button>
+                <button class="tab">Pending</button><button class="tab">Failed</button>
+                <button class="tab">Refunds</button>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">8,452 Transactions</span>
+                    <div style="display:flex;gap:8px;">
+                        <input type="date" class="form-input" style="width:auto;">
+                        <button class="btn btn-outline btn-sm">📥 Export</button>
+                    </div>
+                </div>
+                <div class="table-wrap"><table>
+                    <thead><tr><th>ID</th><th>Date</th><th>Merchant</th><th>Customer</th><th>Amount</th><th>Method</th><th>Fee</th><th>Net</th><th>Status</th></tr></thead>
+                    <tbody id="txTable"></tbody>
+                </table></div>
+                <div style="display:flex;justify-content:center;gap:8px;margin-top:16px;">
+                    <button class="btn btn-sm btn-outline">← Prev</button>
+                    <button class="btn btn-sm btn-brand">1</button>
+                    <button class="btn btn-sm btn-outline">2</button>
+                    <button class="btn btn-sm btn-outline">3</button>
+                    <button class="btn btn-sm btn-outline">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== WALLET PAGE ========== -->
+        <div class="page-content page" id="page-wallet">
+            <h2 style="margin-bottom:16px;">👛 Wallet & Virtual Accounts</h2>
+            <div class="stats-grid">
+                <div class="stat-card brand"><div class="stat-value brand">P 892,000</div><div class="stat-label">Total Balance</div></div>
+                <div class="stat-card"><div class="stat-value">P 345,000</div><div class="stat-label">Orange Money</div></div>
+                <div class="stat-card"><div class="stat-value">P 267,000</div><div class="stat-label">MyZaka</div></div>
+                <div class="stat-card"><div class="stat-value">P 180,000</div><div class="stat-label">Smega</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">💳 Virtual Accounts</span><button class="btn btn-brand btn-sm">+ Create</button></div>
+                    <div class="table-wrap"><table>
+                        <thead><tr><th>Account</th><th>Type</th><th>Balance</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>VA-001</td><td>Orange Money</td><td>P 345,000</td><td><span class="badge badge-success">Active</span></td></tr>
+                            <tr><td>VA-002</td><td>MyZaka</td><td>P 267,000</td><td><span class="badge badge-success">Active</span></td></tr>
+                        </tbody>
+                    </table></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🏦 Bank Integrations</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm);"><span>FNB Botswana</span><span class="badge badge-success">Connected</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm);"><span>Stanbic Bank</span><span class="badge badge-success">Connected</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm);"><span>ABSA Botswana</span><span class="badge badge-warning">Pending</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SETTLEMENTS PAGE ========== -->
+        <div class="page-content page" id="page-settlements">
+            <h2 style="margin-bottom:16px;">🏦 Settlement Centre</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">P 1,102,000</div><div class="stat-label">Settled (MTD)</div></div>
+                <div class="stat-card brand"><div class="stat-value brand">P 34,200</div><div class="stat-label">Pending</div></div>
+                <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Queued</div></div>
+                <div class="stat-card"><div class="stat-value">T+1</div><div class="stat-label">Avg Settlement</div></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Settlement Schedule</span></div>
+                <div class="table-wrap"><table>
+                    <thead><tr><th>Batch</th><th>Period</th><th>Amount</th><th>Transactions</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <tr><td>#BAT-202</td><td>Jul 18-19</td><td>P 245,000</td><td>1,245</td><td><span class="badge badge-success">Settled</span></td></tr>
+                        <tr><td>#BAT-203</td><td>Jul 19-20</td><td>P 180,000</td><td>892</td><td><span class="badge badge-info">Processing</span></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+
+        <!-- ========== PAYMENT LINKS PAGE ========== -->
+        <div class="page-content page" id="page-payment-links">
+            <h2 style="margin-bottom:16px;">🔗 Payment Links</h2>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Create Payment Link</span></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Amount (BWP)</label><input type="number" class="form-input" placeholder="500.00"></div>
+                    <div class="form-group"><label class="form-label">Reference</label><input type="text" class="form-input" placeholder="INV-12345"></div>
+                </div>
+                <button class="btn btn-brand">🔗 Generate Link</button>
+                <div style="margin-top:12px;background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);font-family:monospace;word-break:break-all;">
+                    https://pay.authepay.co.bw/link/px8k2m9n
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== CHECKOUT PAGE ========== -->
+        <div class="page-content page" id="page-checkout">
+            <h2 style="margin-bottom:16px;">🛒 Checkout</h2>
+            <div class="card" style="max-width:500px;margin:0 auto;">
+                <div style="text-align:center;padding:20px;border:2px dashed var(--border);border-radius:var(--radius);">
+                    <div style="font-size:3rem;">🛒</div>
+                    <h3>Embedded Checkout Preview</h3>
+                    <p style="color:var(--text-muted);">Ready for integration via SDK</p>
+                    <button class="btn btn-brand" style="margin-top:12px;">📋 View Integration Docs</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== QR PAYMENTS PAGE ========== -->
+        <div class="page-content page" id="page-qr-payments">
+            <h2 style="margin-bottom:16px;">📱 QR Payments</h2>
+            <div class="card" style="text-align:center;">
+                <div style="width:200px;height:200px;background:var(--bg-input);margin:0 auto;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:5rem;">📱</div>
+                <p style="margin-top:12px;">Scan to pay via Orange Money, MyZaka, or Smega</p>
+                <button class="btn btn-brand">⬇ Download QR</button>
+            </div>
+        </div>
+
+        <!-- ========== SPLIT PAYMENTS PAGE ========== -->
+        <div class="page-content page" id="page-split-payments">
+            <h2 style="margin-bottom:16px;">🔀 Split Payments</h2>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Configure Split</span></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Total Amount</label><input type="number" class="form-input" value="1000"></div>
+                    <div class="form-group"><label class="form-label">Number of Parties</label><input type="number" class="form-input" value="3"></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="display:flex;gap:8px;align-items:center;"><span>Party 1</span><input type="number" class="form-input" value="500" style="width:120px;"><span>50%</span></div>
+                    <div style="display:flex;gap:8px;align-items:center;"><span>Party 2</span><input type="number" class="form-input" value="300" style="width:120px;"><span>30%</span></div>
+                    <div style="display:flex;gap:8px;align-items:center;"><span>Party 3</span><input type="number" class="form-input" value="200" style="width:120px;"><span>20%</span></div>
+                </div>
+                <button class="btn btn-brand" style="margin-top:12px;">✅ Save Split</button>
+            </div>
+        </div>
+
+        <!-- ========== REFUNDS PAGE ========== -->
+        <div class="page-content page" id="page-refunds">
+            <h2 style="margin-bottom:16px;">↩️ Refunds</h2>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Process Refund</span></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Transaction ID</label><input type="text" class="form-input" placeholder="#TX-8921"></div>
+                    <div class="form-group"><label class="form-label">Amount</label><input type="number" class="form-input" placeholder="Full or partial"></div>
+                </div>
+                <button class="btn btn-brand">↩️ Process Refund</button>
+            </div>
+        </div>
+
+        <!-- ========== API MARKETPLACE PAGE ========== -->
+        <div class="page-content page" id="page-api-marketplace">
+            <h2 style="margin-bottom:16px;">⚡ API Marketplace</h2>
+            <div class="grid-3">
+                <div class="card" style="cursor:pointer;"><h3>💳 Payment API</h3><p style="color:var(--text-muted);font-size:0.85rem;">Accept payments via mobile money & bank</p><span class="badge badge-success">v2.1</span></div>
+                <div class="card" style="cursor:pointer;"><h3>👛 Wallet API</h3><p style="color:var(--text-muted);font-size:0.85rem;">Manage virtual accounts</p><span class="badge badge-success">v1.8</span></div>
+                <div class="card" style="cursor:pointer;"><h3>📱 QR API</h3><p style="color:var(--text-muted);font-size:0.85rem;">Generate & verify QR codes</p><span class="badge badge-info">v1.2</span></div>
+                <div class="card" style="cursor:pointer;"><h3>🔗 Payment Links API</h3><p style="color:var(--text-muted);font-size:0.85rem;">Create shareable payment links</p><span class="badge badge-success">v1.5</span></div>
+                <div class="card" style="cursor:pointer;"><h3>🔄 Payouts API</h3><p style="color:var(--text-muted);font-size:0.85rem;">Bulk & instant payouts</p><span class="badge badge-success">v2.0</span></div>
+                <div class="card" style="cursor:pointer;"><h3>🛡️ KYC API</h3><p style="color:var(--text-muted);font-size:0.85rem;">Identity verification</p><span class="badge badge-warning">Beta</span></div>
+            </div>
+        </div>
+
+        <!-- ========== DEVELOPER PORTAL PAGE ========== -->
+        <div class="page-content page" id="page-developer">
+            <h2 style="margin-bottom:16px;">💻 Developer Portal</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">🔑 API Keys</span><button class="btn btn-brand btn-sm">+ Generate</button></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm);"><span>sk_live_••••••••</span><span class="badge badge-success">Active</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm);"><span>sk_test_••••••••</span><span class="badge badge-info">Test</span></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📚 Quick Links</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <a href="#" style="color:var(--brand);">📖 API Documentation</a>
+                        <a href="#" style="color:var(--brand);">📦 SDK Downloads</a>
+                        <a href="#" style="color:var(--brand);">🧪 Sandbox Environment</a>
+                        <a href="#" style="color:var(--brand);">📋 Changelog</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== FEE ENGINE PAGE ========== -->
+        <div class="page-content page" id="page-fee-engine">
+            <h2 style="margin-bottom:16px;">⚙️ Configurable Fee Engine</h2>
+            <p style="color:var(--text-muted);margin-bottom:16px;">All fees are configurable. No hardcoded values. Changes are logged and reversible.</p>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Percentage Fee</span></div>
+                    <div class="fee-slider-group">
+                        <div class="fee-slider-label"><span>Transaction Fee (%)</span><span id="pctFeeVal">2.5%</span></div>
+                        <input type="range" class="fee-slider" min="0" max="10" step="0.1" value="2.5" oninput="updateFeePreview()" id="pctSlider">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Flat Fee</span></div>
+                    <div class="fee-slider-group">
+                        <div class="fee-slider-label"><span>Flat Fee (BWP)</span><span id="flatFeeVal">P 3.00</span></div>
+                        <input type="range" class="fee-slider" min="0" max="50" step="0.5" value="3" oninput="updateFeePreview()" id="flatSlider">
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">💡 Fee Simulator</span></div>
+                <div class="fee-preview">
+                    For a <strong>P 1,000</strong> transaction:<br>
+                    Fee: <span id="simFee">P 28.00</span> |
+                    Merchant receives: <span id="simNet">P 972.00</span>
+                </div>
+            </div>
+            <div class="grid-3" style="margin-top:16px;">
+                <div class="card"><h4>Gateway Partner Fees</h4><p style="color:var(--text-muted);font-size:0.8rem;">Orange: 1.5% | MyZaka: 1.2% | Smega: 1.8%</p></div>
+                <div class="card"><h4>Merchant Pricing</h4><p style="color:var(--text-muted);font-size:0.8rem;">Tiered: Bronze/Silver/Gold/Platinum</p></div>
+                <div class="card"><h4>Scheduled Changes</h4><p style="color:var(--text-muted);font-size:0.8rem;">Next: Aug 1, 2026 – 2.3% → 2.5%</p></div>
+            </div>
+        </div>
+
+        <!-- ========== ADMIN PAGE ========== -->
+        <div class="page-content page" id="page-admin">
+            <h2 style="margin-bottom:16px;">🛡️ Admin Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">1,247</div><div class="stat-label">Total Merchants</div></div>
+                <div class="stat-card"><div class="stat-value">45</div><div class="stat-label">Pending KYC</div></div>
+                <div class="stat-card brand"><div class="stat-value brand">3</div><div class="stat-label">Fraud Alerts</div></div>
+                <div class="stat-card"><div class="stat-value">99.98%</div><div class="stat-label">Uptime</div></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Merchant KYC Queue</span></div>
+                    <div class="table-wrap"><table>
+                        <thead><tr><th>Merchant</th><th>Submitted</th><th>Risk</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>NewShop Ltd</td><td>Jul 19</td><td><span class="badge badge-warning">Medium</span></td><td><button class="btn btn-brand btn-sm">Review</button></td></tr>
+                        </tbody>
+                    </table></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">System Health</span></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        <div style="display:flex;justify-content:space-between;"><span>Payment Gateway</span><span class="badge badge-success">Up</span></div>
+                        <div style="display:flex;justify-content:space-between;"><span>Wallet Service</span><span class="badge badge-success">Up</span></div>
+                        <div style="display:flex;justify-content:space-between;"><span>API Gateway</span><span class="badge badge-success">Up</span></div>
+                        <div style="display:flex;justify-content:space-between;"><span>Fraud Engine</span><span class="badge badge-warning">Degraded</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // NAVIGATION
+        function navigate(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            // Find and activate the matching sidebar link
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                if (link.textContent.toLowerCase().includes(page.replace(/-/g,' ')) || 
+                    link.onclick?.toString().includes(page)) {
+                    link.classList.add('active');
+                }
+            });
+            // Simple active state by matching onclick
+            document.querySelectorAll('.sidebar-link').forEach(l => {
+                const onclick = l.getAttribute('onclick') || '';
+                if (onclick.includes(`'${page}'`)) l.classList.add('active');
+            });
+            closeSidebar();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        // FEE ENGINE SIMULATOR
+        function updateFeePreview() {
+            const pct = parseFloat(document.getElementById('pctSlider').value);
+            const flat = parseFloat(document.getElementById('flatSlider').value);
+            const amount = 1000;
+            const fee = (amount * pct / 100) + flat;
+            document.getElementById('pctFeeVal').textContent = pct.toFixed(1) + '%';
+            document.getElementById('flatFeeVal').textContent = 'P ' + flat.toFixed(2);
+            document.getElementById('simFee').textContent = 'P ' + fee.toFixed(2);
+            document.getElementById('simNet').textContent = 'P ' + (amount - fee).toFixed(2);
+        }
+
+        // POPULATE TRANSACTIONS TABLE
+        function populateTransactions() {
+            const txs = [
+                {id:'#TX-8921',date:'2026-07-20',merchant:'ABC Shop',customer:'John D.',amount:12450,method:'Orange Money',fee:311.25,net:12138.75,status:'Completed'},
+                {id:'#TX-8920',date:'2026-07-20',merchant:'QuickBet',customer:'Sarah M.',amount:8900,method:'MyZaka',fee:222.50,net:8677.50,status:'Completed'},
+                {id:'#TX-8919',date:'2026-07-19',merchant:'PayrollCo',customer:'Bulk',amount:45000,method:'Bank',fee:1125,net:43875,status:'Pending'},
+            ];
+            const tbody = document.getElementById('txTable');
+            if (tbody) {
+                tbody.innerHTML = txs.map(t => `
+                    <tr>
+                        <td>${t.id}</td><td>${t.date}</td><td>${t.merchant}</td><td>${t.customer}</td>
+                        <td>P ${t.amount.toLocaleString()}</td><td>${t.method}</td>
+                        <td>P ${t.fee.toLocaleString()}</td><td>P ${t.net.toLocaleString()}</td>
+                        <td><span class="badge ${t.status==='Completed'?'badge-success':'badge-warning'}">${t.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            populateTransactions();
+            updateFeePreview();
+            // Tab switching
+            document.querySelectorAll('.tabs').forEach(tabGroup => {
+                tabGroup.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('tab')) {
+                        this.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        e.target.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Close sidebar on outside click (mobile)
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-toggle');
+            if (sidebar.classList.contains('open') && 
+                !sidebar.contains(e.target) && 
+                !toggle.contains(e.target)) {
+                closeSidebar();
+            }
+        });
+
+        console.log('✅ AuthePay Phase 3 Core Prototype Loaded');
+        console.log('📦 Modules: Dashboard | Transactions | Wallet | Settlements | Payment Links | Checkout | QR | Split | Refunds | API | Dev | Fee Engine | Admin');
+        console.log('🎨 Design: Premium FinTech | #FF6B00 Brand | Dark Mode | Mobile First');
+        console.log('🔧 Ready for GitHub Copilot Production Conversion');
+    </script>
+</body>
+</html>
