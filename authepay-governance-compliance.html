@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AuthePay Governance &amp; Compliance Center</title>
+    <meta name="description" content="AuthePay Governance & Compliance – Corporate Governance, Legal, Regulatory Compliance, Risk, Audit, Policy, Privacy, Business Continuity, AI Governance." />
+    <style>
+        /* ============================================================
+           AUTHEPAY GOVERNANCE & COMPLIANCE CENTER – STYLES
+           Brand: AuthePay / AutheCorp
+           Primary: #FF6B00 | Secondary: #0A0A0A
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --brand-light: #FF8C3A;
+            --brand-glow: rgba(255, 107, 0, 0.25);
+            --accent: #8B5CF6;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1E1E1E;
+            --bg-input: #1A1A1A;
+            --border: #2A2A2A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* ── APP LAYOUT ── */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+        .sidebar-brand span {
+            color: var(--text-primary);
+        }
+        .sidebar-brand .sub {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 14px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 0, 0.08);
+            color: var(--text-primary);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+            border-left: 3px solid var(--brand);
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .sidebar-nav a .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .sidebar-nav a .status-dot.green {
+            background: var(--success);
+        }
+        .sidebar-nav a .status-dot.yellow {
+            background: var(--warning);
+        }
+        .sidebar-nav a .status-dot.red {
+            background: var(--danger);
+        }
+        .sidebar-section-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0.8rem 14px 0.3rem;
+            font-weight: 700;
+        }
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-footer .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .sidebar-footer .toggle-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .topbar h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .topbar h1 small {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .topbar-actions .ai-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: #fff;
+        }
+        .btn-brand:hover {
+            box-shadow: 0 4px 16px var(--brand-glow);
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            opacity: 0.85;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #000;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-accent:hover {
+            opacity: 0.85;
+        }
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-xs {
+            padding: 3px 8px;
+            font-size: 0.65rem;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── GRIDS ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── STATS ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        .stat-card:hover {
+            border-color: var(--brand);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .stat-card .value.brand {
+            color: var(--brand);
+        }
+        .stat-card .value.green {
+            color: var(--success);
+        }
+        .stat-card .value.red {
+            color: var(--danger);
+        }
+        .stat-card .value.yellow {
+            color: var(--warning);
+        }
+        .stat-card .value.blue {
+            color: var(--info);
+        }
+        .stat-card .value.purple {
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .trend {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stat-card .trend.up {
+            color: var(--success);
+        }
+        .stat-card .trend.down {
+            color: var(--danger);
+        }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+        .badge-brand {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-accent {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+        }
+        .badge-neutral {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* ── FORMS ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px var(--brand-glow);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .form-check input[type="checkbox"],
+        .form-check input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .progress-fill.brand {
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+        .progress-fill.yellow {
+            background: var(--warning);
+        }
+        .progress-fill.purple {
+            background: var(--accent);
+        }
+        .progress-fill.red {
+            background: var(--danger);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            animation: slideIn 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        .toast.info {
+            border-left: 4px solid var(--brand);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 660px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ── STATUS CARD ── */
+        .status-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .status-card:hover {
+            border-color: var(--brand);
+        }
+        .status-card .left .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .status-card .left .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .status-card .right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        /* ── RISK CARD ── */
+        .risk-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .risk-card:hover {
+            border-color: var(--brand);
+        }
+        .risk-card .left .id {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .risk-card .left .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .risk-card .right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .risk-card .right .risk-badge {
+            font-size: 0.65rem;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+        .risk-card .right .risk-badge.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        .risk-card .right .risk-badge.high {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .risk-card .right .risk-badge.medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .risk-card .right .risk-badge.low {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+
+        /* ── AI CARD ── */
+        .ai-card {
+            padding: 0.8rem 1rem;
+            background: var(--bg-input);
+            border-radius: var(--radius);
+            margin-bottom: 6px;
+            border-left: 3px solid var(--brand);
+            transition: var(--transition);
+        }
+        .ai-card:hover {
+            border-color: var(--brand);
+        }
+        .ai-card .title {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .ai-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .ai-card .confidence {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                transform: none !important;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .sidebar-nav a {
+                padding: 6px 12px;
+                font-size: 0.78rem;
+            }
+            .sidebar-section-label {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar h1 {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-5 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .status-card,
+            .risk-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .status-card .right,
+            .risk-card .right {
+                justify-content: center;
+            }
+        }
+
+        /* ── STATUS DOT PULSE ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .pulse-dot.green {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.yellow {
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .pulse-dot.red {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ── AI BANNER ── */
+        .ai-banner {
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-banner .icon {
+            font-size: 1.5rem;
+        }
+        .ai-banner .text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .ai-banner .text strong {
+            color: var(--text-primary);
+        }
+
+        /* ── SECURITY WARNING ── */
+        .security-warning {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .security-warning .icon {
+            font-size: 1.2rem;
+        }
+
+        /* ── BOARD METER ── */
+        .board-meter {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .board-meter .meter {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+        .board-meter .meter svg {
+            transform: rotate(-90deg);
+        }
+        .board-meter .meter .bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 10;
+        }
+        .board-meter .meter .progress {
+            fill: none;
+            stroke: var(--brand);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        .board-meter .meter .label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+        .board-meter .details {
+            flex: 1;
+        }
+        .board-meter .details .value {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+        .board-meter .details .sub {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="icon">⚖️</span>
+                <div>
+                    <span>Governance Center</span>
+                    <span class="sub">Compliance</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section-label">Core</div>
+                <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+                <a href="#" data-page="corporate">🏛️ Corporate Governance</a>
+                <a href="#" data-page="legal">⚖️ Legal Management</a>
+
+                <div class="sidebar-section-label">Compliance</div>
+                <a href="#" data-page="regulatory">📋 Regulatory Compliance</a>
+                <a href="#" data-page="risk">⚠️ Enterprise Risk</a>
+                <a href="#" data-page="audit">📜 Internal Audit</a>
+
+                <div class="sidebar-section-label">Policy &amp; Privacy</div>
+                <a href="#" data-page="policy">📄 Policy Management</a>
+                <a href="#" data-page="privacy">🔐 Privacy Office</a>
+
+                <div class="sidebar-section-label">Continuity &amp; AI</div>
+                <a href="#" data-page="continuity">🔄 Business Continuity</a>
+                <a href="#" data-page="ai-governance">🧠 AI Governance</a>
+
+                <div class="sidebar-section-label">Reporting</div>
+                <a href="#" data-page="reporting">📈 Reporting</a>
+                <a href="#" data-page="audit-logs">📜 Audit</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span><span class="pulse-dot green"></span> Compliant</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">v2.0 · KaTSo AI</span>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Governance Dashboard <small>Compliance Center</small></h1>
+                </div>
+                <div class="topbar-actions">
+                    <span class="ai-badge"><span class="dot"></span> KaTSo AI</span>
+                    <button class="btn btn-outline btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="btn btn-brand btn-sm" onclick="openModal('policyModal')">📄 New Policy</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: DASHBOARD
+            ============================================================ -->
+            <div class="page active" id="page-dashboard">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="value brand" id="dashCompliance">—</div>
+                        <div class="label">Compliance Score</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value blue" id="dashRisks">—</div>
+                        <div class="label">Active Risks</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="dashAudits">—</div>
+                        <div class="label">Audits Completed</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value purple" id="dashPolicies">—</div>
+                        <div class="label">Active Policies</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value yellow" id="dashFindings">—</div>
+                        <div class="label">Open Findings</div>
+                        <div class="trend down">▼ Dynamic</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value green" id="dashAICompliance">—</div>
+                        <div class="label">AI Compliance</div>
+                        <div class="trend up">▲ Dynamic</div>
+                    </div>
+                </div>
+
+                <div class="board-meter" style="margin-bottom:1.5rem;">
+                    <div class="meter">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <circle class="bg" cx="60" cy="60" r="52" />
+                            <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="32.7" />
+                        </svg>
+                        <div class="label">92%</div>
+                    </div>
+                    <div class="details">
+                        <div class="value">92% Governance Score</div>
+                        <div class="sub">Overall compliance and governance health</div>
+                        <div style="display:flex;gap:1rem;margin-top:0.5rem;flex-wrap:wrap;">
+                            <span class="badge badge-success">✅ Regulatory</span>
+                            <span class="badge badge-success">✅ Risk</span>
+                            <span class="badge badge-warning">⚠️ Audit</span>
+                            <span class="badge badge-success">✅ AI Governance</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Compliance Activity (7 Days)</span>
+                        </div>
+                        <div style="height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;">
+                            <div style="flex:1;background:var(--brand);height:35%;border-radius:4px 4px 0 0;min-height:15px;" title="Mon"></div>
+                            <div style="flex:1;background:var(--brand);height:50%;border-radius:4px 4px 0 0;min-height:15px;" title="Tue"></div>
+                            <div style="flex:1;background:var(--brand);height:40%;border-radius:4px 4px 0 0;min-height:15px;" title="Wed"></div>
+                            <div style="flex:1;background:var(--brand);height:65%;border-radius:4px 4px 0 0;min-height:15px;" title="Thu"></div>
+                            <div style="flex:1;background:var(--brand);height:55%;border-radius:4px 4px 0 0;min-height:15px;" title="Fri"></div>
+                            <div style="flex:1;background:var(--brand);height:75%;border-radius:4px 4px 0 0;min-height:15px;" title="Sat"></div>
+                            <div style="flex:1;background:var(--brand);height:90%;border-radius:4px 4px 0 0;min-height:15px;" title="Sun"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <!-- CONNECTION POINT: compliance_activity from Supabase -->
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 Recent Activity</span>
+                            <a href="#" onclick="navigateTo('audit-logs');return false;" style="font-size:0.8rem;color:var(--brand);">View all</a>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-success">✅</span> Audit completed</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">14:23</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-warning">⚠️</span> Policy review due</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">13:45</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+                                <span><span class="badge badge-brand">⚖️</span> Board decision logged</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">12:18</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span><span class="badge badge-accent">🧠</span> AI governance review</span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">11:02</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🏛️ Corporate Governance</span></div>
+                        <div><span style="color:var(--text-muted);">Board Meetings</span> <span style="float:right;color:var(--text-primary);" id="govBoard">—</span></div>
+                        <div><span style="color:var(--text-muted);">KPIs Tracked</span> <span style="float:right;color:var(--text-primary);" id="govKPIs">—</span></div>
+                        <div><span style="color:var(--text-muted);">Decisions</span> <span style="float:right;color:var(--text-primary);" id="govDecisions">—</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Regulatory</span></div>
+                        <div><span style="color:var(--text-muted);">AML/CFT</span> <span style="float:right;color:var(--success);" id="regAML">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Data Protection</span> <span style="float:right;color:var(--success);" id="regDP">✅</span></div>
+                        <div><span style="color:var(--text-muted);">PCI DSS</span> <span style="float:right;color:var(--success);" id="regPCI">✅</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">🧠 AI Governance</span></div>
+                        <div><span style="color:var(--text-muted);">AI Policies</span> <span style="float:right;color:var(--text-primary);" id="aiPolicies">—</span></div>
+                        <div><span style="color:var(--text-muted);">Model Compliance</span> <span style="float:right;color:var(--success);" id="aiModel">✅</span></div>
+                        <div><span style="color:var(--text-muted);">Audit Trail</span> <span style="float:right;color:var(--text-primary);" id="aiAudit">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: CORPORATE GOVERNANCE
+            ============================================================ -->
+            <div class="page" id="page-corporate">
+                <div class="section-header">
+                    <h2>🏛️ Corporate Governance</h2>
+                    <p>Board Dashboard, Executive Dashboard, Governance Policies, Decision Register, Strategic Planning, KPIs &amp; OKRs, and Governance Reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="corBoard">—</div><div class="label">Board Members</div></div>
+                    <div class="stat-card"><div class="value green" id="corMeetings">—</div><div class="label">Meetings (YTD)</div></div>
+                    <div class="stat-card"><div class="value purple" id="corKPIs">—</div><div class="label">KPIs/OKRs</div></div>
+                    <div class="stat-card"><div class="value yellow" id="corDecisions">—</div><div class="label">Decisions</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Board Dashboard</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">👤 Board Members</div><div class="meta">12 members · 8 independent</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📅 Board Meetings</div><div class="meta">8 meetings (YTD) · Next: 2026-08-15</div></div>
+                            <div class="right"><span class="badge badge-success">Scheduled</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Executive Dashboard</div><div class="meta">Monthly executive reports</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📜 Governance Policies</div><div class="meta">12 policies · 98% compliance</div></div>
+                            <div class="right"><span class="badge badge-success">Compliant</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Decision Register</div><div class="meta">24 decisions logged</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🎯 KPIs &amp; OKRs</div><div class="meta">12 KPIs · 89% on track</div></div>
+                            <div class="right"><span class="badge badge-success">On Track</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: corporate_governance from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 KPI Performance</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Revenue Growth</span><span>22%</span><div class="progress-bar"><div class="progress-fill green" style="width:22%;"></div></div></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Customer Retention</span><span>76%</span><div class="progress-bar"><div class="progress-fill brand" style="width:76%;"></div></div></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Compliance Score</span><span>92%</span><div class="progress-bar"><div class="progress-fill purple" style="width:92%;"></div></div></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Strategic Planning</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Q3 2026</span><span>In Progress</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Q4 2026</span><span>Planning</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>2027 Strategy</span><span>Draft</span></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="showToast('📊 Governance report generated','success')">📊 Generate Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: LEGAL MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-legal">
+                <div class="section-header">
+                    <h2>⚖️ Legal Management</h2>
+                    <p>Contract Management, Legal Documents, Intellectual Property, Litigation Register, Legal Reviews, NDA Management, and Legal Calendar.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="legContracts">—</div><div class="label">Contracts</div></div>
+                    <div class="stat-card"><div class="value green" id="legIP">—</div><div class="label">IP Assets</div></div>
+                    <div class="stat-card"><div class="value purple" id="legLitigation">—</div><div class="label">Litigation</div></div>
+                    <div class="stat-card"><div class="value yellow" id="legNDAs">—</div><div class="label">NDAs</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Legal Documents</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">📄 Contract Management</div><div class="meta">24 active · 12 pending</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📜 Legal Documents</div><div class="meta">56 documents · 89% reviewed</div></div>
+                            <div class="right"><span class="badge badge-success">Reviewed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">💡 Intellectual Property</div><div class="meta">12 patents · 8 trademarks</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">⚖️ Litigation Register</div><div class="meta">3 active · 1 pending</div></div>
+                            <div class="right"><span class="badge badge-warning">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔒 NDA Management</div><div class="meta">34 active · 12 expired</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📅 Legal Calendar</div><div class="meta">8 upcoming deadlines</div></div>
+                            <div class="right"><span class="badge badge-info">Active</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: legal_management from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Contract Status</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Active</span><span>24</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Pending</span><span>12</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Expired</span><span>6</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Legal Reviews</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Pending Review</span><span>3</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>In Progress</span><span>2</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Completed</span><span>12</span></div>
+                        </div>
+                        <button class="btn btn-brand btn-sm" style="margin-top:8px;" onclick="showToast('📄 Legal review requested','info')">+ Request Review</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: REGULATORY COMPLIANCE
+            ============================================================ -->
+            <div class="page" id="page-regulatory">
+                <div class="section-header">
+                    <h2>📋 Regulatory Compliance</h2>
+                    <p>AML/CFT, KYC Compliance, Data Protection, PCI DSS, ISO 27001, Regulatory Filings, and Compliance Monitoring.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value green" id="regAML2">—</div><div class="label">AML/CFT</div></div>
+                    <div class="stat-card"><div class="value green" id="regKYC">—</div><div class="label">KYC</div></div>
+                    <div class="stat-card"><div class="value green" id="regPCI2">—</div><div class="label">PCI DSS</div></div>
+                    <div class="stat-card"><div class="value green" id="regISO">—</div><div class="label">ISO 27001</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Compliance Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">💰 AML/CFT</div><div class="meta">Monitoring active · 0 alerts</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Compliant</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🆔 KYC Compliance</div><div class="meta">98% verified · 342 pending</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Compliant</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔐 Data Protection</div><div class="meta">Botswana DPA compliant</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Compliant</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">💳 PCI DSS</div><div class="meta">Level 1 compliant</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Compliant</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 ISO 27001</div><div class="meta">Certified</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Certified</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Regulatory Filings</div><div class="meta">12 filings · All current</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Current</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📡 Compliance Monitoring</div><div class="meta">Real-time monitoring active</div></div>
+                            <div class="right"><span class="badge badge-success">✅ Active</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: regulatory_compliance from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Regulatory Reports</span></div>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 AML report generated','success')">📊 AML</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Data Protection report generated','success')">📊 Data Protection</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 PCI DSS report generated','success')">📊 PCI DSS</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 ISO 27001 report generated','success')">📊 ISO 27001</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: ENTERPRISE RISK
+            ============================================================ -->
+            <div class="page" id="page-risk">
+                <div class="section-header">
+                    <h2>⚠️ Enterprise Risk Management</h2>
+                    <p>Risk Register, Risk Assessments, Operational Risk, Financial Risk, Cyber Risk, Third-Party Risk, and Risk Heat Maps.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="riskTotal">—</div><div class="label">Total Risks</div></div>
+                    <div class="stat-card"><div class="value red" id="riskCritical">—</div><div class="label">Critical</div></div>
+                    <div class="stat-card"><div class="value yellow" id="riskHigh">—</div><div class="label">High</div></div>
+                    <div class="stat-card"><div class="value green" id="riskMitigated">—</div><div class="label">Mitigated</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Risk Register</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="risk-card">
+                            <div class="left"><div class="id">#R-001 · Operational</div><div class="meta">System downtime · Impact: High</div></div>
+                            <div class="right"><span class="risk-badge high">High</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="risk-card">
+                            <div class="left"><div class="id">#R-002 · Financial</div><div class="meta">Currency fluctuation · Impact: Medium</div></div>
+                            <div class="right"><span class="risk-badge medium">Medium</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="risk-card">
+                            <div class="left"><div class="id">#R-003 · Cyber</div><div class="meta">Data breach risk · Impact: Critical</div></div>
+                            <div class="right"><span class="risk-badge critical">Critical</span><button class="btn btn-danger btn-xs">Action</button></div>
+                        </div>
+                        <div class="risk-card">
+                            <div class="left"><div class="id">#R-004 · Third-Party</div><div class="meta">Vendor failure · Impact: Medium</div></div>
+                            <div class="right"><span class="risk-badge medium">Medium</span><button class="btn btn-outline btn-xs">📋</button></div>
+                        </div>
+                        <div class="risk-card">
+                            <div class="left"><div class="id">#R-005 · Regulatory</div><div class="meta">Compliance gap · Impact: High</div></div>
+                            <div class="right"><span class="risk-badge high">High</span><button class="btn btn-warning btn-xs">Review</button></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: risk_register from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Risk Heat Map</span></div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center;">
+                            <div style="background:rgba(239,68,68,0.15);padding:12px;border-radius:var(--radius);border:1px solid var(--danger);">
+                                <span style="font-size:0.7rem;color:var(--text-muted);">Critical</span><br><strong>1</strong>
+                            </div>
+                            <div style="background:rgba(239,68,68,0.08);padding:12px;border-radius:var(--radius);border:1px solid var(--border);">
+                                <span style="font-size:0.7rem;color:var(--text-muted);">High</span><br><strong>2</strong>
+                            </div>
+                            <div style="background:rgba(245,158,11,0.08);padding:12px;border-radius:var(--radius);border:1px solid var(--border);">
+                                <span style="font-size:0.7rem;color:var(--text-muted);">Medium</span><br><strong>2</strong>
+                            </div>
+                            <div style="background:rgba(34,197,94,0.08);padding:12px;border-radius:var(--radius);border:1px solid var(--border);">
+                                <span style="font-size:0.7rem;color:var(--text-muted);">Low</span><br><strong>0</strong>
+                            </div>
+                            <div style="grid-column:span 2;background:var(--bg-input);padding:12px;border-radius:var(--radius);border:1px solid var(--border);">
+                                <span style="font-size:0.7rem;color:var(--text-muted);">Total</span><br><strong>5</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Risk by Category</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Operational</span><span>2</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Financial</span><span>1</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Cyber</span><span>1</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Regulatory</span><span>1</span></div>
+                        </div>
+                        <button class="btn btn-brand btn-sm" style="margin-top:8px;" onclick="showToast('⚠️ New risk added','success')">+ Add Risk</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: INTERNAL AUDIT
+            ============================================================ -->
+            <div class="page" id="page-audit">
+                <div class="section-header">
+                    <h2>📜 Internal Audit</h2>
+                    <p>Audit Planning, Audit Execution, Findings, Corrective Actions, Follow-Up, Evidence Repository, and Audit Reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="audTotal">—</div><div class="label">Total Audits</div></div>
+                    <div class="stat-card"><div class="value green" id="audCompleted">—</div><div class="label">Completed</div></div>
+                    <div class="stat-card"><div class="value yellow" id="audFindings">—</div><div class="label">Findings</div></div>
+                    <div class="stat-card"><div class="value purple" id="audActions">—</div><div class="label">Actions</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Audit Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Audit Planning</div><div class="meta">3 audits scheduled</div></div>
+                            <div class="right"><span class="badge badge-info">Planning</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔍 Audit Execution</div><div class="meta">2 audits in progress</div></div>
+                            <div class="right"><span class="badge badge-warning">In Progress</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Findings</div><div class="meta">12 findings · 8 resolved</div></div>
+                            <div class="right"><span class="badge badge-warning">Review</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">✅ Corrective Actions</div><div class="meta">8 completed · 4 pending</div></div>
+                            <div class="right"><span class="badge badge-warning">Pending</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔄 Follow-Up</div><div class="meta">4 follow-ups scheduled</div></div>
+                            <div class="right"><span class="badge badge-info">Scheduled</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📁 Evidence Repository</div><div class="meta">234 items stored</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📄 Audit Reports</div><div class="meta">8 reports generated</div></div>
+                            <div class="right"><span class="badge badge-success">Available</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: internal_audit from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Audit Metrics</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">Completion Rate</span><br><span style="font-size:1.2rem;font-weight:900;">92%</span></div>
+                        <div><span style="color:var(--text-muted);">Findings Resolved</span><br><span style="font-size:1.2rem;font-weight:900;">8/12</span></div>
+                        <div><span style="color:var(--text-muted);">Avg Resolution</span><br><span style="font-size:1.2rem;font-weight:900;">14 days</span></div>
+                        <div><span style="color:var(--text-muted);">Evidence Items</span><br><span style="font-size:1.2rem;font-weight:900;">234</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: POLICY MANAGEMENT
+            ============================================================ -->
+            <div class="page" id="page-policy">
+                <div class="section-header">
+                    <h2>📄 Policy Management</h2>
+                    <p>Security Policies, HR Policies, Financial Policies, Operational Policies, AI Governance, Version Control, and Policy Approvals.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="polTotal">—</div><div class="label">Total Policies</div></div>
+                    <div class="stat-card"><div class="value green" id="polActive">—</div><div class="label">Active</div></div>
+                    <div class="stat-card"><div class="value yellow" id="polReview">—</div><div class="label">Review</div></div>
+                    <div class="stat-card"><div class="value purple" id="polApprovals">—</div><div class="label">Approvals</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Policies</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">🛡️ Security Policies</div><div class="meta">8 policies · v2.3</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">👥 HR Policies</div><div class="meta">12 policies · v1.8</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">💰 Financial Policies</div><div class="meta">6 policies · v2.0</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">⚙️ Operational Policies</div><div class="meta">10 policies · v1.5</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🧠 AI Governance</div><div class="meta">4 policies · v1.2</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: policies from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Policy Status</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Active</span><span>34</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>In Review</span><span>4</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Expired</span><span>2</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📋 Version Control</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Security Policy</span><span>v2.3</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>AI Governance</span><span>v1.2</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Data Protection</span><span>v2.0</span></div>
+                        </div>
+                        <button class="btn btn-brand btn-sm" style="margin-top:8px;" onclick="openModal('policyModal')">+ New Policy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: PRIVACY OFFICE
+            ============================================================ -->
+            <div class="page" id="page-privacy">
+                <div class="section-header">
+                    <h2>🔐 Privacy Office</h2>
+                    <p>Consent Management, Data Requests, Data Retention, Privacy Impact Assessments, Breach Management, Data Classification, and Privacy Reports.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="privConsents">—</div><div class="label">Consents</div></div>
+                    <div class="stat-card"><div class="value green" id="privRequests">—</div><div class="label">Data Requests</div></div>
+                    <div class="stat-card"><div class="value yellow" id="privBreaches">—</div><div class="label">Breaches</div></div>
+                    <div class="stat-card"><div class="value purple" id="privPIA">—</div><div class="label">PIAs</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Privacy Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">✅ Consent Management</div><div class="meta">98% consent rate · 12,847 consents</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Data Requests</div><div class="meta">12 requests · All resolved</div></div>
+                            <div class="right"><span class="badge badge-success">Resolved</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📅 Data Retention</div><div class="meta">7 years · Automated</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Privacy Impact Assessments</div><div class="meta">8 completed · 2 pending</div></div>
+                            <div class="right"><span class="badge badge-warning">Pending</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🚨 Breach Management</div><div class="meta">0 breaches · 0 incidents</div></div>
+                            <div class="right"><span class="badge badge-success">Clear</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🏷️ Data Classification</div><div class="meta">All data classified</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: privacy_office from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Privacy Reports</span></div>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Privacy report generated','success')">📊 Generate</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 Data inventory exported','success')">📊 Data Inventory</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('📊 PIA report generated','success')">📊 PIA Report</button>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: BUSINESS CONTINUITY
+            ============================================================ -->
+            <div class="page" id="page-continuity">
+                <div class="section-header">
+                    <h2>🔄 Business Continuity</h2>
+                    <p>Disaster Recovery, Crisis Management, Continuity Plans, Recovery Testing, Emergency Contacts, Incident Reviews, and Resilience Metrics.</p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value blue" id="bcPlans">—</div><div class="label">Continuity Plans</div></div>
+                    <div class="stat-card"><div class="value green" id="bcTests">—</div><div class="label">Recovery Tests</div></div>
+                    <div class="stat-card"><div class="value yellow" id="bcIncidents">—</div><div class="label">Incidents</div></div>
+                    <div class="stat-card"><div class="value purple" id="bcRTO">—</div><div class="label">RTO</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 Continuity Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">💾 Disaster Recovery</div><div class="meta">DR plan active · RTO: 12 min</div></div>
+                            <div class="right"><span class="badge badge-success">Ready</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🚨 Crisis Management</div><div class="meta">Crisis team on standby</div></div>
+                            <div class="right"><span class="badge badge-success">Ready</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 Continuity Plans</div><div class="meta">4 plans · All updated</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔍 Recovery Testing</div><div class="meta">Last test: 2026-07-20 · Passed</div></div>
+                            <div class="right"><span class="badge badge-success">Passed</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📞 Emergency Contacts</div><div class="meta">12 contacts · All current</div></div>
+                            <div class="right"><span class="badge badge-success">Current</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Incident Reviews</div><div class="meta">0 incidents · 0 reviews</div></div>
+                            <div class="right"><span class="badge badge-success">Clear</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: business_continuity from Supabase -->
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📊 Resilience Metrics</span></div>
+                    <div class="grid-4">
+                        <div><span style="color:var(--text-muted);">RTO</span><br><span style="font-size:1.2rem;font-weight:900;">12 min</span></div>
+                        <div><span style="color:var(--text-muted);">RPO</span><br><span style="font-size:1.2rem;font-weight:900;">5 min</span></div>
+                        <div><span style="color:var(--text-muted);">Recovery Rate</span><br><span style="font-size:1.2rem;font-weight:900;">99.98%</span></div>
+                        <div><span style="color:var(--text-muted);">Resilience Score</span><br><span style="font-size:1.2rem;font-weight:900;color:var(--success);">96%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AI GOVERNANCE
+            ============================================================ -->
+            <div class="page" id="page-ai-governance">
+                <div class="section-header">
+                    <h2>🧠 AI Governance</h2>
+                    <p>AI Policy Monitoring, AI Decision Logs, AI Risk Assessment, AI Compliance, Model Governance, AI Audit Trail, and Responsible AI Reports.</p>
+                </div>
+
+                <div class="ai-banner" style="margin-bottom:1.5rem;">
+                    <span class="icon">🧠</span>
+                    <div class="text">
+                        <strong>AI Governance</strong> – All AI models are governed, monitored, and compliant with responsible AI guidelines.
+                        <span style="display:block;font-size:0.75rem;color:var(--text-muted);">Policy monitoring · Decision logs · Risk assessment · Model governance</span>
+                    </div>
+                    <button class="btn btn-accent btn-sm" onclick="showToast('🧠 AI governance report generated','success')">📊 Generate Report</button>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="value purple" id="aiPolicies2">—</div><div class="label">AI Policies</div></div>
+                    <div class="stat-card"><div class="value green" id="aiDecisions">—</div><div class="label">AI Decisions</div></div>
+                    <div class="stat-card"><div class="value blue" id="aiModels">—</div><div class="label">Models</div></div>
+                    <div class="stat-card"><div class="value yellow" id="aiRisks">—</div><div class="label">AI Risks</div></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">📋 AI Governance Status</span></div>
+                    <div style="display:flex;flex-direction:column;gap:6px;">
+                        <div class="status-card">
+                            <div class="left"><div class="name">📋 AI Policy Monitoring</div><div class="meta">4 policies · 100% compliance</div></div>
+                            <div class="right"><span class="badge badge-success">Compliant</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📝 AI Decision Logs</div><div class="meta">1,234 decisions logged</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">⚠️ AI Risk Assessment</div><div class="meta">Risk score: 12/100</div></div>
+                            <div class="right"><span class="badge badge-success">Low</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">✅ AI Compliance</div><div class="meta">All models compliant</div></div>
+                            <div class="right"><span class="badge badge-success">Compliant</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Model Governance</div><div class="meta">12 models · All governed</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">🔍 AI Audit Trail</div><div class="meta">All actions logged</div></div>
+                            <div class="right"><span class="badge badge-success">Active</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="left"><div class="name">📊 Responsible AI Reports</div><div class="meta">12 reports available</div></div>
+                            <div class="right"><span class="badge badge-success">Available</span></div>
+                        </div>
+                    </div>
+                    <!-- CONNECTION POINT: ai_governance from Supabase -->
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Model Governance</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Kimi</span><span class="badge badge-success">Compliant</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>DeepSeek</span><span class="badge badge-success">Compliant</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Qwen</span><span class="badge badge-success">Compliant</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Responsible AI</span></div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Fairness</span><span class="badge badge-success">98%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);"><span>Transparency</span><span class="badge badge-success">100%</span></div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Accountability</span><span class="badge badge-success">100%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: REPORTING
+            ============================================================ -->
+            <div class="page" id="page-reporting">
+                <div class="section-header">
+                    <h2>📈 Reporting</h2>
+                    <p>Executive Reports, Board Reports, Compliance Reports, Risk Reports, Audit Reports, Regulatory Reports, and AI Governance Reports.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Executive Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">High-level governance overview.</p>
+                        <button class="btn btn-brand btn-sm" onclick="generateReport('executive')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Board Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Board-level governance summary.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('board')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Compliance Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Regulatory compliance status.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('compliance')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Risk Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Enterprise risk register summary.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('risk')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 Audit Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">Audit findings and status.</p>
+                        <button class="btn btn-outline btn-sm" onclick="generateReport('audit')">📄 Generate</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">📊 AI Governance Report</span></div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;">AI model compliance and governance.</p>
+                        <button class="btn btn-accent btn-sm" onclick="generateReport('ai')">📄 Generate</button>
+                    </div>
+                </div>
+
+                <div id="reportOutput" style="display:none;" class="card">
+                    <div class="card-header"><span class="card-title">📄 Report Generated</span><button class="btn btn-outline btn-sm" onclick="downloadReport()">⬇ Download</button></div>
+                    <div id="reportContent" style="background:var(--bg-input);padding:1.5rem;border-radius:var(--radius);font-family:monospace;font-size:0.8rem;color:var(--text-secondary);white-space:pre-wrap;max-height:300px;overflow-y:auto;"></div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+            PAGE: AUDIT LOGS
+            ============================================================ -->
+            <div class="page" id="page-audit-logs">
+                <div class="section-header">
+                    <h2>📜 Audit Logs</h2>
+                    <p>Immutable audit trail of all governance, compliance, and legal events.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Event Log</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('all')">All</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('governance')">Governance</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('compliance')">Compliance</button>
+                            <button class="btn btn-outline btn-sm" onclick="filterAudit('legal')">Legal</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Category</th><th>Details</th></tr></thead>
+                            <tbody id="auditTable">
+                                <tr>
+                                    <td>2026-07-21 14:23</td><td>admin@authecorp</td><td>Policy Updated</td>
+                                    <td><span class="badge badge-brand">Governance</span></td>
+                                    <td>Security Policy v2.3</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 13:45</td><td>compliance@authecorp</td><td>Audit Completed</td>
+                                    <td><span class="badge badge-success">Compliance</span></td>
+                                    <td>Internal audit passed</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 12:18</td><td>legal@authecorp</td><td>Contract Signed</td>
+                                    <td><span class="badge badge-info">Legal</span></td>
+                                    <td>NDA with TechFin</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-07-21 11:02</td><td>admin@authecorp</td><td>Risk Added</td>
+                                    <td><span class="badge badge-warning">Risk</span></td>
+                                    <td>#R-003 Cyber risk</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- CONNECTION POINT: audit_logs from KaTSo System Core -->
+                </div>
+            </div>
+
+        </div><!-- /main-content -->
+    </div><!-- /app-container -->
+
+    <!-- ============================================================
+    MODALS
+    ============================================================ -->
+
+    <!-- Policy Modal -->
+    <div class="modal-overlay" id="policyModal">
+        <div class="modal">
+            <div class="modal-header"><h2>📄 New Policy</h2><button class="modal-close" onclick="closeModal('policyModal')">✕</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label class="form-label">Policy Name</label><input type="text" class="form-input" placeholder="Data Protection Policy" /></div>
+                <div class="form-group"><label class="form-label">Category</label><select class="form-select"><option>Security</option><option>HR</option><option>Financial</option><option>Operational</option><option>AI Governance</option></select></div>
+                <div class="form-group"><label class="form-label">Version</label><input type="text" class="form-input" value="v1.0" /></div>
+                <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" rows="3" placeholder="Policy description..."></textarea></div>
+                <div class="form-check"><input type="checkbox" checked /> Requires approval</div>
+                <div class="form-check"><input type="checkbox" checked /> Enable version control</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('policyModal')">Cancel</button>
+                <button class="btn btn-brand" onclick="closeModal('policyModal');showToast('📄 Policy created!','success')">Create Policy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – AuthePay Governance & Compliance Center
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // AUTHEPAY GOVERNANCE & COMPLIANCE CENTER – Full JavaScript
+        // ================================================================
+
+        // ── STATE ──
+        const state = {
+            currentPage: 'dashboard'
+        };
+
+        // ── NAVIGATION ──
+        function navigateTo(page) {
+            state.currentPage = page;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(a => {
+                if (a.dataset.page === page) a.classList.add('active');
+            });
+
+            const titles = {
+                dashboard: 'Governance Dashboard',
+                corporate: 'Corporate Governance',
+                legal: 'Legal Management',
+                regulatory: 'Regulatory Compliance',
+                risk: 'Enterprise Risk',
+                audit: 'Internal Audit',
+                policy: 'Policy Management',
+                privacy: 'Privacy Office',
+                continuity: 'Business Continuity',
+                'ai-governance': 'AI Governance',
+                reporting: 'Reporting',
+                'audit-logs': 'Audit Logs'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Governance Center';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigateTo(this.dataset.page);
+            });
+        });
+
+        // ── TOAST ──
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) {
+                existing.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => existing.remove(), 400);
+            }
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: '💡' };
+            t.innerHTML = `<span>${icons[type] || '💡'}</span> ${message}`;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                if (t.parentNode) {
+                    t.style.animation = 'slideOut 0.4s ease forwards';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4500);
+        }
+
+        // ── MODALS ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // ── AUDIT FILTER ──
+        function filterAudit(category) {
+            const rows = document.querySelectorAll('#auditTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (category === 'all' || text.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            showToast(`📋 Filtered: ${category}`, 'info');
+        }
+
+        // ── REPORTS ──
+        function generateReport(type) {
+            const output = document.getElementById('reportOutput');
+            const content = document.getElementById('reportContent');
+            if (!output || !content) return;
+
+            let report = `=== AUTHEPAY GOVERNANCE & COMPLIANCE ===\n`;
+            report += `Report: ${type.toUpperCase()}\n`;
+            report += `Generated: ${new Date().toLocaleString()}\n`;
+            report += `==================================\n\n`;
+
+            if (type === 'executive') {
+                report += `EXECUTIVE GOVERNANCE SUMMARY\n`;
+                report += `────────────────────────────\n`;
+                report += `Governance Score: 92%\n`;
+                report += `Compliance Score: 98%\n`;
+                report += `Active Risks: 5\n`;
+                report += `Critical Risks: 1\n`;
+                report += `Audits Completed: 12\n`;
+                report += `AI Governance: ✅ Compliant\n`;
+            } else if (type === 'board') {
+                report += `BOARD REPORT\n`;
+                report += `────────────\n`;
+                report += `Board Members: 12\n`;
+                report += `Meetings (YTD): 8\n`;
+                report += `KPIs Tracked: 12\n`;
+                report += `Decisions Made: 24\n`;
+                report += `Strategic Plan: Q3 2026 In Progress\n`;
+            } else if (type === 'compliance') {
+                report += `COMPLIANCE REPORT\n`;
+                report += `─────────────────\n`;
+                report += `AML/CFT: ✅ Compliant\n`;
+                report += `KYC: ✅ Compliant\n`;
+                report += `PCI DSS: ✅ Compliant\n`;
+                report += `ISO 27001: ✅ Certified\n`;
+                report += `Data Protection: ✅ Compliant\n`;
+                report += `Regulatory Filings: 12 Current\n`;
+            } else if (type === 'risk') {
+                report += `RISK REPORT\n`;
+                report += `───────────\n`;
+                report += `Total Risks: 5\n`;
+                report += `Critical: 1\n`;
+                report += `High: 2\n`;
+                report += `Medium: 2\n`;
+                report += `Low: 0\n`;
+                report += `Mitigated: 0\n`;
+                report += `Risk Score: 12/100\n`;
+            } else if (type === 'audit') {
+                report += `AUDIT REPORT\n`;
+                report += `────────────\n`;
+                report += `Total Audits: 8\n`;
+                report += `Completed: 6\n`;
+                report += `Findings: 12\n`;
+                report += `Resolved: 8\n`;
+                report += `Actions Pending: 4\n`;
+                report += `Avg Resolution: 14 days\n`;
+            } else if (type === 'ai') {
+                report += `AI GOVERNANCE REPORT\n`;
+                report += `────────────────────\n`;
+                report += `AI Policies: 4\n`;
+                report += `AI Decisions: 1,234\n`;
+                report += `Models: 12\n`;
+                report += `Compliance: ✅ All models compliant\n`;
+                report += `Risk Score: 12/100 (Low)\n`;
+                report += `Responsible AI: Fairness 98%, Transparency 100%\n`;
+            }
+
+            content.textContent = report;
+            output.style.display = 'block';
+            output.scrollIntoView({ behavior: 'smooth' });
+            showToast(`✅ ${type} report generated`, 'success');
+        }
+
+        function downloadReport() {
+            const content = document.getElementById('reportContent');
+            if (!content || !content.textContent) {
+                showToast('No report to download', 'warning');
+                return;
+            }
+            const blob = new Blob([content.textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `governance-report-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📥 Report downloaded', 'success');
+        }
+
+        // ── REFRESH ──
+        function refreshData() {
+            showToast('🔄 Refreshing governance data...', 'info');
+            // CONNECTION POINT: API call to fetch governance metrics
+            setTimeout(() => {
+                const statIds = [
+                    'dashCompliance', 'dashRisks', 'dashAudits', 'dashPolicies', 'dashFindings', 'dashAICompliance',
+                    'govBoard', 'govKPIs', 'govDecisions',
+                    'regAML', 'regDP', 'regPCI',
+                    'aiPolicies', 'aiModel', 'aiAudit',
+                    'corBoard', 'corMeetings', 'corKPIs', 'corDecisions',
+                    'legContracts', 'legIP', 'legLitigation', 'legNDAs',
+                    'regAML2', 'regKYC', 'regPCI2', 'regISO',
+                    'riskTotal', 'riskCritical', 'riskHigh', 'riskMitigated',
+                    'audTotal', 'audCompleted', 'audFindings', 'audActions',
+                    'polTotal', 'polActive', 'polReview', 'polApprovals',
+                    'privConsents', 'privRequests', 'privBreaches', 'privPIA',
+                    'bcPlans', 'bcTests', 'bcIncidents', 'bcRTO',
+                    'aiPolicies2', 'aiDecisions', 'aiModels', 'aiRisks'
+                ];
+                statIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+
+                // Update progress bars to 0%
+                document.querySelectorAll('.progress-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
+
+                showToast('✅ Governance data refreshed', 'success');
+            }, 1200);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // ── CLOSE MODALS ON OVERLAY ──
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+
+            // Animate governance meter
+            const meter = document.querySelector('.board-meter .meter .progress');
+            if (meter) {
+                const circ = 2 * Math.PI * 52;
+                meter.style.strokeDasharray = circ;
+                meter.style.strokeDashoffset = circ;
+                setTimeout(() => {
+                    meter.style.transition = 'stroke-dashoffset 1.5s ease';
+                    meter.style.strokeDashoffset = circ * 0.08; // 92% score
+                }, 300);
+            }
+
+            console.log('⚖️ AuthePay Governance & Compliance Center loaded');
+            console.log('📦 Modules: Corporate, Legal, Regulatory, Risk, Audit, Policy, Privacy, Continuity, AI Governance, Reporting');
+            console.log('🧠 AI: KaTSo AI Governance, Model Compliance, Responsible AI');
+            console.log('🔗 Integrations: KaTSo System Core, Supabase ready');
+            console.log('📋 Compliance: AML/CFT, KYC, PCI DSS, ISO 27001, Botswana DPA');
+        });
+
+        // ── EXPOSE GLOBALS ──
+        window.navigateTo = navigateTo;
+        window.showToast = showToast;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.filterAudit = filterAudit;
+        window.refreshData = refreshData;
+        window.generateReport = generateReport;
+        window.downloadReport = downloadReport;
+    </script>
+
+</body>
+</html>
