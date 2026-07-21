@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuthePay Master Specification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --brand: #FF6B00;
+            --brand-dark: #E55D00;
+            --bg: #0A0A0A;
+            --bg-card: #161616;
+            --border: #2A2A2A;
+            --text: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --success: #22C55E;
+            --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* ── TOP BAR ── */
+        .topbar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0.5rem;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+        .topbar-brand .badge {
+            background: var(--brand);
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: var(--font);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover {
+            border-color: var(--brand);
+            color: var(--text);
+        }
+        .btn-primary {
+            background: var(--brand);
+            border-color: var(--brand);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: var(--brand-dark);
+            border-color: var(--brand-dark);
+            color: #fff;
+        }
+        .btn-success {
+            background: var(--success);
+            border-color: var(--success);
+            color: #000;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+
+        /* ── HEADER ── */
+        .doc-header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .doc-header h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 0.3rem;
+        }
+        .doc-header h1 span {
+            color: var(--brand);
+        }
+        .doc-header .meta {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .doc-header .meta strong {
+            color: var(--text-secondary);
+        }
+        .doc-header .version {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+            padding: 2px 14px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* ── TOC ── */
+        .toc {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .toc h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.3rem 1.5rem;
+        }
+        .toc a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: block;
+            padding: 2px 0;
+            transition: 0.2s;
+        }
+        .toc a:hover {
+            color: var(--brand);
+            padding-left: 4px;
+        }
+        .toc .toc-section {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            padding: 4px 0 2px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── CONTENT ── */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        .section h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+        .section h2 .badge-num {
+            color: var(--brand);
+            font-weight: 900;
+            margin-right: 8px;
+        }
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 1.5rem 0 0.6rem;
+            color: var(--text-secondary);
+        }
+        .section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1.2rem 0 0.4rem;
+            color: var(--text-muted);
+        }
+        .section p {
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+        .section ul,
+        .section ol {
+            color: var(--text-secondary);
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+        .section li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── TABLES ── */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            background: var(--bg);
+            color: var(--text-secondary);
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* ── CODE / MONOSPACE ── */
+        code {
+            background: var(--bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+        pre {
+            background: var(--bg);
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            line-height: 1.8;
+            margin: 0.8rem 0;
+            white-space: pre-wrap;
+        }
+
+        /* ── BADGES ── */
+        .badge-sm {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+        .badge-sm.green {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+        .badge-sm.orange {
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--brand);
+        }
+        .badge-sm.yellow {
+            background: rgba(245, 158, 11, 0.15);
+            color: #F59E0B;
+        }
+        .badge-sm.gray {
+            background: rgba(113, 113, 122, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* ── PROGRESS BAR ── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 4px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--brand);
+        }
+        .progress-fill.green {
+            background: var(--success);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        .footer strong {
+            color: var(--text-secondary);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .doc-header h1 {
+                font-size: 2rem;
+            }
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
+            }
+            .topbar-actions {
+                justify-content: stretch;
+            }
+            .topbar-actions .btn {
+                flex: 1;
+                justify-content: center;
+            }
+            .toc-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .section {
+                padding: 1.2rem;
+            }
+            .doc-header .meta {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+            .doc-header h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* ── PRINT ── */
+        @media print {
+            .topbar {
+                display: none;
+            }
+            .container {
+                padding: 0.5in;
+            }
+            .section {
+                break-inside: avoid;
+                border: 1px solid #222;
+                padding: 1.2rem;
+            }
+            body {
+                background: #fff;
+                color: #000;
+            }
+            .doc-header h1 {
+                color: #000;
+            }
+            .doc-header .meta {
+                color: #555;
+            }
+            .section p,
+            .section li,
+            td {
+                color: #333;
+            }
+            .toc a {
+                color: #0066cc;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div class="topbar-brand">
+                <span>📄 AUTHEPAY</span>
+                <span class="badge">MASTER SPEC</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);font-weight:400;">v2.1.0</span>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn" onclick="downloadMarkdown()">⬇ Download .md</button>
+                <button class="btn btn-primary" onclick="window.print()">🖨️ Print / PDF</button>
+                <button class="btn btn-success" onclick="downloadHTML()">📥 Save HTML</button>
+                <a href="https://github.com" target="_blank" class="btn" style="border-color:var(--brand);">🐙 GitHub</a>
+            </div>
+        </div>
+
+        <!-- HEADER -->
+        <div class="doc-header">
+            <h1>AUTHEPAY <span>MASTER SPECIFICATION</span></h1>
+            <div style="display:flex;flex-wrap:wrap;gap:0.8rem;align-items:center;margin-top:0.3rem;">
+                <span class="version">✅ Production Ready</span>
+                <span class="version" style="background:rgba(255,107,0,0.15);color:var(--brand);">v2.1.0</span>
+            </div>
+            <div class="meta">
+                <span><strong>Owner:</strong> Braincade Holdings Pty Ltd T/A AutheCorp</span>
+                <span><strong>Classification:</strong> Confidential – Internal Use Only</span>
+                <span><strong>Date:</strong> 2026-07-21</span>
+                <span><strong>Pages:</strong> 300+ (when exported)</span>
+                <span><strong>Modules:</strong> 30+</span>
+            </div>
+            <div style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <span class="badge-sm green">✅ 62 Sections</span>
+                <span class="badge-sm orange">🔧 Production Architecture</span>
+                <span class="badge-sm green">🛡️ Zero Trust Security</span>
+                <span class="badge-sm orange">🧠 KaTSo AI OS</span>
+                <span class="badge-sm green">🌍 Global Ready</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- TABLE OF CONTENTS -->
+        <!-- ============================================================ -->
+        <div class="toc">
+            <h2>📑 Table of Contents</h2>
+            <div class="toc-grid" id="tocGrid">
+                <!-- dynamically generated from sections -->
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- CONTENT -->
+        <!-- ============================================================ -->
+        <div class="content" id="mainContent">
+
+            <!-- SECTION 1: Executive Summary -->
+            <div class="section" id="sec-1">
+                <h2><span class="badge-num">1.</span> Executive Summary</h2>
+                <h3>1.1 Overview</h3>
+                <p>AuthePay is an enterprise-grade, AI-powered fintech platform designed to transform financial services across Africa. Built on a modern, cloud-native architecture, AuthePay provides a comprehensive suite of payment, banking, identity, and commerce solutions for individuals, businesses, governments, and institutions.</p>
+                <p>The platform is orchestrated by <strong style="color:var(--text);">KaTSo AI OS</strong> – a multi-agent AI operating system that provides intelligent routing, fraud detection, automation, and decision support across all modules.</p>
+
+                <h3>1.2 Key Capabilities</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Capability</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Payment Processing</strong></td><td>Real-time payment processing across multiple channels (mobile money, cards, bank transfers, QR, NFC)</td></tr>
+                            <tr><td><strong>Digital Wallets</strong></td><td>Multi-currency wallets for individuals and businesses with savings, loyalty, and rewards</td></tr>
+                            <tr><td><strong>Merchant Services</strong></td><td>Full merchant lifecycle management, settlement, reconciliation, and analytics</td></tr>
+                            <tr><td><strong>Identity &amp; Trust</strong></td><td>KYC/KYB, biometric verification, document verification, fraud detection</td></tr>
+                            <tr><td><strong>API Marketplace</strong></td><td>Comprehensive developer platform with REST, GraphQL, and webhooks</td></tr>
+                            <tr><td><strong>AI Intelligence</strong></td><td>KaTSo AI OS providing fraud detection, risk scoring, recommendations, and automation</td></tr>
+                            <tr><td><strong>Enterprise Modules</strong></td><td>Government, education, healthcare, insurance, and banking solutions</td></tr>
+                            <tr><td><strong>Cross-Border</strong></td><td>International transfers, multi-currency, SWIFT, and regional payment networks</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>1.3 Strategic Value</h3>
+                <ul>
+                    <li><strong>Financial Inclusion:</strong> Reaching unbanked and underbanked populations across Africa</li>
+                    <li><strong>Operational Efficiency:</strong> Automating manual processes with AI and workflow orchestration</li>
+                    <li><strong>Security &amp; Trust:</strong> Enterprise-grade security with zero-trust architecture and AI-powered fraud detection</li>
+                    <li><strong>Scalability:</strong> Cloud-native design supporting millions of transactions and users</li>
+                    <li><strong>Compliance:</strong> Full alignment with Botswana Data Protection Act, Bank of Botswana, FIA AML/CFT, PCI DSS, and ISO 27001</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 2: Vision and Mission -->
+            <div class="section" id="sec-2">
+                <h2><span class="badge-num">2.</span> Vision and Mission</h2>
+                <h3>2.1 Vision</h3>
+                <p>To become the leading digital financial services platform in Africa, empowering individuals, businesses, and governments with secure, intelligent, and accessible financial tools that drive economic growth and financial inclusion.</p>
+
+                <h3>2.2 Mission</h3>
+                <p>To build a unified, AI-powered fintech ecosystem that simplifies payments, identity, commerce, and banking for all Africans, while setting the standard for security, compliance, and innovation in financial technology.</p>
+
+                <h3>2.3 Core Values</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Value</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Trust</strong></td><td>Uncompromising security and transparency</td></tr>
+                            <tr><td><strong>Innovation</strong></td><td>AI-first approach to solving financial challenges</td></tr>
+                            <tr><td><strong>Inclusion</strong></td><td>Accessible financial services for all</td></tr>
+                            <tr><td><strong>Excellence</strong></td><td>Enterprise-grade quality and reliability</td></tr>
+                            <tr><td><strong>Integrity</strong></td><td>Ethical AI and responsible data governance</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 3: Product Overview -->
+            <div class="section" id="sec-3">
+                <h2><span class="badge-num">3.</span> Product Overview</h2>
+                <h3>3.1 Platform Architecture</h3>
+                <p>AuthePay is built on a modular, microservices-based architecture with the following layers:</p>
+                <pre>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          PRESENTATION LAYER                                │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
+│  │ Merchant │ │ Customer │ │ Admin    │ │ Developer│ │ Partner  │        │
+│  │ Portal   │ │ App      │ │ Console  │ │ Portal   │ │ Portal   │        │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                          API GATEWAY LAYER                                 │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │              Cloudflare Workers / API Gateway                      │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                          CORE SERVICES LAYER                               │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐       │
+│  │Payment │ │ Wallet │ │Merchant│ │Identity│ │  API   │ │  AI    │       │
+│  │Gateway │ │Platform│ │Platform│ │Platform│ │Market  │ │Platform│       │
+│  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                          ENTERPRISE MODULES LAYER                          │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐       │
+│  │Government│ Banking │  TVET   │Healthcare│Insurance│Enterprise│       │
+│  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                          KaTSo AI OS LAYER                                 │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │  AI Router │ Kimi │ DeepSeek │ Qwen │ Memory │ Analytics │ Auto   │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                          DATA LAYER                                        │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐       │
+│  │PostgreSQL│ Redis  │ Supabase│ Object  │ Vector  │ Queue  │       │
+│  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                          INFRASTRUCTURE LAYER                              │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │              Cloudflare (CDN, Workers, Pages, R2)                 │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────────┘</pre>
+
+                <h3>3.2 Module Architecture</h3>
+                <p>The platform consists of <strong>30+ modules</strong> organized into categories:</p>
+                <ul>
+                    <li><strong>Core Modules:</strong> Payment Gateway, Wallet, API, Identity &amp; Trust, Chat, SoftPOS, Ticket, Growth</li>
+                    <li><strong>Financial Modules:</strong> Financial Core, Cross-Border, Treasury, Billing</li>
+                    <li><strong>Enterprise Modules:</strong> Government, Education, Healthcare, Banking, Commerce, Procurement</li>
+                    <li><strong>Platform Modules:</strong> API Marketplace, BaaS, Launch Center, Production Readiness, Governance, Customer Experience</li>
+                    <li><strong>AI Modules:</strong> KaTSo AI OS, Automation Engine, Fraud Command Center, Data Platform &amp; Lakehouse</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 4: Business Objectives -->
+            <div class="section" id="sec-4">
+                <h2><span class="badge-num">4.</span> Business Objectives</h2>
+                <h3>4.1 Strategic Objectives</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Objective</th><th>Description</th><th>Target</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Market Penetration</strong></td><td>Establish presence in Botswana and SADC</td><td>50% market share by 2028</td></tr>
+                            <tr><td><strong>Revenue Growth</strong></td><td>Scale transaction volume and revenue</td><td>300% YoY growth</td></tr>
+                            <tr><td><strong>Financial Inclusion</strong></td><td>Onboard unbanked and underbanked users</td><td>1M users by 2028</td></tr>
+                            <tr><td><strong>AI Leadership</strong></td><td>Set standard for AI in African fintech</td><td>Industry recognition</td></tr>
+                            <tr><td><strong>Compliance Excellence</strong></td><td>Full regulatory alignment</td><td>Zero compliance incidents</td></tr>
+                            <tr><td><strong>Global Expansion</strong></td><td>Expand beyond Africa</td><td>10+ countries by 2029</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>4.2 Key Performance Indicators (KPIs)</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>KPI</th><th>Target</th><th>Measurement</th></tr></thead>
+                        <tbody>
+                            <tr><td>Annual Transaction Volume</td><td>$500M+</td><td>Monthly transaction reports</td></tr>
+                            <tr><td>Active Users</td><td>1M+</td><td>Active user metrics</td></tr>
+                            <tr><td>Merchant Count</td><td>10,000+</td><td>Onboarded merchants</td></tr>
+                            <tr><td>Revenue</td><td>$50M+</td><td>Financial reports</td></tr>
+                            <tr><td>Platform Uptime</td><td>99.99%</td><td>Monitoring metrics</td></tr>
+                            <tr><td>Fraud Prevention Rate</td><td>99.5%</td><td>Fraud detection reports</td></tr>
+                            <tr><td>Customer Satisfaction</td><td>95%+</td><td>NPS and feedback</td></tr>
+                            <tr><td>AI Accuracy</td><td>98%+</td><td>Model performance metrics</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 5: Functional Requirements -->
+            <div class="section" id="sec-5">
+                <h2><span class="badge-num">5.</span> Functional Requirements</h2>
+                <p><em>Note: Complete functional requirements are documented in the full specification. Key highlights include:</em></p>
+                <ul>
+                    <li><strong>Core Payment Processing (FR-PAY-001 to FR-PAY-008):</strong> Initiate, authorize, capture, refund, track, and route payments across multiple channels.</li>
+                    <li><strong>Digital Wallet (FR-WAL-001 to FR-WAL-008):</strong> Create, deposit, withdraw, transfer, and track wallet transactions with multi-currency support.</li>
+                    <li><strong>Identity &amp; KYC (FR-ID-001 to FR-ID-008):</strong> Registration, verification, biometrics, liveness detection, trust scoring, and digital identity wallet.</li>
+                    <li><strong>Merchant Management (FR-MER-001 to FR-MER-007):</strong> Registration, KYB, dashboard, settlement, payment links, QR, and API credentials.</li>
+                    <li><strong>API Platform (FR-API-001 to FR-API-007):</strong> REST, GraphQL, webhooks, API keys, rate limiting, documentation, and SDKs.</li>
+                    <li><strong>AI &amp; Automation (FR-AI-001 to FR-AI-007):</strong> Fraud detection, intelligent routing, behaviour analysis, workflows, predictive analytics, NLP, and OCR.</li>
+                    <li><strong>Enterprise Modules (FR-ENT-001 to FR-ENT-006):</strong> Government, education, healthcare, insurance, BaaS, and white-label solutions.</li>
+                    <li><strong>Cross-Border (FR-CB-001 to FR-CB-006):</strong> P2P transfers, business payments, multi-currency, FX, SWIFT, and regional networks.</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 6: Non-Functional Requirements -->
+            <div class="section" id="sec-6">
+                <h2><span class="badge-num">6.</span> Non-Functional Requirements</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Category</th><th>Requirement</th><th>Target</th></tr></thead>
+                        <tbody>
+                            <tr><td rowspan="5"><strong>Performance</strong></td><td>API Response Time</td><td>&lt; 150ms (P95)</td></tr>
+                            <tr><td>Transaction Processing</td><td>&lt; 3 seconds</td></tr>
+                            <tr><td>Page Load Time</td><td>&lt; 2 seconds</td></tr>
+                            <tr><td>Concurrent Users</td><td>100,000+</td></tr>
+                            <tr><td>Transactions Per Second</td><td>1,000+</td></tr>
+                            <tr><td rowspan="5"><strong>Availability</strong></td><td>System Uptime</td><td>99.99%</td></tr>
+                            <tr><td>SLA Commitment</td><td>99.95%</td></tr>
+                            <tr><td>RTO</td><td>&lt; 15 minutes</td></tr>
+                            <tr><td>RPO</td><td>&lt; 5 minutes</td></tr>
+                            <tr><td>Disaster Recovery</td><td>Fully automated</td></tr>
+                            <tr><td rowspan="5"><strong>Security</strong></td><td>Encryption at Rest</td><td>AES-256</td></tr>
+                            <tr><td>Encryption in Transit</td><td>TLS 1.3</td></tr>
+                            <tr><td>Authentication</td><td>OAuth 2.0, JWT, MFA</td></tr>
+                            <tr><td>Authorization</td><td>RBAC, ABAC</td></tr>
+                            <tr><td>Compliance</td><td>PCI DSS Level 1, ISO 27001</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 7: Complete System Architecture -->
+            <div class="section" id="sec-7">
+                <h2><span class="badge-num">7.</span> Complete System Architecture</h2>
+                <h3>7.1 Architecture Overview</h3>
+                <p>AuthePay follows a <strong>microservices architecture</strong> with these principles:</p>
+                <ul>
+                    <li><strong>Domain-Driven Design:</strong> Each service maps to a business domain</li>
+                    <li><strong>Event-Driven:</strong> Asynchronous communication via event bus</li>
+                    <li><strong>API-First:</strong> All services expose RESTful APIs</li>
+                    <li><strong>Cloud-Native:</strong> Designed for cloud deployment with auto-scaling</li>
+                    <li><strong>Security-First:</strong> Zero-trust security model</li>
+                </ul>
+                <h3>7.2 Service Communication Patterns</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Pattern</th><th>Description</th><th>Use Case</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Synchronous HTTP/REST</strong></td><td>Request-response for immediate operations</td><td>Payment processing, API calls</td></tr>
+                            <tr><td><strong>Asynchronous Events</strong></td><td>Event-driven via message queue</td><td>Notifications, analytics, reconciliation</td></tr>
+                            <tr><td><strong>Webhooks</strong></td><td>External event delivery</td><td>Third-party integrations</td></tr>
+                            <tr><td><strong>GraphQL</strong></td><td>Batch data fetching</td><td>Complex frontend queries</td></tr>
+                            <tr><td><strong>gRPC</strong></td><td>High-performance internal communication</td><td>Inter-service calls</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 8: Folder Structure -->
+            <div class="section" id="sec-8">
+                <h2><span class="badge-num">8.</span> Folder Structure</h2>
+                <pre>
+KaTSo-AI-OS/
+├── apps/
+│   ├── web/
+│   │   ├── merchant-portal/          # Merchant dashboard (Next.js)
+│   │   ├── customer-app/             # Customer PWA (Next.js)
+│   │   ├── admin-console/            # Admin dashboard (Next.js)
+│   │   ├── developer-portal/         # API documentation (Next.js)
+│   │   └── partner-portal/           # Partner portal (Next.js)
+│   ├── mobile/
+│   │   ├── android/                  # Android app (React Native)
+│   │   └── ios/                      # iOS app (React Native)
+│   └── landing/
+│       └── marketing/                # Marketing site (Next.js)
+├── services/
+│   ├── payment-gateway/              # Python FastAPI
+│   ├── wallet-platform/              # Python FastAPI
+│   ├── merchant-platform/            # Python FastAPI
+│   ├── identity-platform/            # Python FastAPI
+│   ├── api-marketplace/              # Python FastAPI
+│   ├── settlement-engine/            # Python FastAPI
+│   ├── reconciliation-engine/        # Python FastAPI
+│   ├── treasury/                     # Python FastAPI
+│   ├── billing-engine/               # Python FastAPI
+│   ├── cross-border/                 # Python FastAPI
+│   ├── government-platform/          # Python FastAPI
+│   ├── education-platform/           # Python FastAPI
+│   ├── healthcare-platform/          # Python FastAPI
+│   ├── banking-platform/             # Python FastAPI
+│   ├── commerce-platform/            # Python FastAPI
+│   ├── notification-service/         # Python FastAPI
+│   ├── webhook-service/              # Python FastAPI
+│   ├── audit-service/                # Python FastAPI
+│   └── analytics-service/            # Python FastAPI
+├── packages/
+│   ├── shared-types/                 # TypeScript shared types
+│   ├── shared-utils/                 # Shared utilities
+│   ├── shared-validators/            # Validation schemas
+│   ├── shared-db/                    # Database shared models
+│   ├── shared-ai/                    # AI shared models
+│   └── ui-components/                # Shared React components
+├── workers/
+│   ├── katso-ai-worker/              # Cloudflare Worker
+│   ├── fraud-worker/                 # Cloudflare Worker
+│   ├── qr-worker/                    # Cloudflare Worker
+│   ├── webhook-worker/               # Cloudflare Worker
+│   └── notification-worker/          # Cloudflare Worker
+├── infrastructure/
+│   ├── terraform/                    # Infrastructure as Code
+│   ├── docker/                       # Dockerfiles
+│   ├── kubernetes/                   # K8s manifests
+│   └── cloudflare/                   # Cloudflare config
+├── scripts/
+│   ├── deploy/                       # Deployment scripts
+│   ├── migrate/                      # Database migrations
+│   └── seed/                         # Seed data
+├── tests/
+│   ├── unit/                         # Unit tests
+│   ├── integration/                  # Integration tests
+│   ├── e2e/                          # End-to-end tests
+│   └── performance/                  # Performance tests
+├── docs/
+│   ├── api/                          # API documentation
+│   ├── architecture/                 # Architecture docs
+│   ├── guides/                       # Developer guides
+│   └── compliance/                   # Compliance docs
+├── .github/
+│   ├── workflows/                    # GitHub Actions
+│   └── copilot/                      # Copilot instructions
+├── docker-compose.yml                # Local development
+├── package.json                      # Monorepo root
+├── turbo.json                        # Turborepo configuration
+├── wrangler.toml                     # Cloudflare Workers config
+├── .env.example                      # Environment variables template
+└── README.md                         # Project overview</pre>
+            </div>
+
+            <!-- SECTION 9: Monorepo Architecture -->
+            <div class="section" id="sec-9">
+                <h2><span class="badge-num">9.</span> Monorepo Architecture</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Turborepo</strong></td><td>Build system and task orchestration</td></tr>
+                            <tr><td><strong>pnpm</strong></td><td>Package management</td></tr>
+                            <tr><td><strong>Git</strong></td><td>Version control</td></tr>
+                            <tr><td><strong>GitHub Actions</strong></td><td>CI/CD pipeline</td></tr>
+                            <tr><td><strong>Codecov</strong></td><td>Test coverage reporting</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 10: Technology Stack -->
+            <div class="section" id="sec-10">
+                <h2><span class="badge-num">10.</span> Technology Stack</h2>
+                <h3>10.1 Frontend Stack</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td>Framework</td><td>Next.js 14.0.4</td><td>Full-stack React framework</td></tr>
+                            <tr><td>Language</td><td>TypeScript 5.3.3</td><td>Type-safe JavaScript</td></tr>
+                            <tr><td>Styling</td><td>Tailwind CSS 3.4.0</td><td>Utility-first CSS</td></tr>
+                            <tr><td>UI Library</td><td>shadcn/ui (Latest)</td><td>Accessible component library</td></tr>
+                            <tr><td>State Management</td><td>Zustand 4.4.7</td><td>Lightweight state management</td></tr>
+                            <tr><td>Data Fetching</td><td>TanStack Query 5.12.2</td><td>Server-state management</td></tr>
+                            <tr><td>Forms</td><td>React Hook Form 7.48.2</td><td>Form handling</td></tr>
+                            <tr><td>Validation</td><td>Zod 3.22.4</td><td>Schema validation</td></tr>
+                            <tr><td>Charts</td><td>Recharts 2.10.3</td><td>Data visualization</td></tr>
+                            <tr><td>PWA</td><td>Next.js PWA 5.0.0</td><td>Progressive Web App support</td></tr>
+                            <tr><td>Mobile</td><td>React Native 0.73.0</td><td>Native mobile apps</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>10.2 Backend Stack</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td>Framework</td><td>FastAPI 0.109.0</td><td>High-performance Python API</td></tr>
+                            <tr><td>Language</td><td>Python 3.12</td><td>Core backend language</td></tr>
+                            <tr><td>Async</td><td>asyncio</td><td>Concurrency</td></tr>
+                            <tr><td>Database</td><td>PostgreSQL 15.5</td><td>Primary database</td></tr>
+                            <tr><td>ORM</td><td>SQLAlchemy 2.0.25</td><td>Object-relational mapping</td></tr>
+                            <tr><td>Migrations</td><td>Alembic 1.13.1</td><td>Database migrations</td></tr>
+                            <tr><td>Caching</td><td>Redis 7.2.4</td><td>Cache and message broker</td></tr>
+                            <tr><td>Queue</td><td>Celery 5.3.4</td><td>Task queue</td></tr>
+                            <tr><td>Auth</td><td>Supabase Auth</td><td>Authentication</td></tr>
+                            <tr><td>Storage</td><td>Cloudflare R2</td><td>Object storage</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>10.3 Infrastructure Stack</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td>Edge Computing</td><td>Cloudflare Workers</td><td>Serverless API endpoints</td></tr>
+                            <tr><td>Hosting</td><td>Cloudflare Pages</td><td>Frontend hosting</td></tr>
+                            <tr><td>CDN</td><td>Cloudflare CDN</td><td>Content delivery</td></tr>
+                            <tr><td>Object Storage</td><td>Cloudflare R2</td><td>File and image storage</td></tr>
+                            <tr><td>Database</td><td>Supabase PostgreSQL</td><td>Primary database</td></tr>
+                            <tr><td>Auth</td><td>Supabase Auth</td><td>Authentication and authorization</td></tr>
+                            <tr><td>Cache</td><td>Redis (Upstash)</td><td>Distributed caching</td></tr>
+                            <tr><td>DNS</td><td>Cloudflare</td><td>Domain management</td></tr>
+                            <tr><td>CI/CD</td><td>GitHub Actions</td><td>Automated pipelines</td></tr>
+                            <tr><td>Container</td><td>Docker</td><td>Containerization</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 11-12: Database -->
+            <div class="section" id="sec-11">
+                <h2><span class="badge-num">11.</span> Database Architecture</h2>
+                <h3>11.1 Database Design Principles</h3>
+                <ul>
+                    <li><strong>Normalization:</strong> 3NF for transactional data</li>
+                    <li><strong>Denormalization:</strong> For performance-critical queries</li>
+                    <li><strong>Sharding:</strong> Prepared for horizontal scaling</li>
+                    <li><strong>Indexing:</strong> B-tree, GIN, and GIST indexes</li>
+                    <li><strong>Partitioning:</strong> Time-based partitioning for logs</li>
+                    <li><strong>Backup:</strong> Automated daily backups</li>
+                    <li><strong>Replication:</strong> Read replicas for analytics</li>
+                    <li><strong>Migration:</strong> Zero-downtime migrations</li>
+                </ul>
+                <h3>11.2 Key Database Tables</h3>
+                <ul>
+                    <li><strong>Core Transaction Tables:</strong> transactions, transaction_statuses, transaction_methods, transaction_fees</li>
+                    <li><strong>Wallet Tables:</strong> wallets, wallet_balances, wallet_transactions, wallet_currencies</li>
+                    <li><strong>Identity Tables:</strong> users, profiles, kyc_verifications, documents, sessions</li>
+                    <li><strong>Merchant Tables:</strong> merchants, merchant_verifications, merchant_settlements, merchant_api_keys</li>
+                    <li><strong>Settlement Tables:</strong> settlements, settlement_items, reconciliations, reconciliation_exceptions</li>
+                    <li><strong>Audit Tables:</strong> audit_logs, security_events, compliance_events</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-12">
+                <h2><span class="badge-num">12.</span> Complete Database Schema</h2>
+                <p><em>The full schema includes tables for:</em></p>
+                <ul>
+                    <li><strong>Users &amp; Profiles:</strong> users, profiles, sessions</li>
+                    <li><strong>Wallets:</strong> wallets, wallet_transactions</li>
+                    <li><strong>Transactions:</strong> transactions, transaction_status_history</li>
+                    <li><strong>Merchants:</strong> merchants, merchant_settlements</li>
+                    <li><strong>KYC/KYB:</strong> kyc_verifications, documents</li>
+                    <li><strong>Audit:</strong> audit_logs, security_events</li>
+                    <li><strong>Notifications:</strong> notifications</li>
+                    <li><strong>API:</strong> api_keys, webhooks, webhook_deliveries</li>
+                    <li><strong>Compliance:</strong> aml_alerts, compliance_cases</li>
+                    <li><strong>AI:</strong> ai_requests, ai_models</li>
+                </ul>
+                <p><em>Complete DDL statements with indexes are included in the full specification.</em></p>
+            </div>
+
+            <!-- SECTION 13-16: API Architecture -->
+            <div class="section" id="sec-13">
+                <h2><span class="badge-num">13.</span> API Architecture</h2>
+                <h3>13.1 API Design Principles</h3>
+                <ul>
+                    <li><strong>RESTful:</strong> Resource-based endpoints with standard HTTP methods</li>
+                    <li><strong>Versioned:</strong> API versioning in URL path (e.g., /api/v1/)</li>
+                    <li><strong>Stateless:</strong> No client state stored on server</li>
+                    <li><strong>Idempotent:</strong> Safe methods (GET, PUT, DELETE) are idempotent</li>
+                    <li><strong>Consistent:</strong> Uniform naming and response structures</li>
+                    <li><strong>Documented:</strong> OpenAPI 3.0 specification</li>
+                    <li><strong>Secure:</strong> All endpoints require authentication</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-14">
+                <h2><span class="badge-num">14.</span> REST Standards</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Resource</th><th>Endpoint</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td>Payments</td><td><code>/api/v2/payments</code></td><td>Payment operations</td></tr>
+                            <tr><td>Wallets</td><td><code>/api/v2/wallets</code></td><td>Wallet management</td></tr>
+                            <tr><td>Merchants</td><td><code>/api/v2/merchants</code></td><td>Merchant management</td></tr>
+                            <tr><td>Customers</td><td><code>/api/v2/customers</code></td><td>Customer management</td></tr>
+                            <tr><td>Transactions</td><td><code>/api/v2/transactions</code></td><td>Transaction history</td></tr>
+                            <tr><td>Settlements</td><td><code>/api/v2/settlements</code></td><td>Settlement operations</td></tr>
+                            <tr><td>Webhooks</td><td><code>/api/v2/webhooks</code></td><td>Webhook management</td></tr>
+                            <tr><td>API Keys</td><td><code>/api/v2/api-keys</code></td><td>API key management</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="sec-15">
+                <h2><span class="badge-num">15.</span> GraphQL Strategy</h2>
+                <ul>
+                    <li><strong>When to Use:</strong> Complex queries, mobile apps, admin dashboards</li>
+                    <li><strong>When NOT to Use:</strong> Simple CRUD, high-throughput APIs</li>
+                    <li><strong>Gateway:</strong> Apollo Server with Cloudflare Workers</li>
+                    <li><strong>Schema:</strong> Federated GraphQL with Apollo Federation</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-16">
+                <h2><span class="badge-num">16.</span> Webhook Architecture</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Event</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>payment.created</code></td><td>Payment initiated</td></tr>
+                            <tr><td><code>payment.processed</code></td><td>Payment processed</td></tr>
+                            <tr><td><code>payment.completed</code></td><td>Payment completed</td></tr>
+                            <tr><td><code>payment.failed</code></td><td>Payment failed</td></tr>
+                            <tr><td><code>payment.refunded</code></td><td>Payment refunded</td></tr>
+                            <tr><td><code>settlement.completed</code></td><td>Settlement completed</td></tr>
+                            <tr><td><code>merchant.verified</code></td><td>Merchant verified</td></tr>
+                            <tr><td><code>customer.verified</code></td><td>Customer verified</td></tr>
+                            <tr><td><code>fraud.detected</code></td><td>Fraud detected</td></tr>
+                            <tr><td><code>wallet.updated</code></td><td>Wallet balance updated</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 17-19: Auth -->
+            <div class="section" id="sec-17">
+                <h2><span class="badge-num">17.</span> Authentication</h2>
+                <ul>
+                    <li><strong>Email/Password:</strong> Web and mobile app login</li>
+                    <li><strong>Phone/OTP:</strong> Mobile-first login</li>
+                    <li><strong>Social Login:</strong> Google, Apple, Microsoft</li>
+                    <li><strong>Biometric:</strong> Face ID, Fingerprint (mobile)</li>
+                    <li><strong>Passkeys:</strong> Passwordless authentication</li>
+                    <li><strong>MFA:</strong> Extra security layer</li>
+                    <li><strong>API Keys:</strong> Programmatic access</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-18">
+                <h2><span class="badge-num">18.</span> Authorization</h2>
+                <ul>
+                    <li><strong>RBAC:</strong> Role-based access control</li>
+                    <li><strong>ABAC:</strong> Attribute-based access control</li>
+                    <li><strong>Ownership:</strong> Resource ownership checks</li>
+                    <li><strong>Scopes:</strong> Granular permission scopes for API access</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-19">
+                <h2><span class="badge-num">19.</span> RBAC</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Role</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Super Admin</strong></td><td>Full system access</td></tr>
+                            <tr><td><strong>Admin</strong></td><td>Platform management</td></tr>
+                            <tr><td><strong>Compliance Officer</strong></td><td>Compliance and audit</td></tr>
+                            <tr><td><strong>Merchant Manager</strong></td><td>Merchant operations</td></tr>
+                            <tr><td><strong>Developer</strong></td><td>API access, sandbox, docs</td></tr>
+                            <tr><td><strong>Support Agent</strong></td><td>Customer data, tickets</td></tr>
+                            <tr><td><strong>Merchant</strong></td><td>Own payments, settlements</td></tr>
+                            <tr><td><strong>Customer</strong></td><td>Own wallet, payments</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 20: Multi-tenancy -->
+            <div class="section" id="sec-20">
+                <h2><span class="badge-num">20.</span> Multi-tenancy</h2>
+                <ul>
+                    <li><strong>Model:</strong> Shared database, shared schema with tenant isolation</li>
+                    <li><strong>Tenant Identification:</strong> Tenant ID in JWT claims</li>
+                    <li><strong>Data Isolation:</strong> Row-level security (RLS) in PostgreSQL</li>
+                    <li><strong>Tenant Types:</strong> Merchant, enterprise, partner, white-label</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 21-33: Core Modules -->
+            <div class="section" id="sec-21">
+                <h2><span class="badge-num">21.</span> Wallet Architecture</h2>
+                <ul>
+                    <li><strong>Personal Wallet:</strong> Individual user wallet</li>
+                    <li><strong>Merchant Wallet:</strong> Business wallet</li>
+                    <li><strong>Savings Wallet:</strong> Goal-based savings</li>
+                    <li><strong>Business Wallet:</strong> Corporate treasury</li>
+                    <li><strong>Multi-Currency Wallet:</strong> Multiple currencies</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-22">
+                <h2><span class="badge-num">22.</span> Payment Gateway Architecture</h2>
+                <h3>22.1 Payment Methods</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Method</th><th>Provider</th><th>Settlement</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>Orange Money</td><td>Orange Botswana</td><td>Instant</td><td><span class="badge-sm green">Live</span></td></tr>
+                            <tr><td>MyZaka</td><td>Mascom</td><td>Instant</td><td><span class="badge-sm green">Live</span></td></tr>
+                            <tr><td>Smega</td><td>BTC</td><td>Instant</td><td><span class="badge-sm green">Live</span></td></tr>
+                            <tr><td>Bank Transfer</td><td>Various</td><td>T+1</td><td><span class="badge-sm green">Live</span></td></tr>
+                            <tr><td>QR Payment</td><td>AuthePay</td><td>Instant</td><td><span class="badge-sm green">Live</span></td></tr>
+                            <tr><td>Payment Link</td><td>AuthePay</td><td>Instant</td><td><span class="badge-sm green">Live</span></td></tr>
+                            <tr><td>Wallet Transfer</td><td>AuthePay</td><td>Instant</td><td><span class="badge-sm green">Live</span></td></tr>
+                            <tr><td>Visa/Mastercard</td><td>Network</td><td>T+1</td><td><span class="badge-sm gray">Planned</span></td></tr>
+                            <tr><td>SoftPOS</td><td>AuthePay</td><td>Instant</td><td><span class="badge-sm green">Live</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>22.2 Payment Status Lifecycle</h3>
+                <p><code>PENDING → PROCESSING → COMPLETED → REFUNDED</code></p>
+            </div>
+
+            <div class="section" id="sec-23">
+                <h2><span class="badge-num">23.</span> Merchant Platform</h2>
+                <ul>
+                    <li><strong>Merchant Onboarding:</strong> Registration → KYB → Risk Assessment → Account Creation → API Keys</li>
+                    <li><strong>Verification Levels:</strong> Tier 1 (Basic) to Tier 4 (Full)</li>
+                    <li><strong>Features:</strong> Dashboard, Payment Links, QR Generator, Settlement Reports, API Access, Team Management</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-24">
+                <h2><span class="badge-num">24.</span> SoftPOS</h2>
+                <ul>
+                    <li>NFC contactless card reading</li>
+                    <li>Payment SDK for secure processing</li>
+                    <li>Terminal ID and merchant app on Android</li>
+                    <li>Cloud backend for payment orchestration</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-25">
+                <h2><span class="badge-num">25.</span> QR Payments</h2>
+                <ul>
+                    <li><strong>Merchant QR:</strong> Static QR for in-store payments</li>
+                    <li><strong>Dynamic QR:</strong> Time-based QR for secure payments</li>
+                    <li><strong>Payment Link QR:</strong> Link to payment page</li>
+                    <li><strong>P2P QR:</strong> Peer-to-peer transfers</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-26">
+                <h2><span class="badge-num">26.</span> NFC Payments</h2>
+                <ul>
+                    <li>Customer taps card/phone → NFC reader</li>
+                    <li>NFC SDK reads card data → Tokenized</li>
+                    <li>Payment request → AuthePay Gateway</li>
+                    <li>Tokenization → Secure payment processing</li>
+                    <li>Authorization → Bank/Network</li>
+                    <li>Response → Tap confirmation</li>
+                    <li>Receipt → Digital receipt</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-27">
+                <h2><span class="badge-num">27.</span> Wallet</h2>
+                <ul>
+                    <li><strong>Features:</strong> Balance, Deposit, Withdraw, Transfer, Multi-Currency, Savings, Loyalty Points</li>
+                    <li><strong>Security:</strong> PIN, MFA, Session Timeout, Suspicious Activity Monitoring, Transaction Limits, Device Trust</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-28">
+                <h2><span class="badge-num">28.</span> Settlement Engine</h2>
+                <ul>
+                    <li><strong>Types:</strong> Instant, Scheduled (T+1, T+2), Manual</li>
+                    <li><strong>Flow:</strong> Transaction → Batch by Merchant → Calculate Fees → Generate Report → Approve → Process → Notify</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-29">
+                <h2><span class="badge-num">29.</span> Reconciliation Engine</h2>
+                <ul>
+                    <li><strong>Types:</strong> Auto-Reconciliation, Manual, Batch, Real-Time</li>
+                    <li><strong>Exception Types:</strong> Missing, Duplicate, Amount Mismatch, Currency Mismatch</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-30">
+                <h2><span class="badge-num">30.</span> Treasury</h2>
+                <ul>
+                    <li>Cash Management, Liquidity Monitoring, Reserve Management, FX Management, Investment Management, Risk Management</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-31">
+                <h2><span class="badge-num">31.</span> Billing</h2>
+                <ul>
+                    <li><strong>Models:</strong> Subscription, Usage-Based, Hybrid, One-Time</li>
+                    <li><strong>Flow:</strong> Sign-up → Usage Tracking → Invoice → Payment → Confirmation → Renewal</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-32">
+                <h2><span class="badge-num">32.</span> Revenue Sharing</h2>
+                <ul>
+                    <li><strong>Models:</strong> Commission, Fee Sharing, Subscription, Referral, White-Label</li>
+                    <li><strong>Calculation:</strong> Revenue = Transaction Volume × Fee Rate; Partner Share = Revenue × Partner Percentage</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-33">
+                <h2><span class="badge-num">33.</span> API Marketplace</h2>
+                <ul>
+                    <li><strong>APIs:</strong> Payment, Wallet, Merchant, Identity, Settlement, QR, Analytics, Webhook</li>
+                    <li><strong>Tiers:</strong> Free (100 req/min), Professional (500 req/min), Enterprise (1,000 req/min), Partner (Custom)</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 34-39: AI Integration -->
+            <div class="section" id="sec-34">
+                <h2><span class="badge-num">34.</span> AI Integration</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Service</th><th>Provider</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td>Fraud Detection</td><td>DeepSeek</td><td>Identify fraudulent transactions</td></tr>
+                            <tr><td>Risk Scoring</td><td>DeepSeek</td><td>Assess transaction risk</td></tr>
+                            <tr><td>Document Verification</td><td>Qwen</td><td>Verify identity documents</td></tr>
+                            <tr><td>Natural Language Processing</td><td>OpenAI</td><td>Customer support, chat</td></tr>
+                            <tr><td>Code Generation</td><td>Kimi</td><td>Engineering, development</td></tr>
+                            <tr><td>Image Analysis</td><td>Qwen</td><td>Document analysis</td></tr>
+                            <tr><td>Predictive Analytics</td><td>Custom</td><td>Forecasting, insights</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="sec-35">
+                <h2><span class="badge-num">35.</span> KaTSo AI Integration</h2>
+                <pre>
+KaTSo AI OS
+├── AI Router
+│   ├── Intelligent Model Selection
+│   ├── Task Prioritization
+│   ├── Load Balancing
+│   └── Context Memory
+├── AI Agents
+│   ├── Kimi Engineering Agent
+│   ├── DeepSeek Fraud Agent
+│   ├── Qwen Vision Agent
+│   ├── Compliance Agent
+│   ├── Merchant Agent
+│   └── Finance Agent
+├── AI Memory
+│   ├── Vector Database
+│   ├── Knowledge Graph
+│   └── Conversation History
+├── AI Analytics
+│   ├── Predictive Analytics
+│   ├── Revenue Forecasting
+│   └── Customer Insights
+└── AI Automation
+    ├── Workflow Automation
+    ├── Decision Engine
+    └── Event Engine</pre>
+            </div>
+
+            <div class="section" id="sec-36">
+                <h2><span class="badge-num">36.</span> Kimi Integration</h2>
+                <ul>
+                    <li><strong>Code Generation:</strong> Generate code from requirements</li>
+                    <li><strong>Code Review:</strong> Review and suggest improvements</li>
+                    <li><strong>Debugging:</strong> Identify and fix bugs</li>
+                    <li><strong>Documentation:</strong> Generate documentation</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-37">
+                <h2><span class="badge-num">37.</span> DeepSeek Integration</h2>
+                <ul>
+                    <li><strong>Fraud Detection:</strong> Identify fraudulent transactions</li>
+                    <li><strong>Risk Scoring:</strong> Assess transaction risk</li>
+                    <li><strong>Pattern Recognition:</strong> Identify suspicious patterns</li>
+                    <li><strong>Sanctions Screening:</strong> Check against sanctions lists</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-38">
+                <h2><span class="badge-num">38.</span> Qwen Integration</h2>
+                <ul>
+                    <li><strong>Document OCR:</strong> Extract text from documents</li>
+                    <li><strong>Image Analysis:</strong> Analyze images for verification</li>
+                    <li><strong>Liveness Detection:</strong> Detect spoofing attempts</li>
+                    <li><strong>Face Matching:</strong> Compare faces for identity</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-39">
+                <h2><span class="badge-num">39.</span> AI Router Design</h2>
+                <pre>
+# Simplified AI Router logic
+def route_request(request):
+    task_type = classify_task(request)
+    if task_type == "fraud_detection":
+        return deepseek_model(request)
+    elif task_type == "document_verification":
+        return qwen_model(request)
+    elif task_type == "code_generation":
+        return kimi_model(request)
+    elif task_type == "customer_support":
+        return openai_model(request)
+    else:
+        return default_model(request)</pre>
+            </div>
+
+            <!-- SECTION 40-43: Fraud, AML, KYC, Compliance -->
+            <div class="section" id="sec-40">
+                <h2><span class="badge-num">40.</span> Fraud Detection</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Score</th><th>Risk Level</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>0-20</td><td>Low</td><td>Auto-approve</td></tr>
+                            <tr><td>21-50</td><td>Medium</td><td>Flag for review</td></tr>
+                            <tr><td>51-70</td><td>High</td><td>Challenge user</td></tr>
+                            <tr><td>71-100</td><td>Critical</td><td>Auto-reject</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="sec-41">
+                <h2><span class="badge-num">41.</span> AML/CFT</h2>
+                <ul>
+                    <li><strong>Customer Due Diligence:</strong> KYC/KYB verification</li>
+                    <li><strong>Transaction Monitoring:</strong> Real-time monitoring</li>
+                    <li><strong>Sanctions Screening:</strong> Watchlist screening</li>
+                    <li><strong>Suspicious Activity Reporting:</strong> SAR filing</li>
+                    <li><strong>Risk Assessment:</strong> Risk-based approach</li>
+                    <li><strong>Record Keeping:</strong> Document retention</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-42">
+                <h2><span class="badge-num">42.</span> KYC</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Level</th><th>Requirements</th><th>Verification</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Tier 1</strong></td><td>Name, email, phone</td><td>Basic verification</td></tr>
+                            <tr><td><strong>Tier 2</strong></td><td>ID document, selfie</td><td>Document verification</td></tr>
+                            <tr><td><strong>Tier 3</strong></td><td>Proof of address</td><td>Address verification</td></tr>
+                            <tr><td><strong>Tier 4</strong></td><td>Income verification, source of funds</td><td>Enhanced due diligence</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="sec-43">
+                <h2><span class="badge-num">43.</span> Compliance</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Regulation</th><th>Jurisdiction</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>Botswana Data Protection Act</td><td>Botswana</td><td><span class="badge-sm green">✅ Compliant</span></td></tr>
+                            <tr><td>Bank of Botswana Regulations</td><td>Botswana</td><td><span class="badge-sm green">✅ Compliant</span></td></tr>
+                            <tr><td>FIA AML/CFT Guidelines</td><td>Botswana</td><td><span class="badge-sm green">✅ Compliant</span></td></tr>
+                            <tr><td>PCI DSS</td><td>International</td><td><span class="badge-sm green">✅ Compliant</span></td></tr>
+                            <tr><td>ISO 27001</td><td>International</td><td><span class="badge-sm green">✅ Certified</span></td></tr>
+                            <tr><td>GDPR</td><td>EU</td><td><span class="badge-sm green">✅ Compliant</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 44-47: Security -->
+            <div class="section" id="sec-44">
+                <h2><span class="badge-num">44.</span> Security Architecture</h2>
+                <ul>
+                    <li><strong>Network:</strong> WAF, DDoS protection, Firewall</li>
+                    <li><strong>Application:</strong> Input validation, CSRF, XSS prevention</li>
+                    <li><strong>Data:</strong> Encryption at rest, encryption in transit</li>
+                    <li><strong>Authentication:</strong> MFA, JWT, OAuth 2.0</li>
+                    <li><strong>Authorization:</strong> RBAC, ABAC, least privilege</li>
+                    <li><strong>Audit:</strong> Complete audit trail</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-45">
+                <h2><span class="badge-num">45.</span> Zero Trust</h2>
+                <ul>
+                    <li><strong>Never Trust, Always Verify:</strong> Every request authenticated</li>
+                    <li><strong>Least Privilege Access:</strong> Minimal access necessary</li>
+                    <li><strong>Micro-segmentation:</strong> Isolate workloads</li>
+                    <li><strong>Continuous Monitoring:</strong> Real-time threat detection</li>
+                    <li><strong>Identity-Centric Security:</strong> Strong identity verification</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-46">
+                <h2><span class="badge-num">46.</span> Encryption</h2>
+                <ul>
+                    <li><strong>AES-256:</strong> Data at rest (database encryption)</li>
+                    <li><strong>TLS 1.3:</strong> Data in transit (all network traffic)</li>
+                    <li><strong>RSA-2048:</strong> Key exchange (certificate management)</li>
+                    <li><strong>SHA-256:</strong> Hashing (password storage)</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-47">
+                <h2><span class="badge-num">47.</span> Audit Logs</h2>
+                <ul>
+                    <li><strong>User Login:</strong> User ID, IP, timestamp</li>
+                    <li><strong>Payment Processing:</strong> User ID, amount, status</li>
+                    <li><strong>User Management:</strong> User ID, action, timestamp</li>
+                    <li><strong>Configuration Changes:</strong> User ID, setting, old value, new value</li>
+                    <li><strong>Security Events:</strong> Event type, severity, details</li>
+                    <li><strong>API Access:</strong> API key, endpoint, response</li>
+                    <li><strong>Retention:</strong> 7 years for financial data</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 48-50: Monitoring, DevSecOps, CI/CD -->
+            <div class="section" id="sec-48">
+                <h2><span class="badge-num">48.</span> Monitoring</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Category</th><th>Metrics</th><th>Alert Threshold</th></tr></thead>
+                        <tbody>
+                            <tr><td>Application</td><td>Response time, error rate</td><td>&gt;500ms, &gt;5% errors</td></tr>
+                            <tr><td>API</td><td>Requests, latency, errors</td><td>&gt;1s, &gt;5% errors</td></tr>
+                            <tr><td>Database</td><td>Connections, queries, replication</td><td>&gt;100, &gt;10ms query</td></tr>
+                            <tr><td>Infrastructure</td><td>CPU, memory, disk, network</td><td>&gt;80% usage</td></tr>
+                            <tr><td>Business</td><td>Transactions, revenue</td><td>&lt;10/min</td></tr>
+                            <tr><td>Security</td><td>Failed logins, threats</td><td>&gt;10/min</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="sec-49">
+                <h2><span class="badge-num">49.</span> DevSecOps</h2>
+                <ul>
+                    <li><strong>Security as Code:</strong> Security defined in code</li>
+                    <li><strong>Continuous Security:</strong> Automated security testing</li>
+                    <li><strong>Shift Left:</strong> Security in development</li>
+                    <li><strong>Compliance as Code:</strong> Automated compliance checks</li>
+                    <li><strong>Infrastructure as Code:</strong> Terraform/Cloudflare</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-50">
+                <h2><span class="badge-num">50.</span> CI/CD Pipeline</h2>
+                <ul>
+                    <li><strong>Code Commit</strong> → Git, GitHub</li>
+                    <li><strong>Pre-commit Hooks</strong> → Husky, lint-staged</li>
+                    <li><strong>Build</strong> → Turborepo, pnpm</li>
+                    <li><strong>Test</strong> → Jest, Pytest, Cypress</li>
+                    <li><strong>Security Scan</strong> → Snyk, GitHub Advanced Security</li>
+                    <li><strong>Build Container</strong> → Docker</li>
+                    <li><strong>Deploy Sandbox</strong> → Cloudflare Workers</li>
+                    <li><strong>Deploy Staging</strong> → Cloudflare Pages</li>
+                    <li><strong>Deploy Production</strong> → Cloudflare Pages</li>
+                    <li><strong>Post-deploy Monitoring</strong> → Custom scripts</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 51: Testing Strategy -->
+            <div class="section" id="sec-51">
+                <h2><span class="badge-num">51.</span> Testing Strategy</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Type</th><th>Description</th><th>Tools</th></tr></thead>
+                        <tbody>
+                            <tr><td>Unit</td><td>Test individual components</td><td>Jest, Pytest</td></tr>
+                            <tr><td>Integration</td><td>Test service interaction</td><td>Jest, Pytest</td></tr>
+                            <tr><td>E2E</td><td>Test full flows</td><td>Cypress, Playwright</td></tr>
+                            <tr><td>Performance</td><td>Load and stress tests</td><td>K6, Artillery</td></tr>
+                            <tr><td>Security</td><td>Vulnerability tests</td><td>OWASP ZAP, Snyk</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Coverage Requirements</h3>
+                <ul>
+                    <li>Services: 90% target, 80% minimum</li>
+                    <li>Models: 95% target, 85% minimum</li>
+                    <li>API: 95% target, 90% minimum</li>
+                    <li>UI: 80% target, 70% minimum</li>
+                    <li>Critical Path: 100% target, 95% minimum</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 52-53: Disaster Recovery & Business Continuity -->
+            <div class="section" id="sec-52">
+                <h2><span class="badge-num">52.</span> Disaster Recovery</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Metric</th><th>Target</th></tr></thead>
+                        <tbody>
+                            <tr><td>RTO (Recovery Time Objective)</td><td>&lt; 15 minutes</td></tr>
+                            <tr><td>RPO (Recovery Point Objective)</td><td>&lt; 5 minutes</td></tr>
+                            <tr><td>Recovery Rate</td><td>99.98%</td></tr>
+                            <tr><td>Failover Time</td><td>&lt; 1 minute</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="sec-53">
+                <h2><span class="badge-num">53.</span> Business Continuity</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Function</th><th>Recovery Priority</th></tr></thead>
+                        <tbody>
+                            <tr><td>Payment Processing</td><td>P1</td></tr>
+                            <tr><td>Wallet Access</td><td>P1</td></tr>
+                            <tr><td>Customer Authentication</td><td>P1</td></tr>
+                            <tr><td>Reporting</td><td>P2</td></tr>
+                            <tr><td>API Access</td><td>P2</td></tr>
+                            <tr><td>Analytics</td><td>P3</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 54-56: Documentation, Coding, Branch -->
+            <div class="section" id="sec-54">
+                <h2><span class="badge-num">54.</span> Documentation Standards</h2>
+                <ul>
+                    <li><strong>Architecture:</strong> System design → Engineers</li>
+                    <li><strong>API:</strong> Endpoint reference → Developers</li>
+                    <li><strong>Developer Guides:</strong> Integration guides → Developers</li>
+                    <li><strong>User Guides:</strong> Feature documentation → Users</li>
+                    <li><strong>Operations:</strong> Runbooks, playbooks → Ops team</li>
+                    <li><strong>Security:</strong> Security policies → All staff</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-55">
+                <h2><span class="badge-num">55.</span> Coding Standards</h2>
+                <ul>
+                    <li><strong>TypeScript:</strong> Use interfaces for object shapes, type aliases for unions, enums for constants, consistent imports</li>
+                    <li><strong>Python:</strong> Use type hints, dataclasses for DTOs, async/await for I/O</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-56">
+                <h2><span class="badge-num">56.</span> Branch Strategy</h2>
+                <ul>
+                    <li><code>main</code> – Production-ready code</li>
+                    <li><code>staging</code> – Pre-production testing</li>
+                    <li><code>develop</code> – Development branch</li>
+                    <li><code>feature/*</code> – New features</li>
+                    <li><code>bugfix/*</code> – Bug fixes</li>
+                    <li><code>hotfix/*</code> – Critical production fixes</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 57: GitHub Copilot Instructions -->
+            <div class="section" id="sec-57">
+                <h2><span class="badge-num">57.</span> GitHub Copilot Instructions</h2>
+                <pre>
+# GitHub Copilot Instructions
+
+## Context
+You are an AI assistant helping build AuthePay, an enterprise fintech platform.
+
+## Coding Standards
+- Use TypeScript for all frontend code
+- Use Python for all backend code
+- Follow PEP 8 for Python
+- Use ESLint + Prettier for TypeScript
+- Write comprehensive unit tests
+- Use JSDoc/TSDoc for documentation
+
+## Architecture
+- Use FastAPI for backend services
+- Use Next.js for frontend applications
+- Use Supabase for database and auth
+- Use Cloudflare for deployment
+
+## Security
+- Never hardcode secrets
+- Use environment variables
+- Validate all inputs
+- Sanitize all outputs
+
+## Output Format
+- Provide complete files
+- Include imports
+- Include type definitions
+- Include error handling
+- Include logging</pre>
+            </div>
+
+            <!-- SECTION 58-60: Deployment -->
+            <div class="section" id="sec-58">
+                <h2><span class="badge-num">58.</span> Cloudflare Deployment</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Component</th><th>Cloudflare Service</th></tr></thead>
+                        <tbody>
+                            <tr><td>Frontend Apps</td><td>Cloudflare Pages</td></tr>
+                            <tr><td>API Workers</td><td>Cloudflare Workers</td></tr>
+                            <tr><td>CDN</td><td>Cloudflare CDN</td></tr>
+                            <tr><td>DNS</td><td>Cloudflare DNS</td></tr>
+                            <tr><td>Object Storage</td><td>Cloudflare R2</td></tr>
+                            <tr><td>DDoS Protection</td><td>Cloudflare DDoS</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <pre>
+# wrangler.toml
+name = "authepay-api"
+main = "src/index.js"
+compatibility_date = "2026-07-21"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "abc123"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "authepay"
+database_id = "abc123"
+
+[vars]
+SUPABASE_URL = "https://project.supabase.co"
+SUPABASE_ANON_KEY = "anon-key"</pre>
+            </div>
+
+            <div class="section" id="sec-59">
+                <h2><span class="badge-num">59.</span> Supabase Deployment</h2>
+                <ul>
+                    <li><strong>PostgreSQL:</strong> Primary database</li>
+                    <li><strong>Auth:</strong> Authentication</li>
+                    <li><strong>Realtime:</strong> Real-time updates</li>
+                    <li><strong>Storage:</strong> File storage</li>
+                    <li><strong>Edge Functions:</strong> Serverless functions</li>
+                </ul>
+            </div>
+
+            <div class="section" id="sec-60">
+                <h2><span class="badge-num">60.</span> Production Readiness</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Item</th><th>Status</th></tr></thead>
+                        <tbody>
+                            <tr><td>Unit Tests</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>Integration Tests</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>E2E Tests</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>Security Scan</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>Performance Tests</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>Documentation</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>Monitoring</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>Alerting</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>Disaster Recovery</td><td><span class="badge-sm green">✅</span></td></tr>
+                            <tr><td>Backup</td><td><span class="badge-sm green">✅</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 61: Launch Checklist -->
+            <div class="section" id="sec-61">
+                <h2><span class="badge-num">61.</span> Launch Checklist</h2>
+                <h3>Pre-Launch</h3>
+                <ul>
+                    <li>Code Freeze – No new features</li>
+                    <li>Final Testing – Complete regression</li>
+                    <li>Security Audit – Final security review</li>
+                    <li>Compliance Review – Regulatory checks</li>
+                    <li>Performance Test – Load testing</li>
+                    <li>Documentation – Final review</li>
+                    <li>Training – Staff training</li>
+                    <li>Environment Check – Production readiness</li>
+                </ul>
+                <h3>Launch Day</h3>
+                <ul>
+                    <li>Go/No-Go Meeting – Final decision</li>
+                    <li>Deploy Production – Execute deployment</li>
+                    <li>Smoke Testing – Verify critical flows</li>
+                    <li>Live Monitoring – Real-time monitoring</li>
+                    <li>Incident Response – Standby team</li>
+                    <li>Success Metrics – Track launch success</li>
+                </ul>
+                <h3>Post-Launch</h3>
+                <ul>
+                    <li>Monitor Performance – 24/7 monitoring (Day 1)</li>
+                    <li>Bug Fixes – Critical fixes (Week 1)</li>
+                    <li>User Feedback – Collect feedback (Week 1)</li>
+                    <li>Iterate – Quick wins (Week 2)</li>
+                    <li>Full Review – Comprehensive review (Month 1)</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 62: Future Roadmap -->
+            <div class="section" id="sec-62">
+                <h2><span class="badge-num">62.</span> Future Roadmap</h2>
+                <h3>Near-Term (2026-2027)</h3>
+                <ul>
+                    <li><strong>Q3 2026:</strong> Platform Stabilisation – Production launch</li>
+                    <li><strong>Q4 2026:</strong> Feature Expansion – AutheHealth, AutheGov</li>
+                    <li><strong>Q1 2027:</strong> Market Expansion – SADC expansion</li>
+                    <li><strong>Q2 2027:</strong> Cross-Border – International transfers</li>
+                </ul>
+                <h3>Medium-Term (2027-2028)</h3>
+                <ul>
+                    <li><strong>Q3 2027:</strong> Banking Integration – Open banking, BaaS</li>
+                    <li><strong>Q4 2027:</strong> AI Enhancement – Advanced AI models</li>
+                    <li><strong>Q1 2028:</strong> Global Expansion – Pan-African rollout</li>
+                    <li><strong>Q2 2028:</strong> Enterprise Features – Enterprise-grade capabilities</li>
+                </ul>
+                <h3>Long-Term (2029+)</h3>
+                <ul>
+                    <li><strong>2029:</strong> Pan-African Dominance – 10+ countries</li>
+                    <li><strong>2030:</strong> Global Fintech Leader – International expansion</li>
+                    <li><strong>2031:</strong> AI-First Platform – Fully autonomous operations</li>
+                </ul>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <p><strong>AUTHEPAY MASTER SPECIFICATION</strong> — v2.1.0</p>
+                <p>© 2026 Braincade Holdings Pty Ltd T/A AutheCorp. All rights reserved.</p>
+                <p style="font-size:0.75rem;margin-top:0.5rem;">This document contains confidential and proprietary information. Unauthorised distribution is prohibited.</p>
+            </div>
+
+        </div><!-- /content -->
+
+    </div><!-- /container -->
+
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
+    <script>
+        // ── BUILD TOC ──
+        (function buildTOC() {
+            const sections = document.querySelectorAll('.section');
+            const tocGrid = document.getElementById('tocGrid');
+            if (!tocGrid || !sections.length) return;
+
+            // Group sections by number
+            let tocHTML = '';
+            let currentGroup = '';
+
+            sections.forEach((section, index) => {
+                const h2 = section.querySelector('h2');
+                if (!h2) return;
+                const text = h2.textContent.trim();
+                const match = text.match(/^(\d+)\.\s+(.+)/);
+                if (match) {
+                    const num = match[1];
+                    const title = match[2];
+                    const id = section.id || `sec-${num}`;
+                    const sectionNum = parseInt(num);
+
+                    // Group by 10s
+                    const group = Math.floor((sectionNum - 1) / 10) * 10 + 1;
+                    const groupLabel = `${group}-${group + 9}`;
+
+                    if (groupLabel !== currentGroup) {
+                        currentGroup = groupLabel;
+                        tocHTML += `<div class="toc-section">Sections ${groupLabel}</div>`;
+                    }
+
+                    tocHTML += `<a href="#${id}">${num}. ${title}</a>`;
+                }
+            });
+
+            tocGrid.innerHTML = tocHTML;
+        })();
+
+        // ── DOWNLOAD MARKDOWN ──
+        function downloadMarkdown() {
+            // Build markdown content from the page
+            let md = '# AUTHEPAY MASTER SPECIFICATION\n\n';
+            md += '**Version:** 2.1.0 | **Status:** Production Ready | **Date:** 2026-07-21\n\n';
+            md += '---\n\n';
+
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section) => {
+                const h2 = section.querySelector('h2');
+                if (h2) {
+                    md += '## ' + h2.textContent.trim() + '\n\n';
+                }
+                // Get text content without HTML
+                const text = section.textContent.trim();
+                // Remove the heading text from the start
+                const content = text.replace(h2 ? h2.textContent.trim() : '', '').trim();
+                md += content + '\n\n';
+            });
+
+            // Clean up extra whitespace
+            md = md.replace(/\n{3,}/g, '\n\n');
+
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'AUTHEPAY_MASTER_SPEC.md';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ── DOWNLOAD HTML ──
+        function downloadHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([
+                '<!DOCTYPE html>\n' + htmlContent
+            ], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'AUTHEPAY_MASTER_SPEC.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ── KEYBOARD SHORTCUTS ──
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                downloadMarkdown();
+            }
+            if (e.ctrlKey && e.key === 'p') {
+                // Let print dialog open
+            }
+        });
+
+        console.log('📄 AuthePay Master Specification loaded');
+        console.log('📦 62 sections · 30+ modules · 300+ pages when exported');
+        console.log('💡 Press Ctrl+S to download Markdown');
+    </script>
+
+</body>
+</html>
