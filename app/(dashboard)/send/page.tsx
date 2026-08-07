@@ -109,7 +109,7 @@ export default function SendMoneyPage() {
                 <Input
                   placeholder="John Doe"
                   value={recipientName}
-                  onChange={(e) => setRecipientName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRecipientName(e.target.value)}
                   className="pl-10"
                   required
                 />
@@ -122,7 +122,7 @@ export default function SendMoneyPage() {
                 <Input
                   placeholder="+267 76 749 821"
                   value={recipientPhone}
-                  onChange={(e) => setRecipientPhone(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRecipientPhone(e.target.value)}
                   className="pl-10"
                   required
                 />
@@ -134,7 +134,7 @@ export default function SendMoneyPage() {
                 type="number"
                 placeholder="0.00"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
                 min="1"
                 step="0.01"
                 required
@@ -147,7 +147,7 @@ export default function SendMoneyPage() {
                 <Input
                   placeholder="Payment for services"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
                   className="pl-10"
                 />
               </div>

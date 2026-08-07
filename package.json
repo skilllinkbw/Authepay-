@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "echo 'tests not yet configured'",
@@ -12,12 +12,12 @@
   },
   "dependencies": {
     "@opennextjs/cloudflare": "latest",
-    "@supabase/supabase-js": "^2.38.0",
-    "@supabase/ssr": "^0.0.10",
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.112.2",
     "clsx": "^2.1.1",
     "date-fns": "^2.30.0",
     "lucide-react": "^0.344.0",
-    "next": "^16.2.10",
+    "next": "^16.3.0",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.0"

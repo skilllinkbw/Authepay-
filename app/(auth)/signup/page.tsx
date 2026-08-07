@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { Mail, Lock, User, Phone, ArrowRight } from "lucide-react";
 
 export default function SignupPage() {
@@ -14,7 +14,6 @@ export default function SignupPage() {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const supabase = createClient();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +72,7 @@ export default function SignupPage() {
                 <Input
                   placeholder="John Doe"
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFullName(e.target.value)}
                   className="pl-10"
                   required
                 />
@@ -87,7 +86,7 @@ export default function SignupPage() {
                   type="email"
                   placeholder="you@example.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                   className="pl-10"
                   required
                 />
@@ -100,7 +99,7 @@ export default function SignupPage() {
                 <Input
                   placeholder="+267 76 749 821"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhone(e.target.value)}
                   className="pl-10"
                   required
                 />
@@ -114,7 +113,7 @@ export default function SignupPage() {
                   type="password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                   className="pl-10"
                   required
                   minLength={8}
