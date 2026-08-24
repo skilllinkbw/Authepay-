@@ -2,12 +2,16 @@
   "name": "authepay",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
-    "test": "echo 'tests not yet configured'",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "node --test tests/money.test.ts tests/refs.test.ts tests/idempotency.test.ts tests/api-keys.test.ts tests/payments-state.test.ts tests/webhooks.test.ts",
     "opennext": "opennextjs-cloudflare build"
   },
   "dependencies": {
@@ -27,6 +31,8 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.4.16",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^16.3.0",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.3",
     "typescript": "^5"

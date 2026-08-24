@@ -1,0 +1,11 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "@next/next/no-img-element": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ]
+  },
+  "ignorePatterns": ["node_modules/", ".next/", ".open-next/", "out/", "build/", "venv/", "supabase/migrations/"]
+}
