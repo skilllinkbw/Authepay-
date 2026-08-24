@@ -12,7 +12,7 @@ import { executeTransfer } from "@/lib/services/transfer-service";
 import { writeAudit } from "@/lib/services/audit-service";
 import { idempotencyKeyFromHeaders } from "@/lib/idempotency";
 import { badRequest, notFound } from "@/lib/errors";
-import { toMinorUnits, DEFAULT_CURRENCY, type Currency } from "@/lib/money";
+import { toMinorUnits, DEFAULT_CURRENCY } from "@/lib/money";
 
 interface TransferBody {
   recipient_email?: unknown;

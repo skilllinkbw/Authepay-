@@ -34,6 +34,8 @@ export default function MerchantsPage() {
   }, []);
 
   useEffect(() => {
+    // Initial fetch; state updates happen asynchronously after the request.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
 

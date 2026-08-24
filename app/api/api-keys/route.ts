@@ -14,7 +14,7 @@ import { API_KEY_SCOPES, type ApiKeyScope } from "@/lib/api-keys";
 export async function GET() {
   try {
     const supabase = await createClient();
-    const ctx = await getAuthedContext(supabase);
+    await getAuthedContext(supabase);
     const keys = await listUserApiKeys(supabase);
     return ok({ api_keys: keys });
   } catch (err) {

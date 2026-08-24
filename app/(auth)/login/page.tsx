@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase/client";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,7 +29,8 @@ export default function LoginPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
+      router.refresh();
     }
   };
 
@@ -82,7 +85,7 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center text-sm text-gray-500 mt-6">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-authepay-blue font-semibold hover:underline">
               Sign up
             </Link>

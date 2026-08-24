@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase/client";
 import { Mail, Lock, User, Phone, ArrowRight } from "lucide-react";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -40,7 +42,8 @@ export default function SignupPage() {
     // Profile + wallet are provisioned server-side by the handle_new_user
     // database trigger; the client never inserts financial rows directly.
 
-    window.location.href = "/dashboard";
+    router.push("/dashboard");
+    router.refresh();
   };
 
   return (

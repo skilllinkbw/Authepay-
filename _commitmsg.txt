@@ -1,0 +1,14 @@
+AuthePay: ESLint 9 flat config, lint-clean codebase
+
+- Fix dependency conflict: eslint-config-next@16 requires eslint >=9
+  (previous ^8 pin made every npm install fail with ERESOLVE).
+- Replace legacy .eslintrc.json with native flat eslint.config.mjs using
+  eslint-config-next/core-web-vitals + /typescript (v16 ships flat arrays).
+- Fix all lint errors: remove unused imports/vars, replace `any` in
+  Input/server cookie types with real types, escape unescaped entity,
+  navigate via useRouter instead of window.location, annotate initial
+  data-fetch effects for react-hooks/set-state-in-effect.
+- Document backend/ Python files as design reference only.
+
+Verified: tsc --noEmit clean, eslint --max-warnings 0 clean, 27/27 tests
+passing, production build serves (/ = 200, /api/wallet unauth = 401).

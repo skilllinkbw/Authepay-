@@ -15,7 +15,7 @@ import { badRequest } from "@/lib/errors";
 export async function GET() {
   try {
     const supabase = await createClient();
-    const ctx = await getAuthedContext(supabase);
+    await getAuthedContext(supabase);
     const merchants = await listMyMerchants(supabase);
     return ok({ merchants });
   } catch (err) {

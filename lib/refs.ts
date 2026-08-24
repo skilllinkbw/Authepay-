@@ -7,8 +7,7 @@
 
 import { randomBytes } from "node:crypto";
 
-const PREFIXES = ["ap_txn", "ap_pay", "ap_ref", "ap_key"] as const;
-export type ReferencePrefix = (typeof PREFIXES)[number];
+export type ReferencePrefix = "ap_txn" | "ap_pay" | "ap_ref" | "ap_key";
 
 export interface RandomSource {
   (size: number): Buffer;

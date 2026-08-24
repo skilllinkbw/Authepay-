@@ -9,7 +9,6 @@ import {
   paginationFromUrl,
   readJsonBody,
   requirePhone,
-  requireString,
 } from "@/lib/server/api";
 import { initiatePayment, requireOwnWallet } from "@/lib/services/payment-service";
 import { writeAudit } from "@/lib/services/audit-service";

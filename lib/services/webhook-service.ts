@@ -6,7 +6,7 @@
  * transaction state machine. Outbound merchant notifications are signed.
  */
 
-import { ApiError, conflict } from "../errors.ts";
+import { ApiError } from "../errors.ts";
 import { requireAdminClient } from "../supabase/admin.ts";
 import { logger } from "../logger.ts";
 import { defaultProvider } from "../providers/registry.ts";
