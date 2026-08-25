@@ -63,7 +63,7 @@ interface PatchMerchantBody {
 export async function PATCH(request: Request) {
   try {
     const supabase = await createClient();
-    const ctx = await getAuthedContext(supabase);
+    await getAuthedContext(supabase);
     const body = await readJsonBody<PatchMerchantBody>(request);
     if (typeof body.id !== "string" || !/^[0-9a-fA-F-]{36}$/.test(body.id)) {
       throw badRequest("'id' must be a valid uuid");
@@ -74,7 +74,6 @@ export async function PATCH(request: Request) {
       patch.description = optionalString(body.description, "description");
     }
     const merchant = await updateMerchant(supabase, body.id, patch);
-    void ctx;
     return ok({ merchant });
   } catch (err) {
     return fail(err);

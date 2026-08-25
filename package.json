@@ -1,7 +1,8 @@
 {
   "name": "authepay",
   "version": "0.1.0",
-  "private": true,
+     "private": true,
+   "type": "module",
   "engines": {
     "node": ">=20.9.0"
   },

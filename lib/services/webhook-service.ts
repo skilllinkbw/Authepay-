@@ -11,17 +11,12 @@ import { requireAdminClient } from "../supabase/admin.ts";
 import { logger } from "../logger.ts";
 import { defaultProvider } from "../providers/registry.ts";
 import type { ProviderEventResult, ProviderPaymentStatus } from "../providers/types.ts";
-import type { PaymentStatus } from "../types.ts";
 
 export interface InboundEventOutcome {
   duplicate: boolean;
   eventId: string;
   reference: string | null;
   status: ProviderPaymentStatus | null;
-}
-
-function toPaymentStatus(s: ProviderPaymentStatus | null): PaymentStatus | null {
-  return s;
 }
 
 /** Process a single inbound provider webhook event. */
@@ -70,14 +65,14 @@ export async function processInboundEvent(
   }
 
   // 3. Reconcile the referenced transaction, when present.
-  const status = toPaymentStatus(event.status);
+  const status = event.status;
   if (event.reference && status && ["succeeded", "failed", "cancelled", "pending"].includes(status)) {
-    const from_status =
-      status === "pending" ? null : null; // providers may report transitions from any state
+    // Providers may report transitions from any state, so we don't enforce a
+    // from_status check during reconciliation.
     try {
       const { error } = await admin.rpc("update_transaction_status", {
         p_reference: event.reference,
-        p_from_status: from_status,
+        p_from_status: null,
         p_to_status: status === "pending" ? "processing" : status,
         p_reason: `provider_event:${event.eventType}`,
         p_actor: `provider:${provider.name}`,

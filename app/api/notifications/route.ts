@@ -36,7 +36,6 @@ export async function POST(request: Request) {
     if (typeof body.id !== "number" || !Number.isSafeInteger(body.id)) {
       throw badRequest("'id' must be numeric");
     }
-    void ctx;
     await markNotificationRead(supabase, ctx.userId, body.id);
     return noContent();
   } catch (err) {
