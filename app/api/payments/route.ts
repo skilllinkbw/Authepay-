@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     const wallet = await requireOwnWallet(supabase, ctx.userId);
     const idempotencyKey = idempotencyKeyFromHeaders((name) => request.headers.get(name));
 
-    const transaction = await initiatePayment(supabase, ctx.userId, wallet.id, {
+    const { transaction, redirect_url } = await initiatePayment(supabase, ctx.userId, wallet.id, {
       amount: amountRaw,
       currency,
       description: optionalString(body.description, "description"),
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
       userAgent: getUserAgent(request),
     });
 
-    return ok({ payment: transaction }, 201);
+    return ok({ payment: transaction, redirect_url }, 201);
   } catch (err) {
     return fail(err);
   }

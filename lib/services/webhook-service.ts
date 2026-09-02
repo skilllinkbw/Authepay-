@@ -7,10 +7,15 @@
  */
 
 import { ApiError } from "../errors.ts";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireAdminClient } from "../supabase/admin.ts";
 import { logger } from "../logger.ts";
 import { defaultProvider } from "../providers/registry.ts";
-import type { ProviderEventResult, ProviderPaymentStatus } from "../providers/types.ts";
+import type {
+  PaymentProvider,
+  ProviderEventResult,
+  ProviderPaymentStatus,
+} from "../providers/types.ts";
 
 export interface InboundEventOutcome {
   duplicate: boolean;
@@ -64,46 +69,18 @@ export async function processInboundEvent(
     return { duplicate: true, eventId: event.eventId, reference: event.reference, status: event.status };
   }
 
-  // 3. Reconcile the referenced transaction, when present.
+  // 3. Reconcile the referenced payment, when present. Events reference payment
+  //    intents; settlement/failure always run through the SQL settlement RPCs
+  //    so balances can only change via the ledger functions. Unknown references
+  //    (legacy transaction references) fall back to the guarded transaction
+  //    state machine.
   const status = event.status;
   if (event.reference && status && ["succeeded", "failed", "cancelled", "pending"].includes(status)) {
-    // Providers may report transitions from any state, so we don't enforce a
-    // from_status check during reconciliation.
-    try {
-      const { error } = await admin.rpc("update_transaction_status", {
-        p_reference: event.reference,
-        p_from_status: null,
-        p_to_status: status === "pending" ? "processing" : status,
-        p_reason: `provider_event:${event.eventType}`,
-        p_actor: `provider:${provider.name}`,
-      });
-      if (error) {
-        const message = error.message ?? "";
-        if (/unexpected_state/.test(message)) {
-          // Concurrent/duplicate transition — treat as benign but auditable.
-          logger.warn("Ignoring out-of-order provider event", {
-            reference: event.reference,
-            eventType: event.eventType,
-          });
-        } else if (/transaction_not_found/.test(message)) {
-          logger.warn("Provider event references unknown transaction", {
-            reference: event.reference,
-          });
-        } else {
-          throw new ApiError(500, "db_error", "Reconciliation failed");
-        }
-      }
-    } catch (err) {
-      if (err instanceof ApiError) throw err;
-      throw new ApiError(500, "db_error", "Reconciliation failed");
-    }
+    await reconcileProviderEvent(admin, provider, event, status);
   }
 
-  // Mark processed so retries do not redo reconciliation work.
-  await admin
-    .from("provider_webhook_events")
-    .update({ processed: true })
-    .match({ provider: provider.name, event_id: event.eventId });
+  // 4. Mark processed so retries do not redo reconciliation work.
+  await markProcessed(admin, provider, event.eventId);
 
   return {
     duplicate: false,
@@ -111,6 +88,115 @@ export async function processInboundEvent(
     reference: event.reference,
     status: event.status,
   };
+}
+
+/**
+ * Reconcile an inbound provider event into our state.
+ *
+ * Rules:
+ *  - succeeded  -> settle_payment_intent  (credits the wallet exactly once)
+ *  - failed/cancelled -> fail_payment_intent (never touches balances)
+ *  - pending    -> guarded transition to processing (never success)
+ *  - unknown intent references fall back to the guarded transaction state
+ *    machine for legacy/direct transaction references.
+ *  - Out-of-order / terminal-state redeliveries are logged and ignored.
+ *  - Errors are raised as typed ApiErrors; no unknown exception escapes.
+ */
+async function reconcileProviderEvent(
+  admin: SupabaseClient,
+  provider: PaymentProvider,
+  event: ProviderEventResult,
+  status: ProviderPaymentStatus
+): Promise<void> {
+  try {
+    if (status === "succeeded") {
+      const { error } = await admin.rpc("settle_payment_intent", {
+        p_intent_reference: event.reference,
+        p_provider_reference: null,
+        p_actor: `provider:${provider.name}`,
+      });
+      if (!error) return;
+      const msg = error.message ?? "";
+      if (/intent_not_found/.test(msg)) {
+        return fallbackTransactionTransition(admin, provider, event, status);
+      }
+      if (/intent_not_settleable/.test(msg)) {
+        logger.warn("Provider event for terminal intent ignored", {
+          reference: event.reference,
+          eventType: event.eventType,
+        });
+        return;
+      }
+      throw new ApiError(500, "db_error", "Reconciliation failed");
+    }
+
+    if (status === "failed") {
+      const { error } = await admin.rpc("fail_payment_intent", {
+        p_intent_reference: event.reference,
+        p_reason: `provider_event:${event.eventType}`,
+        p_actor: `provider:${provider.name}`,
+      });
+      if (!error) return;
+      const msg = error.message ?? "";
+      if (/intent_not_found/.test(msg)) {
+        return fallbackTransactionTransition(admin, provider, event, status);
+      }
+      throw new ApiError(500, "db_error", "Reconciliation failed");
+    }
+
+    // pending: only ever advances an intent/transaction to processing.
+    return fallbackTransactionTransition(admin, provider, event, "pending");
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError(500, "db_error", "Reconciliation failed");
+  }
+}
+
+/**
+ * Guarded fallback for references that are transactions rather than intents.
+ * Never transitions a terminal state; out-of-order events are benign no-ops.
+ */
+async function fallbackTransactionTransition(
+  admin: SupabaseClient,
+  provider: PaymentProvider,
+  event: ProviderEventResult,
+  status: ProviderPaymentStatus
+): Promise<void> {
+  const { error } = await admin.rpc("update_transaction_status", {
+    p_reference: event.reference,
+    p_from_status: null,
+    p_to_status: status === "pending" ? "processing" : status,
+    p_reason: `provider_event:${event.eventType}`,
+    p_actor: `provider:${provider.name}`,
+  });
+  if (!error) return;
+  const msg = error.message ?? "";
+  if (/unexpected_state|invalid_transition/.test(msg)) {
+    logger.warn("Out-of-order provider event ignored", {
+      reference: event.reference,
+      eventType: event.eventType,
+    });
+    return;
+  }
+  if (/transaction_not_found|intent_not_found/.test(msg)) {
+    logger.warn("Provider event references unknown payment", {
+      reference: event.reference,
+    });
+    return;
+  }
+  throw new ApiError(500, "db_error", "Reconciliation failed");
+}
+
+/** Mark an event row processed (idempotent). */
+async function markProcessed(
+  admin: SupabaseClient,
+  provider: PaymentProvider,
+  eventId: string
+): Promise<void> {
+  await admin
+    .from("provider_webhook_events")
+    .update({ processed: true })
+    .match({ provider: provider.name, event_id: eventId });
 }
 
 /**

@@ -26,15 +26,24 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(5);
 
+  // Totals are computed from the COMPLETE ledger (append-only, per-wallet),
+  // never from a truncated subset of transactions.
+  const { data: ledger } = wallet
+    ? await supabase
+        .from("ledger_entries")
+        .select("direction, amount_minor")
+        .eq("wallet_id", wallet.id)
+    : { data: [] };
+
   const balance = wallet?.balance_minor ?? 0;
   const currency = wallet?.currency ?? "BWP";
 
-  const totalIn = (transactions ?? [])
-    .filter((t) => t.to_wallet_id === wallet?.id)
-    .reduce((sum, t) => sum + t.amount_minor, 0);
-  const totalOut = (transactions ?? [])
-    .filter((t) => t.from_wallet_id === wallet?.id)
-    .reduce((sum, t) => sum + t.amount_minor, 0);
+  const totalIn = (ledger ?? [])
+    .filter((e) => e.direction === "credit")
+    .reduce((sum, e) => sum + e.amount_minor, 0);
+  const totalOut = (ledger ?? [])
+    .filter((e) => e.direction === "debit")
+    .reduce((sum, e) => sum + e.amount_minor, 0);
 
   return (
     <div className="space-y-6">

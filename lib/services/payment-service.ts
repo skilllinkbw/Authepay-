@@ -39,11 +39,33 @@ export function mapPostgresError(err: unknown): never {
     throw notFound("Wallet not found");
   }
   if (/transaction_not_found/.test(message)) throw notFound("Transaction not found");
+  if (/intent_not_found/.test(message)) throw notFound("Payment intent not found");
   if (/not_refundable/.test(message)) {
     throw new ApiError(409, "not_refundable", "Only succeeded payments can be refunded");
   }
+  if (/refund_exceeds_refundable/.test(message)) {
+    throw new ApiError(422, "refund_exceeds_refundable", "Refund amount exceeds the refundable amount");
+  }
+  if (/refund_forbidden/.test(message)) {
+    throw new ApiError(403, "refund_forbidden", "You are not authorized to refund this transaction");
+  }
+  if (/currency_mismatch/.test(message)) {
+    throw new ApiError(422, "currency_mismatch", "Refund currency does not match the original transaction");
+  }
+  if (/no_settlement_wallet/.test(message)) {
+    throw new ApiError(422, "no_settlement_wallet", "Payment has no wallet to settle into");
+  }
+  if (/intent_not_settleable/.test(message)) {
+    throw new ApiError(409, "intent_not_settleable", "Payment intent is not in a settleable state");
+  }
   if (/unexpected_state/.test(message)) {
     throw new ApiError(409, "invalid_state_transition", "Transaction is in an unexpected state");
+  }
+  if (/invalid_transition:/i.test(message)) {
+    throw new ApiError(409, "invalid_state_transition", "Transaction state transition is not allowed");
+  }
+  if (/role_change_forbidden/.test(message)) {
+    throw new ApiError(403, "role_change_forbidden", "Role changes are only permitted by an administrator");
   }
   if (/duplicate key value/i.test(message)) throw new IdempotencyConflictError();
   logger.error("Financial operation failed", { message });
@@ -72,7 +94,7 @@ export async function initiatePayment(
   userId: string,
   walletId: string,
   input: InitiatePaymentInput
-): Promise<Transaction> {
+): Promise<{ transaction: Transaction; redirect_url: string | null }> {
   const amountMinor = toMinorUnits(input.amount, input.currency);
   if (amountMinor < 100) throw badRequest("Minimum amount is P1.00");
 
@@ -109,6 +131,7 @@ export async function initiatePayment(
 
   // 2) Ask the provider to start collection. Failures keep the intent pending.
   let providerReference: string | null = null;
+  let redirectUrl: string | null = null;
   try {
     const result = await provider.initiatePayment({
       amount_minor: amountMinor,
@@ -121,14 +144,31 @@ export async function initiatePayment(
       idempotency_key: input.idempotency_key ?? null,
     });
     providerReference = result.provider_reference ?? null;
+    redirectUrl = result.redirect_url ?? null;
   } catch (err) {
     logger.warn("Provider initiation failed", {
       message: err instanceof Error ? err.message : String(err),
     });
   }
 
+  // 3) Persist the provider reference so reconciliation has a stable link.
+  if (providerReference) {
+    const { error: updErr } = await admin
+      .from("payment_intents")
+      .update({ provider_reference: providerReference })
+      .eq("reference", reference);
+    if (updErr) {
+      logger.warn("Failed to persist provider reference", {
+        message: updErr.message,
+      });
+    }
+  }
+
   return {
-    ...(intentRow as unknown as Transaction),
-    provider_reference: providerReference,
+    transaction: {
+      ...(intentRow as unknown as Transaction),
+      provider_reference: providerReference,
+    },
+    redirect_url: redirectUrl,
   };
 }

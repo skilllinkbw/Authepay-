@@ -3,7 +3,7 @@
 ## Exposed credentials incident (development environment)
 
 A `.env` file containing Supabase project URLs and anon keys was committed to
-git history at some point in this repository's past (`git show HEAD:.env`).
+git history early in this repository's life (original commit `5023c44`).
 
 Treat everything that was in that file as **compromised**:
 
@@ -14,9 +14,22 @@ Treat everything that was in that file as **compromised**:
 4. Never re-add real values to any tracked file. Use `.env` (git-ignored) or
    your hosting provider's secret store.
 
-`.env` has been removed from the git index while keeping the local file on
-disk. Note: removing it from HEAD does not scrub history - rotation above is
-still required.
+**History remediation status:** `.env` has been removed from the entire
+repository history. All branches were rewritten with `git filter-branch`
+(index-filter removing `.env`), the `refs/original/*` backup refs were deleted,
+reflogs were expired, and `git gc --prune=now` physically removed the old
+objects. Verified evidence: `git log --all -- .env` returns no commits and
+`git cat-file -t 5023c44` fails (object pruned).
+
+**Still required externally:**
+
+- Rotation (steps 1-2) remains mandatory - objects may persist in local clones,
+  forks, and the remote `origin` until it is force-pushed with the rewritten
+  history. A **force push is required** and must be coordinated with
+  collaborators; GitHub secret scanning / push protection should be enabled on
+  the repository (Settings -> Code security) before the push.
+- Any other clone of this repository still holds the old objects and must be
+  re-cloned after the force push.
 
 ## Reporting
 

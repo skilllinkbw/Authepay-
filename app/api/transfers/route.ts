@@ -7,6 +7,7 @@ import {
   optionalString,
   requirePhone,
 } from "@/lib/server/api";
+import { requireAdminClient } from "@/lib/supabase/admin";
 import { requireOwnWallet } from "@/lib/services/payment-service";
 import { executeTransfer } from "@/lib/services/transfer-service";
 import { writeAudit } from "@/lib/services/audit-service";
@@ -21,10 +22,17 @@ interface TransferBody {
   description?: unknown;
 }
 
+interface RecipientLookup {
+  user_id: string;
+  full_name: string | null;
+  wallet_id: string;
+}
+
 /**
  * POST /api/transfers — move money between two wallets server-side.
  * Requires an Idempotency-Key header; balances are updated atomically in the
- * database, never on the client.
+ * database, never on the client. Recipients are resolved through a SECURITY
+ * DEFINER RPC because RLS hides other users' profiles.
  */
 export async function POST(request: Request) {
   try {
@@ -38,27 +46,27 @@ export async function POST(request: Request) {
     const amountMinor = toMinorUnits(body.amount, DEFAULT_CURRENCY);
     if (amountMinor < 100) throw badRequest("Minimum transfer is P1.00");
 
-    // Resolve the destination account by email or phone (never by client-supplied id).
-    let destProfileId: string | null = null;
+    // Resolve the destination account by email or phone (never by client id).
+    let email: string | null = null;
+    let phone: string | null = null;
     if (typeof body.recipient_email === "string" && body.recipient_email.trim() !== "") {
-      const email = body.recipient_email.trim().toLowerCase();
-      const { data } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("email", email)
-        .maybeSingle();
-      destProfileId = data?.id ?? null;
+      email = body.recipient_email.trim().toLowerCase();
     } else if (typeof body.recipient_phone === "string" && body.recipient_phone.trim() !== "") {
-      const phone = requirePhone(body.recipient_phone);
-      const { data } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("phone", phone)
-        .maybeSingle();
-      destProfileId = data?.id ?? null;
+      phone = requirePhone(body.recipient_phone);
     }
-    if (!destProfileId) throw notFound("Recipient not found");
-    if (destProfileId === ctx.userId) throw badRequest("Cannot transfer to yourself");
+    if (!email && !phone) {
+      throw badRequest("Provide a recipient email or phone");
+    }
+
+    const admin = requireAdminClient();
+    const { data: lookup, error: lookupError } = await admin.rpc(
+      "lookup_transfer_recipient",
+      { p_email: email, p_phone: phone }
+    );
+    if (lookupError) throw badRequest("Failed to resolve recipient", "db_error");
+    const recipient = (lookup ?? null) as RecipientLookup | null;
+    if (!recipient?.user_id) throw notFound("Recipient not found");
+    if (recipient.user_id === ctx.userId) throw badRequest("Cannot transfer to yourself");
 
     const wallet = await requireOwnWallet(supabase, ctx.userId);
     if (wallet.status !== "active") throw badRequest("Wallet is not active");
@@ -75,7 +83,7 @@ export async function POST(request: Request) {
       amountMinor,
       currency: wallet.currency,
       toOwnerType: "user",
-      toOwnerId: destProfileId,
+      toOwnerId: recipient.user_id,
       idempotencyKey,
       description: optionalString(body.description, "description", 280),
     });

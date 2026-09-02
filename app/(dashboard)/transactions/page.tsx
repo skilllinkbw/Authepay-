@@ -11,12 +11,23 @@ export default async function TransactionsPage() {
 
   if (!user) return null;
 
+  const { data: wallet } = await supabase
+    .from("wallets")
+    .select("id")
+    .eq("owner_type", "user")
+    .eq("owner_id", user.id)
+    .maybeSingle();
+
   // RLS restricts rows to transactions touching the caller's wallets.
   const { data: transactions } = await supabase
     .from("transactions")
     .select("*")
     .order("created_at", { ascending: false })
     .limit(100);
+
+  // Direction is derived from which wallet is the FROM side (money out) vs the
+  // TO side (money in) for THIS user's wallet. Never guess from a non-null id.
+  const walletId = wallet?.id ?? null;
 
   return (
     <div className="space-y-6">
@@ -27,10 +38,12 @@ export default async function TransactionsPage() {
           <CardTitle>History</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {transactions && transactions.length > 0 ? (
+          {!walletId ? (
+            <p className="p-8 text-center text-gray-400">No wallet found for this account.</p>
+          ) : transactions && transactions.length > 0 ? (
             <div className="divide-y divide-gray-100">
               {transactions.map((t) => {
-                const incoming = t.to_wallet_id !== null;
+                const incoming = t.to_wallet_id === walletId && t.from_wallet_id !== walletId;
                 const settled = t.status === "succeeded" || t.status === "refunded";
                 return (
                   <div key={t.id} className="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition-colors">

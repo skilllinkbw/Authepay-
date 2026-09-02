@@ -1,4 +1,5 @@
 import Logo from "@/components/brand/logo";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -17,13 +18,19 @@ export default function Home() {
         </p>
 
         <div className="mt-10 flex gap-4">
-          <button className="rounded-lg bg-[#0B1F3A] px-6 py-3 text-white">
+          <Link
+            href="/signup"
+            className="rounded-lg bg-[#0B1F3A] px-6 py-3 text-white hover:opacity-90"
+          >
             Start Building
-          </button>
+          </Link>
 
-          <button className="rounded-lg border border-gray-300 px-6 py-3 text-[#0B1F3A]">
+          <Link
+            href="/dashboard"
+            className="rounded-lg border border-gray-300 px-6 py-3 text-[#0B1F3A] hover:bg-gray-50"
+          >
             Explore Platform
-          </button>
+          </Link>
         </div>
 
       </section>

@@ -57,11 +57,21 @@ export default function AdminPage() {
   }, [load]);
 
   const changeRole = async (id: string, role: string) => {
-    await fetch("/api/admin/users", {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ id, role }),
-    });
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id, role }),
+      });
+      if (!res.ok) {
+        const json = (await res.json()) as { error?: { message?: string } };
+        setError(json.error?.message ?? "Could not update user role");
+        return;
+      }
+      setError("");
+    } catch {
+      setError("Network error while updating user role");
+    }
     await load();
   };
 

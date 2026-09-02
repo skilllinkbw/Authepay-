@@ -35,11 +35,21 @@ export default function NotificationsPage() {
   }, [load]);
 
   const markRead = async (id: number) => {
-    await fetch("/api/notifications", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
+    try {
+      const res = await fetch("/api/notifications", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) {
+        const json = (await res.json()) as { error?: { message?: string } };
+        setError(json.error?.message ?? "Could not update notification");
+        return;
+      }
+      setError("");
+    } catch {
+      setError("Network error while updating notification");
+    }
     await load();
   };
 

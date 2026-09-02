@@ -67,7 +67,17 @@ export default function DeveloperPage() {
   };
 
   const revoke = async (id: string) => {
-    await fetch(`/api/api-keys/${id}`, { method: "DELETE" });
+    try {
+      const res = await fetch(`/api/api-keys/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const json = (await res.json()) as { error?: { message?: string } };
+        setError(json.error?.message ?? "Could not revoke API key");
+        return;
+      }
+      setError("");
+    } catch {
+      setError("Network error while revoking API key");
+    }
     await load();
   };
 

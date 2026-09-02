@@ -22,13 +22,18 @@ export default function SendMoneyPage() {
   const [reference, setReference] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  // One idempotency key per submission attempt so a retry cannot double-send.
-  const [idempotencyKey] = useState(() =>
-    (globalThis.crypto?.randomUUID?.() ?? `send-${Date.now()}-${Math.random()}`).replace(/-/g, "")
-  );
+  // Idempotency semantics:
+  //  - one logical submission = one key
+  //  - retries of the SAME submission reuse the key (network errors / 5xx)
+  //  - a genuinely new submission (success or a definitive client error) gets
+  //    a fresh key so a completed transfer can never become the next one
+  const newKey = () =>
+    (globalThis.crypto?.randomUUID?.() ?? `send-${Date.now()}-${Math.random()}`).replace(/-/g, "");
+  const [idempotencyKey, setIdempotencyKey] = useState(() => newKey());
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
     setError("");
     setReference(null);
@@ -51,13 +56,23 @@ export default function SendMoneyPage() {
         data?: { transaction?: { reference?: string } };
         error?: { message?: string };
       };
-      if (!res.ok) {
-        setError(json.error?.message ?? "Transfer failed");
-      } else {
+
+      if (res.ok) {
         setReference(json.data?.transaction?.reference ?? null);
+        // Success: this submission is done. The next submission is new.
+        setIdempotencyKey(newKey());
+      } else {
+        setError(json.error?.message ?? "Transfer failed");
+        if (res.status < 500) {
+          // Definitive client error (400/401/403/404/409/422): resubmitting the
+          // identical request would only fail again, so retire this key.
+          setIdempotencyKey(newKey());
+        }
+        // 5xx / network: keep the key so a retry is idempotent.
       }
     } catch {
       setError("Network error - please retry.");
+      // key intentionally NOT rotated: a retry must reuse the same key.
     } finally {
       setLoading(false);
     }
