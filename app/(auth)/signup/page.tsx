@@ -6,7 +6,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase/client";
+import { requiredSignupPolicies } from "@/lib/legal/policies";
 import { Mail, Lock, User, Phone, ArrowRight } from "lucide-react";
+
+const REQUIRED_LEGAL = requiredSignupPolicies();
 
 export default function SignupPage() {
   const router = useRouter();
@@ -16,9 +19,14 @@ export default function SignupPage() {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [acceptedLegal, setAcceptedLegal] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptedLegal) {
+      setError("You must accept the Terms of Service and Privacy Policy.");
+      return;
+    }
     setLoading(true);
     setError("");
 
@@ -41,6 +49,21 @@ export default function SignupPage() {
 
     // Profile + wallet are provisioned server-side by the handle_new_user
     // database trigger; the client never inserts financial rows directly.
+
+    // Record legal acceptance server-side. If email confirmation is enabled
+    // there may be no session yet — the dashboard PolicyGate will collect
+    // acceptance on first sign-in in that case, so nothing is lost.
+    try {
+      for (const p of REQUIRED_LEGAL) {
+        await fetch("/api/legal/acceptance", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ policy_id: p.id, policy_version: p.version }),
+        });
+      }
+    } catch {
+      // Non-fatal: PolicyGate enforces acceptance on first dashboard visit.
+    }
 
     router.push("/dashboard");
     router.refresh();
@@ -116,6 +139,32 @@ export default function SignupPage() {
                   minLength={8}
                 />
               </div>
+            </div>
+            <div className="flex items-start gap-3 rounded-xl border border-gray-200 p-3">
+              <input
+                id="accept-legal"
+                type="checkbox"
+                checked={acceptedLegal}
+                onChange={(e) => setAcceptedLegal(e.target.checked)}
+                className="mt-1 h-4 w-4 accent-authepay-navy"
+                required
+              />
+              <label htmlFor="accept-legal" className="text-sm text-gray-600">
+                I have read and accept the{" "}
+                {REQUIRED_LEGAL.map((p, i) => (
+                  <span key={p.id}>
+                    {i > 0 && " and "}
+                    <Link
+                      href={`/legal/${p.id}`}
+                      target="_blank"
+                      className="font-semibold text-authepay-blue hover:underline"
+                    >
+                      {p.title}
+                    </Link>
+                  </span>
+                ))}
+                .
+              </label>
             </div>
             <Button type="submit" className="w-full" isLoading={loading}>
               Create Account

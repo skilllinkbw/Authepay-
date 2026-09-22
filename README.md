@@ -73,5 +73,35 @@ to re-run.
 - Passwords/tokens/secrets are never logged (`lib/logger.ts` redacts).
 - Payment status is never accepted from the client - only provider webhooks
   (verified server-side) can settle a transaction.
-- Security headers (HSTS, nosniff, DENY framing, strict referrer) are set in
-  `next.config.js`.
+- Security headers (HSTS, CSP, nosniff, DENY framing, strict referrer) are
+  set in `next.config.mjs`.
+- `GET /api/health` exposes boolean configuration state for monitoring.
+
+## Commercial model
+
+Plans, limits, and subscription states are defined centrally in
+`lib/commercial/plans.ts` and stored per-account in the `subscriptions`
+table (migration 013). Plan prices are intentionally unset (`null`) until
+commercial sign-off. Enforcement is server-side: suspended/cancelled/expired
+accounts cannot initiate payments, transfers, merchants, or API keys, and
+plan limits (API keys, trial volume) are checked in the API routes. Admins
+manage subscriptions via `/api/admin/subscriptions`; users see their plan and
+usage at `/billing`.
+
+## Legal & compliance
+
+In-app policy pages live at `/legal/*` (source of truth:
+`lib/legal/policies.ts`); Markdown copies for partners are generated with
+`npm run export:legal`. Acceptance of required documents is recorded
+server-side (append-only, versioned) via migration 012 and enforced by the
+dashboard policy gate. All documents are drafts pending Botswana legal
+review — see `docs/LEGAL_REVIEW.md`.
+
+## Documentation
+
+- `docs/API.md` — endpoint reference
+- `docs/DEPLOYMENT.md` — build, release, migration, and production checklist
+- `docs/EXTERNAL_DEPENDENCIES.md` — everything that requires contracts,
+  credentials, legal review, or regulator action (do not claim as done)
+- `docs/LEGAL_REVIEW.md` — review pack for Botswana counsel
+- `SECURITY.md` — security model and the historical credential incident

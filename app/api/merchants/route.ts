@@ -8,6 +8,10 @@ import {
   requireString,
 } from "@/lib/server/api";
 import { createMerchant, listMyMerchants, updateMerchant } from "@/lib/services/merchant-service";
+import {
+  assertPaymentsAllowed,
+  getSubscription,
+} from "@/lib/services/subscription-service";
 import { writeAudit } from "@/lib/services/audit-service";
 import { badRequest } from "@/lib/errors";
 
@@ -35,6 +39,10 @@ export async function POST(request: Request) {
     const ctx = await getAuthedContext(supabase);
     const body = await readJsonBody<CreateMerchantBody>(request);
     const name = requireString(body.name, "name", 2, 80);
+
+    // Merchant onboarding requires an account in good standing.
+    assertPaymentsAllowed(await getSubscription(supabase, ctx.userId));
+
     const merchant = await createMerchant(
       supabase,
       ctx.userId,

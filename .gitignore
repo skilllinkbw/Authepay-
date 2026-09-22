@@ -22,3 +22,4 @@ _run_detached.js
 _spawn_*.js
 _refs_*.html
 wmic_test*.txt
+_verify/

@@ -32,6 +32,26 @@ const nextConfig = {
             value: "max-age=63072000; includeSubDomains; preload",
           },
           { key: "X-XSS-Protection", value: "1; mode=block" },
+          {
+            // Pragmatic CSP: Next.js emits inline bootstrap scripts, so
+            // script-src keeps 'unsafe-inline'; the value here comes from
+            // restricting object/base/frame/form directives and connection
+            // targets. connect-src is limited to the API origin and Supabase.
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data:",
+              "font-src 'self' data:",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+              "upgrade-insecure-requests",
+            ].join("; "),
+          },
         ],
       },
     ];

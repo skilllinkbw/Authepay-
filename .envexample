@@ -16,8 +16,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 # --- Server-only secrets (never exposed to the browser) ---------------------
 # Supabase service-role key. Used ONLY by server-side API routes to invoke
 # atomic, security-definer Postgres functions for financial operations.
-# At minimum, restrict this key to EXECUTE the functions listed in
-# supabase/migrations/0004-rls.sql. Rotate immediately if leaked.
+# Migrations 010/011 revoke PUBLIC execute on money RPCs and grant EXECUTE to
+# the service role only. Rotate immediately if leaked (see SECURITY.md).
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 
 # --- Payment provider configuration -----------------------------------------

@@ -10,6 +10,10 @@ import {
 import { requireAdminClient } from "@/lib/supabase/admin";
 import { requireOwnWallet } from "@/lib/services/payment-service";
 import { executeTransfer } from "@/lib/services/transfer-service";
+import {
+  assertPaymentsAllowed,
+  getSubscription,
+} from "@/lib/services/subscription-service";
 import { writeAudit } from "@/lib/services/audit-service";
 import { idempotencyKeyFromHeaders } from "@/lib/idempotency";
 import { badRequest, notFound } from "@/lib/errors";
@@ -39,6 +43,9 @@ export async function POST(request: Request) {
     const supabase = await createClient();
     const ctx = await getAuthedContext(supabase);
     const body = await readJsonBody<TransferBody>(request);
+
+    // Suspended/cancelled/expired accounts cannot move money.
+    assertPaymentsAllowed(await getSubscription(supabase, ctx.userId));
 
     if (typeof body.amount !== "string" && typeof body.amount !== "number") {
       throw badRequest("'amount' must be a number or decimal string");

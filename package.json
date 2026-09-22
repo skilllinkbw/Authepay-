@@ -12,7 +12,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings 0",
-    "test": "node --test tests/money.test.ts tests/refs.test.ts tests/idempotency.test.ts tests/api-keys.test.ts tests/payments-state.test.ts tests/webhooks.test.ts tests/settlement.test.ts tests/payment-errors.test.ts tests/migrations-contract.test.ts tests/logger.test.ts",
+    "test": "node --test tests/money.test.ts tests/refs.test.ts tests/idempotency.test.ts tests/api-keys.test.ts tests/payments-state.test.ts tests/webhooks.test.ts tests/settlement.test.ts tests/payment-errors.test.ts tests/migrations-contract.test.ts tests/logger.test.ts tests/commercial.test.ts tests/legal-policies.test.ts",
+    "export:legal": "node scripts/export-legal.mjs",
     "opennext": "opennextjs-cloudflare build"
   },
   "dependencies": {

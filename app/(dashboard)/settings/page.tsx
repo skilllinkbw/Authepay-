@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Phone, Lock, AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { LegalStatus } from "@/components/legal-status";
 
 interface Profile {
   id: string;
@@ -211,6 +212,8 @@ if (loadingProfile) {
           </form>
         </CardContent>
       </Card>
+
+      <LegalStatus />
     </div>
   );
 }

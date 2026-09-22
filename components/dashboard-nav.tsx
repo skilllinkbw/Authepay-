@@ -9,6 +9,7 @@ import {
   Receipt,
   Store,
   KeyRound,
+  CreditCard,
   Bell,
   Shield,
   LogOut,
@@ -22,6 +23,7 @@ const LINKS = [
   { href: "/transactions", label: "Transactions", icon: Receipt },
   { href: "/merchants", label: "Merchants", icon: Store },
   { href: "/developer", label: "Developers", icon: KeyRound },
+  { href: "/billing", label: "Billing", icon: CreditCard },
   { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/admin", label: "Admin", icon: Shield },
 ];

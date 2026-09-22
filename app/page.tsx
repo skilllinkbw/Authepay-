@@ -34,6 +34,20 @@ export default function Home() {
         </div>
 
       </section>
+
+      <footer className="border-t border-gray-200">
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-8 text-sm text-gray-500 md:flex-row md:justify-between">
+          <p>&copy; {new Date().getFullYear()} AuthePay. Botswana.</p>
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <Link href="/legal/terms-of-service" className="hover:text-gray-900">Terms</Link>
+            <Link href="/legal/privacy-policy" className="hover:text-gray-900">Privacy</Link>
+            <Link href="/legal/acceptable-use" className="hover:text-gray-900">Acceptable Use</Link>
+            <Link href="/legal/merchant-terms" className="hover:text-gray-900">Merchants</Link>
+            <Link href="/legal/api-terms" className="hover:text-gray-900">API</Link>
+            <Link href="/legal" className="hover:text-gray-900">All legal</Link>
+          </nav>
+        </div>
+      </footer>
     </main>
   );
 }

@@ -11,9 +11,16 @@ import {
   requirePhone,
 } from "@/lib/server/api";
 import { initiatePayment, requireOwnWallet } from "@/lib/services/payment-service";
+import {
+  assertPaymentsAllowed,
+  assertVolumeAllowed,
+  getPlanFor,
+  getSubscription,
+  monthlyPaymentVolumeMinor,
+} from "@/lib/services/subscription-service";
 import { writeAudit } from "@/lib/services/audit-service";
 import { idempotencyKeyFromHeaders } from "@/lib/idempotency";
-import { DEFAULT_CURRENCY, type Currency } from "@/lib/money";
+import { DEFAULT_CURRENCY, toMinorUnits, type Currency } from "@/lib/money";
 import { badRequest } from "@/lib/errors";
 
 /** GET /api/payments — list payment intents created by the caller. */
@@ -60,6 +67,17 @@ export async function POST(request: Request) {
     ) as Currency;
     if (currency !== "BWP" && currency !== "USD" && currency !== "ZAR") {
       throw badRequest("Unsupported currency");
+    }
+
+    // Commercial enforcement (server-side, never client-trusted): the
+    // account must be in good standing and within its plan's volume cap.
+    const subscription = await getSubscription(supabase, ctx.userId);
+    assertPaymentsAllowed(subscription);
+    const plan = getPlanFor(subscription);
+    if (plan.limits.monthly_payment_volume_minor !== null) {
+      const amountMinor = toMinorUnits(amountRaw, currency);
+      const usedMinor = await monthlyPaymentVolumeMinor(ctx.userId, currency);
+      assertVolumeAllowed(plan, usedMinor, amountMinor);
     }
 
     const wallet = await requireOwnWallet(supabase, ctx.userId);

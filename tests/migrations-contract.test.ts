@@ -57,10 +57,37 @@ test("migration 011 adds recipient lookup, state machine and settlement", () => 
 });
 
 test("no remediation migration contains literal secrets or connection strings", () => {
-  for (const name of ["010_security_hardening.sql", "011_settlement_and_rpc_hardening.sql"]) {
+  for (const name of [
+    "010_security_hardening.sql",
+    "011_settlement_and_rpc_hardening.sql",
+    "012_legal_acceptance.sql",
+    "013_commercial.sql",
+  ]) {
     const sql = read(name);
     assert.doesNotMatch(sql, /eyJhbGciOi/i); // JWT fragments
     assert.doesNotMatch(sql, /supabase\.co/i); // real project URLs
     assert.doesNotMatch(sql, /password\s*=.*["']/i);
   }
+});
+
+test("migration 012 records policy acceptance append-only via service-role RPC", () => {
+  const sql = read("012_legal_acceptance.sql");
+  assert.match(sql, /create table if not exists public\.policy_acceptances/i);
+  assert.match(sql, /unique \(user_id, policy_id, policy_version\)/i); // idempotent
+  assert.match(sql, /enable row level security/i);
+  assert.match(sql, /revoke insert, update, delete on public\.policy_acceptances from authenticated/i);
+  assert.match(sql, /create or replace function public\.record_policy_acceptance/i);
+  assert.match(sql, /revoke all on function public\.record_policy_acceptance[\s\S]*from public, anon, authenticated/i);
+  assert.match(sql, /grant execute on function public\.record_policy_acceptance[\s\S]*to service_role/i);
+});
+
+test("migration 013 subscriptions are admin-writable only, with auto-provisioning", () => {
+  const sql = read("013_commercial.sql");
+  assert.match(sql, /create table if not exists public\.subscriptions/i);
+  assert.match(sql, /check \(status in \('trialing','active','past_due','suspended','cancelled'\)\)/i);
+  assert.match(sql, /create trigger on_profile_created_subscription/i); // auto-provision
+  assert.match(sql, /revoke insert, update, delete on public\.subscriptions from authenticated/i);
+  assert.match(sql, /create or replace function public\.set_subscription/i);
+  assert.match(sql, /role = 'admin'/i); // in-RPC authorization re-check
+  assert.match(sql, /grant execute on function public\.set_subscription[\s\S]*to service_role/i);
 });

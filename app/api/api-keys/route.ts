@@ -7,6 +7,13 @@ import {
   requireString,
 } from "@/lib/server/api";
 import { createUserApiKey, listUserApiKeys } from "@/lib/services/api-key-service";
+import {
+  assertApiKeyAllowed,
+  assertPaymentsAllowed,
+  countActiveApiKeys,
+  getPlanFor,
+  getSubscription,
+} from "@/lib/services/subscription-service";
 import { writeAudit } from "@/lib/services/audit-service";
 import { API_KEY_SCOPES, type ApiKeyScope } from "@/lib/api-keys";
 
@@ -41,6 +48,15 @@ export async function POST(request: Request) {
     const rawScopes = Array.isArray(body.scopes) ? body.scopes : [];
     const scopes = (rawScopes as string[]).filter((s): s is ApiKeyScope =>
       (API_KEY_SCOPES as readonly string[]).includes(s)
+    );
+
+    // Commercial enforcement: account must be in good standing and within
+    // the plan's active-key limit.
+    const subscription = await getSubscription(supabase, ctx.userId);
+    assertPaymentsAllowed(subscription);
+    assertApiKeyAllowed(
+      getPlanFor(subscription),
+      await countActiveApiKeys(ctx.userId)
     );
 
     const created = await createUserApiKey(ctx.userId, name, scopes);
